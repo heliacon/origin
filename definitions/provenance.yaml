@@ -1,0 +1,37 @@
+id: provenance
+title: Provenance
+version: 0.1
+status: draft
+author: Pete Dainty
+updated: 2026-07-04
+
+summary: >
+  Provenance is the verifiable record of where knowledge and capability came from —
+  the property that lets a claim or a result be trusted rather than merely asserted.
+
+definition: >
+  A machine-readable, versioned chain of origin, authorship, and change attached to every
+  definition, claim, capability, and result an origin publishes. Provenance answers "says
+  who, from what, and when" without requiring trust in the answer's presentation.
+
+rationale:
+  - In a web where agents synthesise answers from many sources, the source is the scarce, valuable thing. Provenance makes it first-class.
+  - Provenance by default means every projection carries its lineage — the JSON, the HTML, and the agent's cited answer all trace to the same origin and version.
+  - It is the difference between an origin that can be cited and one that can only be scraped. Citability is a moat.
+
+examples:
+  - "Every definition carries id, version, author, and updated date; a projection preserves them."
+  - "An agent answering from Heliacon returns a citation that resolves to a specific, versioned corpus entry."
+  - "A claim's provenance links to the reference implementation or research that substantiates it."
+
+antipatterns:
+  - Content presented as authoritative with no traceable source or version.
+  - Provenance kept only in human-readable footnotes that machines cannot follow.
+
+related:
+  - origin
+  - invocation
+  - capability
+  - privacy
+
+projections: [html, markdown, json, jsonld, llms, mcp]

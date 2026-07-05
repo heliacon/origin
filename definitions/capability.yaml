@@ -1,0 +1,37 @@
+id: capability
+title: Capability
+version: 0.1
+status: draft
+author: Pete Dainty
+updated: 2026-07-04
+
+summary: >
+  A Capability is a declared, invocable action an origin can perform or vouch for —
+  the origin's offer to do work, not just to display content.
+
+definition: >
+  A named, described, and contractually-specified function an origin exposes for
+  invocation, with defined inputs, outputs, and provenance. Capability is what an origin
+  can do; content is only what it can show.
+
+rationale:
+  - Capability over content. In an agentic internet, the useful unit is an action an agent can take, not a paragraph it must read.
+  - Declaring capabilities explicitly (in JSON, llms.txt, and an MCP manifest) makes an origin discoverable and usable by machines without bespoke integration.
+  - A capability is a promise. Backing it with provenance is what makes the promise trustworthy rather than merely available.
+
+examples:
+  - "ask — resolve a question against the Heliacon corpus and return a cited answer."
+  - "definitions — return a canonical definition and its relationships."
+  - "citations / provenance — return the verifiable source of a claim."
+  - "research — expose a body of work for retrieval and reasoning."
+
+antipatterns:
+  - A page that describes what a company could do, with no invocable surface behind it.
+  - Capabilities without declared inputs/outputs, so only humans reading docs can use them.
+
+related:
+  - invocation
+  - provenance
+  - origin
+
+projections: [html, markdown, json, jsonld, llms, mcp]

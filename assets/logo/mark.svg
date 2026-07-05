@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Heliacon mark: the heliacal O — star above a rising sun, inside the ring -->
+  <circle cx="50" cy="50" r="35" fill="none" stroke="#F4ECD8" stroke-width="8.5"/>
+  <!-- 4-point star, upper interior -->
+  <path d="M50 27 Q52.4 40.6 63 43 Q52.4 45.4 50 59 Q47.6 45.4 37 43 Q47.6 40.6 50 27 Z" fill="#E7B23C"/>
+  <!-- rising sun: half-disc on the horizon, lower interior -->
+  <clipPath id="h"><rect x="26" y="40" width="48" height="24"/></clipPath>
+  <circle cx="50" cy="64" r="13" fill="#E7B23C" clip-path="url(#h)"/>
+  <line x1="30" y1="64" x2="70" y2="64" stroke="#E7B23C" stroke-width="3.4" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://heliacon.com/schemas/definition.schema.json",
+  "title": "Heliacon Definition",
+  "description": "The canonical structure of a Heliacon definition. Definitions are the structured source of truth; all projections derive from them.",
+  "type": "object",
+  "required": ["id", "title", "version", "status", "summary", "definition"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Stable, lowercase, url-safe identifier."
+    },
+    "title": { "type": "string" },
+    "version": {
+      "type": ["string", "number"],
+      "description": "Semantic-ish version of this definition; bumped when meaning changes."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "review", "stable", "deprecated"]
+    },
+    "author": { "type": "string" },
+    "updated": {
+      "type": "string",
+      "description": "ISO 8601 date (YYYY-MM-DD)."
+    },
+    "summary": {
+      "type": "string",
+      "description": "One-sentence canonical definition."
+    },
+    "definition": {
+      "type": "string",
+      "description": "A tighter, dictionary-style definition."
+    },
+    "rationale": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Why the concept exists and matters."
+    },
+    "examples": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "antipatterns": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "What the concept is NOT — common failures."
+    },
+    "related": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "ids of related definitions."
+    },
+    "projections": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["html", "markdown", "json", "jsonld", "llms", "mcp"] }
+    }
+  }
+}

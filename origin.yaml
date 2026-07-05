@@ -1,0 +1,53 @@
+version: 0.1
+
+id: heliacon
+
+name: Heliacon
+
+tagline: Be first light.
+
+description: >
+  Heliacon is a trusted origin for knowledge, capability,
+  and provenance in the agentic web.
+
+status: draft
+
+author:
+  name: Pete Dainty
+
+published: 2026-07-04
+
+updated: 2026-07-04
+
+principles:
+
+  - provenance
+  - invocation
+  - privacy
+  - capability
+  - sovereignty
+
+canonical_url: https://heliacon.com
+
+projections:
+
+  - html
+  - markdown
+  - json
+  - jsonld
+  - llms
+  - mcp
+
+capabilities:
+
+  - ask
+  - definitions
+  - citations
+  - provenance
+  - research
+
+corpus:
+
+  root: /corpus
+
+license: copyright

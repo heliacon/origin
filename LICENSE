@@ -1,0 +1,32 @@
+Heliacon Origin — Source-Available License v1.0
+
+Copyright © 2026 Pete Dainty / Heliacon LLC. All Rights Reserved.
+
+This repository — the Heliacon origin, its corpus, definitions, schemas, and
+documentation (the "Work") — is made source-available for inspection, learning,
+and discussion. It is not open source.
+
+You MAY:
+  - read, study, and privately fork the Work;
+  - reference and cite it, with attribution and a link to https://heliacon.com;
+  - quote short excerpts for commentary, criticism, or discussion;
+  - propose changes via issues or pull requests to this repository.
+
+You MAY NOT, without prior written permission from Heliacon LLC:
+  - republish or redistribute substantial portions of the Work;
+  - use the Work, in whole or in substantial part, to build or operate a competing
+    product, service, corpus, or "origin";
+  - remove or alter provenance, authorship, or this license.
+
+TRADEMARKS. "Heliacon", the Heliacon wordmark, and the Heliacon logo are trademarks
+of Heliacon LLC. This license grants no rights to use them.
+
+INTENT. Portions of this architecture may be released later under a permissive
+open license (e.g. Apache-2.0 for SDKs, specifications, and reference
+implementations). Until then, all rights are reserved.
+
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY
+ARISING FROM, OUT OF, OR IN CONNECTION WITH THE WORK OR ITS USE.
+
+For permissions beyond the scope of this license, contact: hello@heliacon.com

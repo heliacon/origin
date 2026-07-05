@@ -1,0 +1,36 @@
+id: origin
+title: Origin
+version: 0.1
+status: draft
+author: Pete Dainty
+updated: 2026-07-04
+
+summary: >
+  An Origin is the canonical source of an organisation's identity, knowledge,
+  capabilities, and trust — the single thing every other representation derives from.
+
+definition: >
+  A durable, addressable, versioned source of truth that publishes not a website but a
+  negotiable identity: one canonical object from which humans, software, and agents each
+  obtain the projection they can consume.
+
+rationale:
+  - The web made the browser the privileged consumer; the agentic internet has many consumers, each with different capabilities.
+  - If the human page and the machine data drift apart, trust erodes. A single origin keeps every projection consistent by construction.
+  - Provenance, versioning, and canonical addressing are properties of the origin, so every projection inherits them for free.
+
+examples:
+  - "heliacon.com serves HTML to a browser, JSON-LD to a crawler, and an MCP manifest to an agent — all rendered from the same origin.yaml + corpus."
+  - "A company's origin declares its definitions, capabilities, and provenance once; its site, its docs, its llms.txt, and its API are all projections of it."
+
+antipatterns:
+  - A marketing homepage with a separate, out-of-date API and a bolted-on llms.txt.
+  - Treating the browser render as canonical and generating machine formats as an afterthought.
+
+related:
+  - projection
+  - provenance
+  - capability
+  - sovereignty
+
+projections: [html, markdown, json, jsonld, llms, mcp]

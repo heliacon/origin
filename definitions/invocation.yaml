@@ -1,0 +1,36 @@
+id: invocation
+title: Invocation
+version: 0.1
+status: draft
+author: Pete Dainty
+updated: 2026-07-04
+
+summary: >
+  An Invocation is the successful use of a trusted capability to resolve an intent —
+  the unit of value in an agentic internet, and what Heliacon measures instead of traffic.
+
+definition: >
+  A completed act in which a consumer (human or agent) discovers a declared capability of
+  an origin, invokes it against a real intent, and receives a provenance-bearing result.
+  Attention is spent looking; invocation is work done.
+
+rationale:
+  - The attention economy rewards being seen. The agentic internet rewards being used. These optimise for opposite things.
+  - An origin that is invoked is load-bearing infrastructure; one that is merely visited is a brochure. Heliacon is built to be invoked.
+  - Invocation is measurable and honest — a count of resolved intents — where "traffic" measures only arrival, not usefulness.
+
+examples:
+  - "An agent calls Heliacon's `ask` capability to resolve a definition, and cites the provenance it returns."
+  - "A model reads llms.txt, discovers a capability, and invokes it to answer a user — the user never visits the site, and that is success."
+  - "PennyPika resolving a real question about someone's spending is an invocation; a pageview on its landing page is not."
+
+antipatterns:
+  - Optimising the origin for clicks, dwell time, or impressions.
+  - Capabilities that look invocable but return unverifiable or unattributed results.
+
+related:
+  - capability
+  - provenance
+  - origin
+
+projections: [html, markdown, json, jsonld, llms, mcp]
