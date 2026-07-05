@@ -6,7 +6,8 @@
   "description": "The canonical origin for Heliacon — one source of truth, many projections.",
   "scripts": {
     "build": "tsx build.ts",
-    "preview": "tsx build.ts && npx --yes serve dist"
+    "preview": "tsx build.ts && npx --yes wrangler dev",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "js-yaml": "^4.1.0",
@@ -16,6 +17,7 @@
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.10.0",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "wrangler": "^4.20.0"
   }
 }

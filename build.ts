@@ -312,6 +312,14 @@ async function main(): Promise<void> {
   // homepage (HTML projection of the origin)
   write(join(DIST, "index.html"), homeHtml(origin, defs));
 
+  // 404 (served by the Worker's not_found_handling)
+  write(join(DIST, "404.html"), page("Not found — Heliacon",
+    `<a class="back" href="/">&larr; Heliacon</a>
+     <h1 style="margin-top:40px">Not found</h1>
+     <p class="lede">That projection doesn't exist — yet.</p>
+     <p>Every consumer negotiates a projection of the same origin. This path isn't one of them.</p>`,
+    "/404", {}));
+
   // definitions — html + json + markdown projections
   for (const d of defs) {
     write(join(DIST, "definitions", d.id, "index.html"), definitionHtml(d));

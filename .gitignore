@@ -4,5 +4,9 @@ dist/
 # node
 node_modules/
 
+# wrangler / cloudflare
+.wrangler/
+.dev.vars
+
 # os
 .DS_Store

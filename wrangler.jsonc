@@ -1,0 +1,13 @@
+{
+  // Heliacon origin — deployed as a Cloudflare Worker with static assets.
+  // Static now (serves ./dist); a Worker script (capabilities, content-negotiation,
+  // MCP) can be added later via a "main" entry without changing hosting.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "heliacon-origin",
+  "compatibility_date": "2026-07-03",
+  "assets": {
+    "directory": "./dist",
+    // serve /404.html on any unmatched path (multi-page site, not an SPA)
+    "not_found_handling": "404-page"
+  }
+}

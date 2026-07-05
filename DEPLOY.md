@@ -1,49 +1,45 @@
-# Deploy — GitHub + Cloudflare Pages
+# Deploy — Cloudflare Workers (static assets)
 
-The origin is the source; `dist/` is a projection. Cloudflare Pages rebuilds `dist/`
-from source on every push. Nothing in `dist/` is committed.
+The origin is the source; `dist/` is a projection. Cloudflare rebuilds `dist/` from source
+on every push to `main`. Nothing in `dist/` is committed.
+
+Deployed as a **Worker with static assets** (not Pages): Cloudflare is consolidating on
+Workers, and this keeps static hosting + future edge functions (capabilities, MCP,
+content-negotiation) in one deployable — see `wrangler.jsonc`.
 
 ## Build contract
-- Build command: `npm install && npm run build`
-- Output directory: `dist`
-- Node: 20+ (Cloudflare Pages default is fine; pin with `NODE_VERSION=20` if needed)
+- Build command: `npm run build`   (Cloudflare installs deps automatically)
+- Deploy command: `npx wrangler deploy`
+- Worker config: `wrangler.jsonc` → `name: heliacon-origin`, `assets.directory: ./dist`
+- Output: `dist/` (61 static files: HTML + JSON/JSON-LD/Markdown/llms.txt/MCP projections)
 
-The build is TypeScript (`build.ts`, run via `tsx`) so the whole origin is one edge-native
-language — the same as the Cloudflare Workers / Pages Functions that will host the dynamic
-capabilities (`ask`, `provenance`, MCP, content negotiation) later.
+## Dashboard setup (one-time)
 
-## One-time setup
+Repo is already pushed to `github.com/heliacon/origin`.
 
-### 1. Git + first tag (local)
+1. Cloudflare dashboard → **Compute → Workers** (new 2026 sidebar; Workers & Pages moved
+   under **Compute**) → **Create** → **Import a repository** / **Connect to Git**.
+2. Authorize the **`heliacon`** GitHub account → pick **`heliacon/origin`** → branch `main`.
+3. Build settings:
+   - Build command: `npm run build`
+   - Deploy command: `npx wrangler deploy`   (default — leave as is)
+   - Root directory: `/`   (leave default)
+4. Deploy → you get `heliacon-origin.<subdomain>.workers.dev`.
+
+### Custom domain
+Worker → **Settings → Domains & Routes → Add → Custom domain** → `heliacon.com` (and `www`).
+Records auto-add because DNS is on Cloudflare. Add a redirect rule so `www` → 301 → apex.
+
+## Local commands
 ```bash
-cd ~/projects/Heliacon
-git init
-git add -A
-git commit -m "origin v0.1: canonical source + projection pipeline + brand"
-git tag -a v0.1.0 -m "Heliacon origin v0.1.0"
+npm run build      # generate dist/
+npm run preview    # build + wrangler dev (local preview at 127.0.0.1:8787)
+npm run deploy     # build + wrangler deploy (manual deploy; needs `wrangler login`)
 ```
-
-### 2. Create the GitHub repo and push
-```bash
-gh repo create heliacon/origin --private --source=. --remote=origin --push
-# (or luckylarryschopshop/heliacon-origin if not using a 'heliacon' org)
-git push origin v0.1.0
-```
-
-### 3. Connect Cloudflare Pages
-Dashboard → Workers & Pages → Create → Pages → Connect to Git → pick the repo.
-- Framework preset: **None**
-- Build command: `npm install && npm run build`
-- Build output directory: `dist`
-- (optional) Env var: `NODE_VERSION` = `20`
-Deploy. You'll get `heliacon-origin.pages.dev`.
-
-### 4. Custom domain
-Pages project → Custom domains → Set up → `heliacon.com` (and `www`).
-Because `heliacon.com`'s DNS is already on Cloudflare, it adds the records for you.
-Set `www` → 301 → apex (or vice-versa) via a redirect rule.
 
 ## After launch
-- `git push` → Pages rebuilds and deploys.
+- `git push` → Workers Builds rebuilds and deploys `main` automatically.
 - Cross-posts (dev.to / LinkedIn / Substack) are non-canonical projections: each carries
   `rel="canonical"` back to the matching `https://heliacon.com/...` URL.
+- Adding capabilities later: set `"main": "worker.ts"` + `assets.binding` in `wrangler.jsonc`
+  and put edge code in `worker.ts` — same repo, same deploy.
