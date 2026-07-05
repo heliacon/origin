@@ -3,30 +3,30 @@ title: Provenance
 version: 0.1
 status: draft
 author: Pete Dainty
-updated: 2026-07-04
+updated: 2026-07-05
 
 summary: >
-  Provenance is the verifiable record of where knowledge and capability came from —
-  the property that lets a claim or a result be trusted rather than merely asserted.
+  Provenance is the verifiable record of where knowledge and capability came from. It lets a
+  claim or a result be trusted rather than merely asserted.
 
 definition: >
-  A machine-readable, versioned chain of origin, authorship, and change attached to every
-  definition, claim, capability, and result an origin publishes. Provenance answers "says
-  who, from what, and when" without requiring trust in the answer's presentation.
+  A machine-readable, versioned chain of origin, authorship and change attached to every
+  definition, claim, capability and result an origin publishes. It answers who said it, from
+  what and when, without requiring trust in how that answer is presented.
 
 rationale:
-  - In a web where agents synthesise answers from many sources, the source is the scarce, valuable thing. Provenance makes it first-class.
-  - Provenance by default means every projection carries its lineage — the JSON, the HTML, and the agent's cited answer all trace to the same origin and version.
+  - Where agents synthesise answers from many sources, the source is the scarce and valuable thing. Provenance makes it first-class.
+  - Provenance by default means every projection carries its lineage. The JSON, the HTML and the agent's cited answer all trace to the same origin and version.
   - It is the difference between an origin that can be cited and one that can only be scraped. Citability is a moat.
 
 examples:
-  - "Every definition carries id, version, author, and updated date; a projection preserves them."
-  - "An agent answering from Heliacon returns a citation that resolves to a specific, versioned corpus entry."
-  - "A claim's provenance links to the reference implementation or research that substantiates it."
+  - Every definition carries id, version, author and updated date. A projection preserves them.
+  - An agent answering from the corpus returns a citation that resolves to a specific, versioned entry.
+  - A claim's provenance links to the research or implementation that substantiates it.
 
 antipatterns:
   - Content presented as authoritative with no traceable source or version.
-  - Provenance kept only in human-readable footnotes that machines cannot follow.
+  - Provenance kept only in footnotes a person can read but a machine cannot follow.
 
 related:
   - origin

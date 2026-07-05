@@ -1,0 +1,35 @@
+id: sovereignty
+title: Sovereignty
+version: 0.1
+status: draft
+author: Pete Dainty
+updated: 2026-07-05
+
+summary: >
+  Sovereignty is control of your own origin. You own the source, the canonical address and the
+  right to be the place your identity is read from.
+
+definition: >
+  The property of holding your identity, knowledge and capabilities as your own canonical
+  source, on infrastructure and terms you control, so no platform sits between you and the
+  consumers who read you.
+
+rationale:
+  - If your identity lives on someone else's platform, they own the terms, the reach and the exit. An origin you control cannot be deplatformed out of existence.
+  - One canonical address, owned by you, is what lets every projection point home. Rent the address and you rent the authority.
+  - Sovereignty is not isolation. You still project everywhere. You just keep the source and the canonical link.
+
+examples:
+  - heliacon.com is the canonical home. A post on another platform is a projection that links back to it.
+  - The origin is a repository you own, built and deployed on infrastructure you control.
+
+antipatterns:
+  - Making a rented profile the canonical version of who you are.
+  - Publishing only where a platform allows, with no source of your own.
+
+related:
+  - origin
+  - privacy
+  - provenance
+
+projections: [html, markdown, json, jsonld, llms, mcp]

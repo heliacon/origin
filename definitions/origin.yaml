@@ -3,29 +3,29 @@ title: Origin
 version: 0.1
 status: draft
 author: Pete Dainty
-updated: 2026-07-04
+updated: 2026-07-05
 
 summary: >
-  An Origin is the canonical source of an organisation's identity, knowledge,
-  capabilities, and trust — the single thing every other representation derives from.
+  An Origin is the canonical source of an organisation's identity, knowledge, capability and
+  trust. It is the single thing every other representation derives from.
 
 definition: >
-  A durable, addressable, versioned source of truth that publishes not a website but a
-  negotiable identity: one canonical object from which humans, software, and agents each
+  A durable, addressable, versioned source of truth that publishes a negotiable identity
+  rather than a website. One canonical object, from which humans, software and agents each
   obtain the projection they can consume.
 
 rationale:
-  - The web made the browser the privileged consumer; the agentic internet has many consumers, each with different capabilities.
+  - The web made the browser the privileged consumer. The agentic internet has many consumers, each with different capabilities.
   - If the human page and the machine data drift apart, trust erodes. A single origin keeps every projection consistent by construction.
-  - Provenance, versioning, and canonical addressing are properties of the origin, so every projection inherits them for free.
+  - Provenance, versioning and canonical addressing are properties of the origin, so every projection inherits them for free.
 
 examples:
-  - "heliacon.com serves HTML to a browser, JSON-LD to a crawler, and an MCP manifest to an agent — all rendered from the same origin.yaml + corpus."
-  - "A company's origin declares its definitions, capabilities, and provenance once; its site, its docs, its llms.txt, and its API are all projections of it."
+  - heliacon.com serves HTML to a browser, JSON-LD to a crawler and an MCP manifest to an agent, all rendered from the same origin.yaml and corpus.
+  - An origin declares its definitions, capabilities and provenance once. Its site, its docs, its llms.txt and its API are all projections of it.
 
 antipatterns:
-  - A marketing homepage with a separate, out-of-date API and a bolted-on llms.txt.
-  - Treating the browser render as canonical and generating machine formats as an afterthought.
+  - A marketing homepage with a separate, outdated API and a bolted on llms.txt.
+  - Treating the browser render as canonical and generating the machine formats as an afterthought.
 
 related:
   - projection

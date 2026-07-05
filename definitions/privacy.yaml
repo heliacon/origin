@@ -1,0 +1,35 @@
+id: privacy
+title: Privacy
+version: 0.1
+status: draft
+author: Pete Dainty
+updated: 2026-07-05
+
+summary: >
+  Privacy is a property of the architecture, not a promise in a policy. An origin discloses
+  what it means to publish and nothing more.
+
+definition: >
+  A design in which what is private stays private by construction rather than by trust. The
+  origin publishes its knowledge and capabilities openly and keeps everything else
+  structurally out of reach, so a leak is a bug you can find, not a policy you must believe.
+
+rationale:
+  - A privacy policy is a claim. An architecture is a proof. Prefer the one you can inspect.
+  - Privacy and provenance are the same discipline seen from two sides. Prove the lineage of what you publish. Disclose nothing you should not.
+  - What is never collected cannot leak, cannot be subpoenaed and cannot be sold. The strongest guarantee is structural.
+
+examples:
+  - The corpus is public by design. Anything a person or a product holds that is not corpus never enters the origin.
+  - A capability answers from published knowledge and returns a citation, not a profile of who asked.
+
+antipatterns:
+  - Privacy asserted in prose while the system quietly collects and retains.
+  - Treating a policy as the control rather than the architecture.
+
+related:
+  - provenance
+  - sovereignty
+  - origin
+
+projections: [html, markdown, json, jsonld, llms, mcp]

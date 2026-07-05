@@ -46,7 +46,7 @@
     "antipatterns": {
       "type": "array",
       "items": { "type": "string" },
-      "description": "What the concept is NOT — common failures."
+      "description": "What the concept is NOT. Common failures."
     },
     "related": {
       "type": "array",

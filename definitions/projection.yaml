@@ -3,30 +3,30 @@ title: Projection
 version: 0.1
 status: draft
 author: Pete Dainty
-updated: 2026-07-04
+updated: 2026-07-05
 
 summary: >
   A Projection is a representation of the origin, negotiated and rendered for a specific
-  consumer's capabilities — one of many faces of a single source of truth.
+  consumer. It is one of many faces of a single source of truth.
 
 definition: >
-  A deterministic rendering of canonical origin data into a target format (HTML, Markdown,
-  JSON, JSON-LD, llms.txt, MCP, or a future protocol), selected by content negotiation
-  rather than assumed. No projection is privileged; all are equal and consistent.
+  A deterministic rendering of canonical origin data into a target format such as HTML,
+  Markdown, JSON, JSON-LD, llms.txt or MCP, chosen by content negotiation rather than assumed.
+  No projection is privileged. All are equal and consistent.
 
 rationale:
-  - Different consumers can consume different things. A browser wants HTML; a crawler wants JSON-LD; an agent wants a tool manifest. Serve each what it can use.
-  - Because projections are generated from one source, they cannot contradict each other — the machine view and the human view are the same truth, differently shaped.
-  - Cross-posting is projection. An article on heliacon.com is canonical; the same piece on another platform is a non-canonical projection that points home via rel=canonical.
+  - Different consumers consume different things. A browser wants HTML. A crawler wants JSON-LD. An agent wants a tool manifest. Serve each what it can use.
+  - Projections are generated from one source, so they cannot contradict each other. The machine view and the human view are the same truth, differently shaped.
+  - Cross-posting is projection. An article on heliacon.com is canonical. The same piece elsewhere is a non-canonical projection that points home with rel=canonical.
 
 examples:
-  - "origin.md and origin.html are both projections of origin.yaml."
-  - "A definition is projected to a JSON object for APIs, an HTML page for people, and an entry in llms.txt for models."
-  - "A LinkedIn post or dev.to article is a projection of a corpus entry, carrying a canonical link back to the origin."
+  - origin.md and origin.html are both projections of origin.yaml.
+  - A definition is projected to JSON for an API, to HTML for a person and to an entry in llms.txt for a model.
+  - A cross-posted article is a projection of a corpus entry, carrying a canonical link back to the origin.
 
 antipatterns:
   - Hand-maintaining the same content in three formats until they drift.
-  - A machine format that says something the human page does not (or vice-versa).
+  - A machine format that says something the human page does not, or the reverse.
 
 related:
   - origin

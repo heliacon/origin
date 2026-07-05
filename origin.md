@@ -2,9 +2,9 @@
 
 **Be first light.**
 
-Heliacon is a trusted origin for knowledge, capability, and provenance.
+Heliacon is a trusted origin for knowledge, capability and provenance.
 
-It exists to publish canonical research, expose trustworthy capabilities, and demonstrate how organisations can become origin-first in an increasingly agentic internet.
+It exists to publish canonical research, expose trustworthy capabilities and show how an organisation can become origin-first as more of the internet is read by machines.
 
 ---
 

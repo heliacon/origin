@@ -88,7 +88,7 @@ html{scroll-behavior:smooth}
 body{margin:0;background:var(--ink);color:var(--cream);
   font:400 18px/1.65 "Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
   -webkit-font-smoothing:antialiased}
-.wrap{max-width:760px;margin:0 auto;padding:64px 24px 96px}
+.wrap{max-width:760px;margin:0 auto;padding:44px 24px 96px}
 a{color:var(--gold);text-decoration:none} a:hover{text-decoration:underline}
 header.mast{display:flex;flex-direction:column;gap:16px;margin-bottom:56px}
 header.mast svg{width:min(340px,72%);height:auto;display:block}
@@ -124,7 +124,7 @@ article h2{font-family:ui-sans-serif,system-ui,sans-serif}
 <div class="wrap">
 ${body}
 <footer>
-  <strong>Heliacon</strong> — a trusted origin for knowledge, capability, and provenance.<br>
+  <strong>Heliacon</strong>. A trusted origin for knowledge, capability and provenance.<br>
   One origin, many projections · © 2026 Heliacon LLC ·
   <a href="/llms.txt">llms.txt</a> ·
   <a href="/.well-known/mcp.json">MCP</a> ·
@@ -148,7 +148,7 @@ function homeHtml(origin: Dict, defs: Dict[]): string {
     "Invocation over attention.", "One origin. Many projections."]
     .map((x) => `<li>${esc(x)}</li>`).join("");
   const byId = Object.fromEntries(defs.map((d) => [d.id, d]));
-  const cards = ["origin", "projection", "invocation", "capability", "provenance"]
+  const cards = ["origin", "projection", "invocation", "capability", "provenance", "privacy", "sovereignty"]
     .map((id) => byId[id]).filter(Boolean)
     .map((d) =>
       `<a class="card" href="/definitions/${d.id}/"><span class="k">Definition</span>` +
@@ -159,12 +159,12 @@ function homeHtml(origin: Dict, defs: Dict[]): string {
   <div class="tag">Be first light</div>
 </header>
 
-<p class="lede">Heliacon is a trusted origin for knowledge, capability, and provenance —
-the canonical source from which every projection is derived.</p>
+<p class="lede">Heliacon is a trusted origin for knowledge, capability and provenance. It is the
+canonical source from which every projection is derived.</p>
 <p>The browser is not privileged. Neither is the agent. Every consumer negotiates the
 projection most appropriate for its capabilities, from one source of truth.</p>
 
-<h2>The five definitions</h2>
+<h2>The definitions</h2>
 ${cards}
 
 <h2>Principles</h2>
@@ -181,7 +181,7 @@ ${cards}
   <a href="/llms.txt">llms.txt</a>
   <a href="/.well-known/mcp.json">MCP</a>
 </p>`;
-  return page("Heliacon — Be first light", body, "/", {
+  return page("Heliacon · Be first light", body, "/", {
     "text/markdown": `${CANON}/origin.md`,
     "application/json": `${CANON}/origin.json`,
     "application/ld+json": `${CANON}/origin.jsonld`,
@@ -210,7 +210,7 @@ ${sec("Not this", d.antipatterns)}
   <a href="/definitions/${d.id}.md">Markdown</a>
 </p>
 </article>`;
-  return page(`${d.title} — Heliacon`, body, `/definitions/${d.id}/`, {
+  return page(`${d.title} · Heliacon`, body, `/definitions/${d.id}/`, {
     "application/json": `${CANON}/definitions/${d.id}.json`,
     "text/markdown": `${CANON}/definitions/${d.id}.md`,
   });
@@ -288,6 +288,34 @@ function mcpManifest(origin: Dict): Dict {
   };
 }
 
+function sitemapXml(defs: Dict[], corpus: Dict[]): string {
+  const urls = ["/", ...defs.map((d) => `/definitions/${d.id}/`), ...corpus.map((c) => `/corpus/${c.slug}/`)];
+  const items = urls.map((u) => `  <url><loc>${CANON}${u}</loc></url>`).join("\n");
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${items}\n</urlset>\n`;
+}
+
+const robotsTxt = () => `User-agent: *\nAllow: /\n\nSitemap: ${CANON}/sitemap.xml\n`;
+
+// Content types and CORS for the machine projections, so agents can fetch them cross-origin.
+const HEADERS_FILE = `/origin.json
+  Content-Type: application/json; charset=utf-8
+  Access-Control-Allow-Origin: *
+/origin.jsonld
+  Content-Type: application/ld+json; charset=utf-8
+  Access-Control-Allow-Origin: *
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+  Access-Control-Allow-Origin: *
+/.well-known/mcp.json
+  Content-Type: application/json; charset=utf-8
+  Access-Control-Allow-Origin: *
+/.well-known/llms.txt
+  Content-Type: text/plain; charset=utf-8
+  Access-Control-Allow-Origin: *
+/definitions/*
+  Access-Control-Allow-Origin: *
+`;
+
 // ── build ────────────────────────────────────────────────────────────────────
 function write(path: string, content: unknown): void {
   mkdirSync(dirname(path), { recursive: true });
@@ -313,10 +341,10 @@ async function main(): Promise<void> {
   write(join(DIST, "index.html"), homeHtml(origin, defs));
 
   // 404 (served by the Worker's not_found_handling)
-  write(join(DIST, "404.html"), page("Not found — Heliacon",
+  write(join(DIST, "404.html"), page("Not found · Heliacon",
     `<a class="back" href="/">&larr; Heliacon</a>
      <h1 style="margin-top:40px">Not found</h1>
-     <p class="lede">That projection doesn't exist — yet.</p>
+     <p class="lede">That projection does not exist yet.</p>
      <p>Every consumer negotiates a projection of the same origin. This path isn't one of them.</p>`,
     "/404", {}));
 
@@ -331,14 +359,17 @@ async function main(): Promise<void> {
   // corpus — html + markdown projections
   for (const c of corpus) {
     const htmlBody = await marked.parse(c.body_md);
-    const pg = page(`${c.title} — Heliacon`,
+    const pg = page(`${c.title} · Heliacon`,
       `<a class="back" href="/">&larr; Heliacon</a><article>${htmlBody}</article>`,
       `/corpus/${c.slug}/`, { "text/markdown": `${CANON}/corpus/${c.slug}.md` });
     write(join(DIST, "corpus", c.slug, "index.html"), pg);
     write(join(DIST, "corpus", `${c.slug}.md`), c.body_md);
   }
 
-  // discovery projections
+  // discovery + crawl projections
+  write(join(DIST, "sitemap.xml"), sitemapXml(defs, corpus));
+  write(join(DIST, "robots.txt"), robotsTxt());
+  write(join(DIST, "_headers"), HEADERS_FILE);
   write(join(DIST, "llms.txt"), llmsTxt(origin, defs, corpus));
   write(join(DIST, ".well-known", "mcp.json"), mcpManifest(origin));
   write(join(DIST, ".well-known", "llms.txt"), llmsTxt(origin, defs, corpus));

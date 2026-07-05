@@ -3,29 +3,29 @@ title: Invocation
 version: 0.1
 status: draft
 author: Pete Dainty
-updated: 2026-07-04
+updated: 2026-07-05
 
 summary: >
-  An Invocation is the successful use of a trusted capability to resolve an intent —
-  the unit of value in an agentic internet, and what Heliacon measures instead of traffic.
+  An Invocation is the successful use of a trusted capability to resolve an intent. It is the
+  unit of value in an agentic internet. It is what Heliacon measures instead of traffic.
 
 definition: >
-  A completed act in which a consumer (human or agent) discovers a declared capability of
-  an origin, invokes it against a real intent, and receives a provenance-bearing result.
-  Attention is spent looking; invocation is work done.
+  A completed act in which a consumer, human or agent, discovers a declared capability of an
+  origin, invokes it against a real intent and receives a result that carries its provenance.
+  Attention is spent looking. Invocation is work done.
 
 rationale:
-  - The attention economy rewards being seen. The agentic internet rewards being used. These optimise for opposite things.
-  - An origin that is invoked is load-bearing infrastructure; one that is merely visited is a brochure. Heliacon is built to be invoked.
-  - Invocation is measurable and honest — a count of resolved intents — where "traffic" measures only arrival, not usefulness.
+  - The attention economy rewards being seen. The agentic internet rewards being used. They optimise for opposite things.
+  - An origin that is invoked is load-bearing infrastructure. One that is merely visited is a brochure. Heliacon is built to be invoked.
+  - Invocation is measurable and honest. It counts resolved intents, where traffic measures only arrival, not usefulness.
 
 examples:
-  - "An agent calls Heliacon's `ask` capability to resolve a definition, and cites the provenance it returns."
-  - "A model reads llms.txt, discovers a capability, and invokes it to answer a user — the user never visits the site, and that is success."
-  - "PennyPika resolving a real question about someone's spending is an invocation; a pageview on its landing page is not."
+  - An agent calls the ask capability to resolve a definition, and cites the provenance it returns.
+  - A model reads llms.txt, discovers a capability and invokes it to answer a user. The user never visits the site, and that is the point.
+  - A capability resolving a real question is an invocation. A pageview on a landing page is not.
 
 antipatterns:
-  - Optimising the origin for clicks, dwell time, or impressions.
+  - Optimising the origin for clicks, dwell time or impressions.
   - Capabilities that look invocable but return unverifiable or unattributed results.
 
 related:
