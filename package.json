@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsx build.ts",
     "preview": "tsx build.ts && npx --yes wrangler dev",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy --minify"
   },
   "dependencies": {
     "js-yaml": "^4.1.0",

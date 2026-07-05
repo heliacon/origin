@@ -67,6 +67,51 @@ const jsonReplacer = (_k: string, v: unknown) =>
   v instanceof Date ? v.toISOString().slice(0, 10) : v;
 
 // ── html projection ──────────────────────────────────────────────────────────
+
+// The site stylesheet. Written once to /styles.css and linked, so a browser fetches it once
+// and caches it across every page, rather than re-parsing an inline copy on each request.
+const CSS = `@font-face{font-family:Cinzel;font-weight:500;font-display:swap;src:url(/assets/fonts/cinzel-500.woff2) format("woff2")}
+@font-face{font-family:Cinzel;font-weight:600;font-display:swap;src:url(/assets/fonts/cinzel-600.woff2) format("woff2")}
+:root{--navy:#0E1533;--ink:#0B1029;--cream:#F4ECD8;--gold:#E7B23C;--dim:#9aa0b8}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--cream);font:400 18px/1.65 "Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:44px 24px 96px}
+a{color:var(--gold);text-decoration:none}a:hover{text-decoration:underline}
+header.mast{display:flex;flex-direction:column;gap:16px;margin-bottom:56px}
+header.mast img{width:min(340px,72%);height:auto;display:block}
+.tag{font:600 13px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
+h1,h2,h3{font-weight:600;letter-spacing:-.01em;line-height:1.15}
+h1,h3{font-family:Cinzel,"Iowan Old Style",Palatino,Georgia,serif;letter-spacing:.02em}
+h1{font-size:38px;margin:0 0 8px}
+h2{font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);font-family:ui-sans-serif,system-ui,sans-serif;margin:56px 0 18px}
+h3{font-size:24px;margin:0 0 6px}
+p{margin:0 0 18px}
+.lede{font-size:22px;color:var(--cream)}
+ul{padding-left:1.1em}li{margin:6px 0}
+.card{display:block;padding:20px 22px;margin:10px 0;border:1px solid #2a3050;border-radius:14px;background:#141a38;transition:border-color .15s,transform .1s}
+.card:hover{border-color:var(--gold);transform:translateY(-1px);text-decoration:none}
+.card .k{font:600 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.card h3{margin:8px 0 4px;color:var(--cream)}
+.card p{margin:0;color:var(--dim);font-size:16px}
+.proj{font:500 13px/1.8 ui-sans-serif,system-ui,sans-serif;color:var(--dim)}
+.proj a{color:var(--dim);border:1px solid #2a3050;border-radius:999px;padding:4px 12px;margin:0 6px 8px 0;display:inline-block}
+.proj a:hover{color:var(--gold);border-color:var(--gold);text-decoration:none}
+footer{margin-top:72px;padding-top:24px;border-top:1px solid #2a3050;font:400 14px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--dim)}
+.back{font:600 13px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+article h2{font-family:ui-sans-serif,system-ui,sans-serif}`;
+
+// Dependency-free minifiers. Safe for this project's hand-written CSS and generated markup.
+const minifyCss = (css: string): string =>
+  css.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\s*([{}:;,])\s*/g, "$1").replace(/;}/g, "}").replace(/\s+/g, " ").trim();
+
+function minifyHtml(html: string): string {
+  const keep: string[] = [];
+  const stashed = html.replace(/<(pre|code|textarea|script)[\s\S]*?<\/\1>/gi, (m) => `\x00${keep.push(m) - 1}\x00`);
+  const min = stashed.replace(/<!--[\s\S]*?-->/g, "").replace(/>\s+</g, "><").replace(/\s{2,}/g, " ").trim();
+  return min.replace(/\x00(\d+)\x00/g, (_, i) => keep[Number(i)]);
+}
+
 function page(title: string, body: string, canonicalPath: string, alternates: Record<string, string>): string {
   const alt = Object.entries(alternates)
     .map(([t, href]) => `<link rel="alternate" type="${t}" href="${href}">`)
@@ -81,47 +126,7 @@ function page(title: string, body: string, canonicalPath: string, alternates: Re
 <link rel="icon" href="/assets/logo/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/logo/icon-180.png">
     ${alt}
-<style>
-@font-face{font-family:Cinzel;font-weight:500;font-display:swap;src:url(/assets/fonts/cinzel-500.woff2) format("woff2")}
-@font-face{font-family:Cinzel;font-weight:600;font-display:swap;src:url(/assets/fonts/cinzel-600.woff2) format("woff2")}
-:root{--navy:#0E1533;--ink:#0B1029;--cream:#F4ECD8;--gold:#E7B23C;--dim:#9aa0b8}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--ink);color:var(--cream);
-  font:400 18px/1.65 "Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
-  -webkit-font-smoothing:antialiased}
-.wrap{max-width:760px;margin:0 auto;padding:44px 24px 96px}
-a{color:var(--gold);text-decoration:none} a:hover{text-decoration:underline}
-header.mast{display:flex;flex-direction:column;gap:16px;margin-bottom:56px}
-header.mast svg{width:min(340px,72%);height:auto;display:block}
-.tag{font:600 13px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.32em;
-  text-transform:uppercase;color:var(--gold)}
-h1,h2,h3{font-weight:600;letter-spacing:-.01em;line-height:1.15}
-h1,h3{font-family:Cinzel,"Iowan Old Style",Palatino,Georgia,serif;letter-spacing:.02em}
-h1{font-size:38px;margin:0 0 8px}
-h2{font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);
-  font-family:ui-sans-serif,system-ui,sans-serif;margin:56px 0 18px}
-h3{font-size:24px;margin:0 0 6px}
-p{margin:0 0 18px}
-.lede{font-size:22px;color:var(--cream)}
-ul{padding-left:1.1em} li{margin:6px 0}
-.card{display:block;padding:20px 22px;margin:10px 0;border:1px solid #2a3050;
-  border-radius:14px;background:#141a38;transition:border-color .15s,transform .1s}
-.card:hover{border-color:var(--gold);transform:translateY(-1px);text-decoration:none}
-.card .k{font:600 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--gold)}
-.card h3{margin:8px 0 4px;color:var(--cream)}
-.card p{margin:0;color:var(--dim);font-size:16px}
-.proj{font:500 13px/1.8 ui-sans-serif,system-ui,sans-serif;color:var(--dim)}
-.proj a{color:var(--dim);border:1px solid #2a3050;border-radius:999px;
-  padding:4px 12px;margin:0 6px 8px 0;display:inline-block}
-.proj a:hover{color:var(--gold);border-color:var(--gold);text-decoration:none}
-footer{margin-top:72px;padding-top:24px;border-top:1px solid #2a3050;
-  font:400 14px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--dim)}
-.back{font:600 13px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;
-  text-transform:uppercase}
-article h2{font-family:ui-sans-serif,system-ui,sans-serif}
-</style>
+<link rel="stylesheet" href="/styles.css">
 </head>
 <body>
 <div class="wrap">
@@ -138,12 +143,9 @@ ${body}
 </html>`;
 }
 
-function logoSvg(): string {
-  const p = join(ROOT, "assets", "logo", "wordmark.svg");
-  return existsSync(p)
-    ? readFileSync(p, "utf8")
-    : '<span style="font:600 40px/1 serif;letter-spacing:.04em">HELIAC&#9679;N</span>';
-}
+// Reference the wordmark as an external image so the browser caches it once, rather than
+// inlining ~12KB of SVG into the homepage HTML.
+const logoImg = (): string => '<img src="/assets/logo/wordmark.svg" alt="Heliacon">';
 
 function homeHtml(origin: Dict, defs: Dict[]): string {
   const caps = (origin.capabilities ?? []).map((c: string) => `<li><code>${esc(c)}</code></li>`).join("");
@@ -158,7 +160,7 @@ function homeHtml(origin: Dict, defs: Dict[]): string {
       `<h3>${esc(d.title)}</h3><p>${esc(collapse(d.summary))}</p></a>`).join("");
   const body = `
 <header class="mast">
-  <a href="/" aria-label="Heliacon" style="display:block">${logoSvg()}</a>
+  <a href="/" aria-label="Heliacon" style="display:block">${logoImg()}</a>
   <div class="tag">Be first light</div>
 </header>
 
@@ -345,20 +347,23 @@ async function main(): Promise<void> {
   write(join(DIST, "origin.json"), origin);
   write(join(DIST, "origin.jsonld"), jsonld(origin, defs));
 
+  // the stylesheet, minified and external (cached across pages)
+  write(join(DIST, "styles.css"), minifyCss(CSS));
+
   // homepage (HTML projection of the origin)
-  write(join(DIST, "index.html"), homeHtml(origin, defs));
+  write(join(DIST, "index.html"), minifyHtml(homeHtml(origin, defs)));
 
   // 404 (served by the Worker's not_found_handling)
-  write(join(DIST, "404.html"), page("Not found · Heliacon",
+  write(join(DIST, "404.html"), minifyHtml(page("Not found · Heliacon",
     `<a class="back" href="/">&larr; Heliacon</a>
      <h1 style="margin-top:40px">Not found</h1>
      <p class="lede">That projection does not exist yet.</p>
      <p>Every consumer negotiates a projection of the same origin. This path isn't one of them.</p>`,
-    "/404", {}));
+    "/404", {})));
 
   // definitions: html, json and markdown projections
   for (const d of defs) {
-    write(join(DIST, "definitions", d.id, "index.html"), definitionHtml(d));
+    write(join(DIST, "definitions", d.id, "index.html"), minifyHtml(definitionHtml(d)));
     write(join(DIST, "definitions", `${d.id}.json`), d);
     write(join(DIST, "definitions", `${d.id}.md`), definitionMarkdown(d));
   }
@@ -370,7 +375,7 @@ async function main(): Promise<void> {
     const pg = page(`${c.title} · Heliacon`,
       `<a class="back" href="/">&larr; Heliacon</a><article>${htmlBody}</article>`,
       `/corpus/${c.slug}/`, { "text/markdown": `${CANON}/corpus/${c.slug}.md` });
-    write(join(DIST, "corpus", c.slug, "index.html"), pg);
+    write(join(DIST, "corpus", c.slug, "index.html"), minifyHtml(pg));
     write(join(DIST, "corpus", `${c.slug}.md`), c.body_md);
   }
 
