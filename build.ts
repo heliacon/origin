@@ -74,6 +74,7 @@ const CSS = `@font-face{font-family:Cinzel;font-weight:500;font-display:swap;src
 @font-face{font-family:Cinzel;font-weight:600;font-display:swap;src:url(/assets/fonts/cinzel-600.woff2) format("woff2")}
 :root{--navy:#0E1533;--ink:#0B1029;--cream:#F4ECD8;--gold:#E7B23C;--dim:#9aa0b8}
 *{box-sizing:border-box}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--ink);color:var(--cream);font:400 18px/1.65 "Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;-webkit-font-smoothing:antialiased}
 .wrap{max-width:760px;margin:0 auto;padding:44px 24px 96px}
@@ -112,7 +113,13 @@ function minifyHtml(html: string): string {
   return min.replace(/\x00(\d+)\x00/g, (_, i) => keep[Number(i)]);
 }
 
-function page(title: string, body: string, canonicalPath: string, alternates: Record<string, string>): string {
+interface PageOpts { description?: string; jsonld?: unknown; alternates?: Record<string, string>; }
+
+const DEFAULT_DESC = "Heliacon is a trusted origin for knowledge, capability and provenance.";
+
+function page(title: string, body: string, canonicalPath: string, opts: PageOpts = {}): string {
+  const { description = DEFAULT_DESC, jsonld, alternates = {} } = opts;
+  const url = `${CANON}${canonicalPath}`;
   const alt = Object.entries(alternates)
     .map(([t, href]) => `<link rel="alternate" type="${t}" href="${href}">`)
     .join("\n    ");
@@ -122,15 +129,22 @@ function page(title: string, body: string, canonicalPath: string, alternates: Re
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
-<link rel="canonical" href="${CANON}${canonicalPath}">
+<meta name="description" content="${esc(description)}">
+<link rel="canonical" href="${url}">
 <link rel="icon" href="/assets/logo/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/logo/icon-180.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(description)}">
+<meta property="og:url" content="${url}">
+<meta property="og:image" content="${CANON}/assets/logo/og.png">
+<meta name="twitter:card" content="summary_large_image">
     ${alt}
-<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/styles.css">${jsonld ? `\n<script type="application/ld+json">${JSON.stringify(jsonld)}</script>` : ""}
 </head>
 <body>
 <div class="wrap">
-${body}
+<main>${body}</main>
 <footer>
   <strong>Heliacon</strong>. A trusted origin for knowledge, capability and provenance.<br>
   One origin, many projections · © 2026 Heliacon LLC ·
@@ -159,6 +173,7 @@ function homeHtml(origin: Dict, defs: Dict[]): string {
       `<a class="card" href="/definitions/${d.id}/"><span class="k">Definition</span>` +
       `<h3>${esc(d.title)}</h3><p>${esc(collapse(d.summary))}</p></a>`).join("");
   const body = `
+<h1 class="sr-only">Heliacon: a trusted origin for knowledge, capability and provenance</h1>
 <header class="mast">
   <a href="/" aria-label="Heliacon" style="display:block">${logoImg()}</a>
   <div class="tag">Be first light</div>
@@ -187,9 +202,13 @@ ${cards}
   <a href="/.well-known/mcp.json">MCP</a>
 </p>`;
   return page("Heliacon · Be first light", body, "/", {
-    "text/markdown": `${CANON}/origin.md`,
-    "application/json": `${CANON}/origin.json`,
-    "application/ld+json": `${CANON}/origin.jsonld`,
+    description: collapse(origin.description),
+    jsonld: jsonld(origin, defs),
+    alternates: {
+      "text/markdown": `${CANON}/origin.md`,
+      "application/json": `${CANON}/origin.json`,
+      "application/ld+json": `${CANON}/origin.jsonld`,
+    },
   });
 }
 
@@ -216,8 +235,20 @@ ${sec("Not this", d.antipatterns)}
 </p>
 </article>`;
   return page(`${d.title} · Heliacon`, body, `/definitions/${d.id}/`, {
-    "application/json": `${CANON}/definitions/${d.id}.json`,
-    "text/markdown": `${CANON}/definitions/${d.id}.md`,
+    description: collapse(d.summary),
+    jsonld: {
+      "@context": "https://schema.org",
+      "@type": "DefinedTerm",
+      "@id": `${CANON}/definitions/${d.id}/`,
+      name: d.title,
+      description: collapse(d.summary),
+      inDefinedTermSet: `${CANON}/#corpus`,
+      version: String(d.version ?? "0.1"),
+    },
+    alternates: {
+      "application/json": `${CANON}/definitions/${d.id}.json`,
+      "text/markdown": `${CANON}/definitions/${d.id}.md`,
+    },
   });
 }
 
@@ -374,7 +405,10 @@ async function main(): Promise<void> {
     const htmlBody = await marked.parse(c.body_md);
     const pg = page(`${c.title} · Heliacon`,
       `<a class="back" href="/">&larr; Heliacon</a><article>${htmlBody}</article>`,
-      `/corpus/${c.slug}/`, { "text/markdown": `${CANON}/corpus/${c.slug}.md` });
+      `/corpus/${c.slug}/`, {
+        description: collapse(c.body_md.replace(/^#.*$/m, "").replace(/[#*_`>-]/g, "")).slice(0, 155),
+        alternates: { "text/markdown": `${CANON}/corpus/${c.slug}.md` },
+      });
     write(join(DIST, "corpus", c.slug, "index.html"), minifyHtml(pg));
     write(join(DIST, "corpus", `${c.slug}.md`), c.body_md);
   }
