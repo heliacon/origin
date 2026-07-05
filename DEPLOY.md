@@ -4,9 +4,13 @@ The origin is the source; `dist/` is a projection. Cloudflare Pages rebuilds `di
 from source on every push. Nothing in `dist/` is committed.
 
 ## Build contract
-- Build command: `pip install -r requirements.txt && python build.py`
+- Build command: `npm install && npm run build`
 - Output directory: `dist`
-- Python: 3.11+ (set `PYTHON_VERSION=3.11` in Pages build env vars)
+- Node: 20+ (Cloudflare Pages default is fine; pin with `NODE_VERSION=20` if needed)
+
+The build is TypeScript (`build.ts`, run via `tsx`) so the whole origin is one edge-native
+language — the same as the Cloudflare Workers / Pages Functions that will host the dynamic
+capabilities (`ask`, `provenance`, MCP, content negotiation) later.
 
 ## One-time setup
 
@@ -29,9 +33,9 @@ git push origin v0.1.0
 ### 3. Connect Cloudflare Pages
 Dashboard → Workers & Pages → Create → Pages → Connect to Git → pick the repo.
 - Framework preset: **None**
-- Build command: `pip install -r requirements.txt && python build.py`
+- Build command: `npm install && npm run build`
 - Build output directory: `dist`
-- Env var: `PYTHON_VERSION` = `3.11`
+- (optional) Env var: `NODE_VERSION` = `20`
 Deploy. You'll get `heliacon-origin.pages.dev`.
 
 ### 4. Custom domain

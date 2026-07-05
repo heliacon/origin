@@ -43,7 +43,7 @@ origin/
 
 **Source of truth is structured.** Prose is a projection. `origin.yaml` and the
 `definitions/*.yaml` are canonical; the Markdown and HTML are generated from them by the
-build (see `build.py`). Edit the structured source, not the outputs.
+build (see `build.ts`). Edit the structured source, not the outputs.
 
 ## The five canonical definitions
 

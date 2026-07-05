@@ -1,10 +1,8 @@
 # build output (Cloudflare Pages regenerates this)
 dist/
 
-# python
-.venv/
-__pycache__/
-*.pyc
+# node
+node_modules/
 
 # os
 .DS_Store
