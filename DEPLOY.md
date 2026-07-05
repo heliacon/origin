@@ -1,17 +1,20 @@
-# Deploy — Cloudflare Workers (static assets)
+# Deploy: Cloudflare Worker with static assets
 
-The origin is the source; `dist/` is a projection. Cloudflare rebuilds `dist/` from source
-on every push to `main`. Nothing in `dist/` is committed.
+The origin is the source. `dist/` is a projection. Cloudflare rebuilds `dist/` from source on
+every push to `main`. Nothing in `dist/` is committed.
 
-Deployed as a **Worker with static assets** (not Pages): Cloudflare is consolidating on
-Workers, and this keeps static hosting + future edge functions (capabilities, MCP,
-content-negotiation) in one deployable — see `wrangler.jsonc`.
+Deployed as a Worker with static assets, not Pages. Cloudflare is consolidating on Workers, and
+this keeps static hosting and edge code in one deployable. See `wrangler.jsonc`.
+
+`worker.ts` runs first on every request and content-negotiates. A request for a page returns
+HTML to a browser and JSON to a client that sends `Accept: application/json`, from the same
+URL. Everything else falls through to the static assets. It also forces HTTPS.
 
 ## Build contract
-- Build command: `npm run build`   (Cloudflare installs deps automatically)
-- Deploy command: `npx wrangler deploy`
-- Worker config: `wrangler.jsonc` → `name: heliacon-origin`, `assets.directory: ./dist`
-- Output: `dist/` (61 static files: HTML + JSON/JSON-LD/Markdown/llms.txt/MCP projections)
+- Build command: `npm run build`. Cloudflare installs deps automatically.
+- Deploy command: `npx wrangler deploy`. Bundles `worker.ts` and uploads `dist/`.
+- Config: `wrangler.jsonc`. `name: heliacon-origin`, `main: worker.ts`, `assets.directory: ./dist`.
+- Output: `dist/`. HTML plus JSON, JSON-LD, Markdown, llms.txt and MCP projections.
 
 ## Dashboard setup (one-time)
 

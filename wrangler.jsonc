@@ -4,9 +4,14 @@
   // MCP) can be added later via a "main" entry without changing hosting.
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "heliacon-origin",
+  "main": "worker.ts",
   "compatibility_date": "2026-07-03",
   "assets": {
     "directory": "./dist",
+    // the worker binding, so worker.ts can serve the static files itself
+    "binding": "ASSETS",
+    // run the worker before asset serving, so it can content-negotiate
+    "run_worker_first": true,
     // serve /404.html on any unmatched path (multi-page site, not an SPA)
     "not_found_handling": "404-page"
   }

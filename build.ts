@@ -1,5 +1,5 @@
 /**
- * Heliacon origin build — projects the canonical source into many representations.
+ * Heliacon origin build. Projects the canonical source into many representations.
  *
  *     origin.yaml + definitions/*.yaml + corpus/*.md
  *         -> dist/                     (the deployable site + machine projections)
@@ -21,7 +21,7 @@ type Dict = Record<string, any>;
 
 // ── loading ────────────────────────────────────────────────────────────────
 // js-yaml parses `2026-07-04` into a Date; project it back to a plain YYYY-MM-DD string
-// (and do it at load so every projection — JSON included — is consistent).
+// Do it at load, so every projection is consistent, JSON included.
 function normDates(v: any): any {
   if (v instanceof Date) return v.toISOString().slice(0, 10);
   if (Array.isArray(v)) return v.map(normDates);
@@ -62,7 +62,7 @@ const esc = (s: unknown): string =>
 
 const collapse = (s: unknown): string => String(s ?? "").split(/\s+/).join(" ").trim();
 
-// dates from js-yaml come back as Date — project them as YYYY-MM-DD
+// dates from js-yaml come back as Date. Project them as YYYY-MM-DD
 const jsonReplacer = (_k: string, v: unknown) =>
   v instanceof Date ? v.toISOString().slice(0, 10) : v;
 
@@ -82,6 +82,8 @@ function page(title: string, body: string, canonicalPath: string, alternates: Re
 <link rel="apple-touch-icon" href="/assets/logo/icon-180.png">
     ${alt}
 <style>
+@font-face{font-family:Cinzel;font-weight:500;font-display:swap;src:url(/assets/fonts/cinzel-500.woff2) format("woff2")}
+@font-face{font-family:Cinzel;font-weight:600;font-display:swap;src:url(/assets/fonts/cinzel-600.woff2) format("woff2")}
 :root{--navy:#0E1533;--ink:#0B1029;--cream:#F4ECD8;--gold:#E7B23C;--dim:#9aa0b8}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -95,7 +97,8 @@ header.mast svg{width:min(340px,72%);height:auto;display:block}
 .tag{font:600 13px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.32em;
   text-transform:uppercase;color:var(--gold)}
 h1,h2,h3{font-weight:600;letter-spacing:-.01em;line-height:1.15}
-h1{font-size:40px;margin:0 0 8px}
+h1,h3{font-family:Cinzel,"Iowan Old Style",Palatino,Georgia,serif;letter-spacing:.02em}
+h1{font-size:38px;margin:0 0 8px}
 h2{font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);
   font-family:ui-sans-serif,system-ui,sans-serif;margin:56px 0 18px}
 h3{font-size:24px;margin:0 0 6px}
@@ -296,8 +299,13 @@ function sitemapXml(defs: Dict[], corpus: Dict[]): string {
 
 const robotsTxt = () => `User-agent: *\nAllow: /\n\nSitemap: ${CANON}/sitemap.xml\n`;
 
-// Content types and CORS for the machine projections, so agents can fetch them cross-origin.
-const HEADERS_FILE = `/origin.json
+// Security headers on everything, then content types and CORS for the machine projections
+// so agents can fetch them cross-origin.
+const HEADERS_FILE = `/*
+  Strict-Transport-Security: max-age=63072000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+/origin.json
   Content-Type: application/json; charset=utf-8
   Access-Control-Allow-Origin: *
 /origin.jsonld
@@ -348,7 +356,7 @@ async function main(): Promise<void> {
      <p>Every consumer negotiates a projection of the same origin. This path isn't one of them.</p>`,
     "/404", {}));
 
-  // definitions — html + json + markdown projections
+  // definitions: html, json and markdown projections
   for (const d of defs) {
     write(join(DIST, "definitions", d.id, "index.html"), definitionHtml(d));
     write(join(DIST, "definitions", `${d.id}.json`), d);
@@ -356,7 +364,7 @@ async function main(): Promise<void> {
   }
   write(join(DIST, "definitions", "index.json"), defs);
 
-  // corpus — html + markdown projections
+  // corpus: html and markdown projections
   for (const c of corpus) {
     const htmlBody = await marked.parse(c.body_md);
     const pg = page(`${c.title} · Heliacon`,
@@ -380,7 +388,7 @@ async function main(): Promise<void> {
   if (existsSync(join(ROOT, "assets"))) cpSync(join(ROOT, "assets"), join(DIST, "assets"), { recursive: true });
 
   const n = 1 + defs.length * 3 + corpus.length * 2 + 6;
-  console.log(`built dist/ — ${n} files · ${defs.length} definitions · ${corpus.length} corpus entries`);
+  console.log(`built dist/ (${n} files, ${defs.length} definitions, ${corpus.length} corpus entries)`);
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });
