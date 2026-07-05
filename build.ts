@@ -90,8 +90,8 @@ body{margin:0;background:var(--ink);color:var(--cream);
   -webkit-font-smoothing:antialiased}
 .wrap{max-width:760px;margin:0 auto;padding:64px 24px 96px}
 a{color:var(--gold);text-decoration:none} a:hover{text-decoration:underline}
-header.mast{display:flex;flex-direction:column;gap:14px;margin-bottom:56px}
-.logo{width:min(460px,86%)}
+header.mast{display:flex;flex-direction:column;gap:16px;margin-bottom:56px}
+header.mast svg{width:min(340px,72%);height:auto;display:block}
 .tag{font:600 13px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.32em;
   text-transform:uppercase;color:var(--gold)}
 h1,h2,h3{font-weight:600;letter-spacing:-.01em;line-height:1.15}
