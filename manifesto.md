@@ -21,7 +21,7 @@ So we build origin-first. One canonical source of truth, published in whatever f
 ## The three faces, one origin
 
 - **The research explains.** A canonical corpus of definitions, architecture and patterns for being found, trusted and invoked in an agentic world. This is the origin, and it is the credibility everything else rests on.
-- **The products prove.** Apps, tools and games built on the research. Apps prove. Games explore. Tools expose. Crawl Space is the tool that embodies the work on machine answerability. Each product is a projection of the same origin.
+- **The products prove.** Apps, tools and games built on the research. Apps prove. Games explore. Tools expose. Each product is a projection of the same origin.
 - **The consulting applies.** We help other companies become origin-first. The same architecture, brought to your work, so that humans, software and future systems can all consume one source of truth.
 
 Research explains. Products prove. Consulting applies. One origin, many projections.

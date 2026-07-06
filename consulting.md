@@ -4,16 +4,25 @@ Heliacon helps companies be found, trusted and invoked in a world where the read
 
 Search is no longer the only front door. People ask an assistant. Agents assemble answers from many sources and cite the ones they can verify. If your work is not legible to those systems then you are invisible to them, however good it is.
 
-## What we do
+## The shift we lead
 
-We bring the architecture Heliacon is built on to your work. You become origin-first: one canonical source of truth, projected for whoever asks, each projection carrying its own provenance.
+Call it SEO, AEO or GEO. They are the same move under new names: be the source a machine trusts enough to quote. We take it a level deeper, to the thing underneath all three.
 
-In practice that is four things, in order of foundation:
+We make you **origin-first**. Your knowledge and capabilities live as one canonical source of truth, projected for whoever asks, each projection carrying its own provenance. You stop optimising to rank on a page, and become the origin a machine cites and invokes.
 
-- **SEO** done properly. Still the ground everything stands on.
-- **AEO**, answer engine optimisation. Being the source an assistant quotes, not the page it skips.
-- **GEO**, making your content retrievable and citable by the models that now summarise the web.
-- **Agentic**, exposing your capabilities as things an agent can call, not just pages it can read.
+That is two disciplines:
+
+- **Be found and cited.** The source an assistant quotes, retrievable and verifiable by the models that now summarise the web.
+- **Be invocable.** Your capabilities exposed as things an agent can call, grounded and provenance-first, not just pages it can read.
+
+## We also help with
+
+The same judgement, on the problems next to it:
+
+- **Experimentation and measurement.** Designing, running and reading tests, and building the velocity to ship far more of them.
+- **Search, discovery and personalisation.** Ranking, relevance and recommendations at scale.
+- **AI product and agentic workflows.** Putting models and agents to work in a product, without the theatre.
+- **Fractional product leadership.** Senior product and engineering leadership, by the engagement.
 
 ## Who it is for
 
