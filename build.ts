@@ -176,11 +176,12 @@ function page(title: string, body: string, canonicalPath: string, opts: PageOpts
 <div class="wrap">
 <main>${body}</main>
 <footer>
-  <strong>Heliacon</strong>. A trusted origin for knowledge, capability and provenance.<br>
-  One origin, many projections · © 2026 Heliacon LLC ·
+  <a href="/manifesto/">Manifesto</a> ·
+  <a href="/architecture/">Architecture</a> ·
   <a href="/llms.txt">llms.txt</a> ·
   <a href="/.well-known/mcp.json">MCP</a> ·
-  <a href="/origin.json">JSON</a>
+  <a href="/origin.json">JSON</a><br>
+  One origin, many projections · © 2026 Heliacon LLC
 </footer>
 </div>
 </body>
@@ -354,6 +355,8 @@ function llmsTxt(origin: Dict, defs: Dict[], corpus: Dict[]): string {
     `> ${collapse(origin.description)}`, "",
     `Tagline: ${origin.tagline}`,
     `Canonical: ${CANON}`,
+    `Manifesto: ${CANON}/manifesto`,
+    `Architecture: ${CANON}/architecture`,
     `Ask: ${CANON}/ask?q=`,
     `MCP: ${CANON}/mcp`,
     `Provenance: ${CANON}/provenance`,
@@ -388,7 +391,7 @@ function mcpManifest(origin: Dict): Dict {
 }
 
 function sitemapXml(defs: Dict[], corpus: Dict[]): string {
-  const urls = ["/", ...defs.map((d) => `/definitions/${d.id}/`), ...corpus.map((c) => `/corpus/${c.slug}/`)];
+  const urls = ["/", "/manifesto/", "/architecture/", ...defs.map((d) => `/definitions/${d.id}/`), ...corpus.map((c) => `/corpus/${c.slug}/`)];
   const items = urls.map((u) => `  <url><loc>${CANON}${u}</loc></url>`).join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${items}\n</urlset>\n`;
 }
@@ -544,6 +547,19 @@ async function main(): Promise<void> {
       });
     write(join(DIST, "corpus", c.slug, "index.html"), minifyHtml(pg));
     write(join(DIST, "corpus", `${c.slug}.md`), c.body_md);
+  }
+
+  // root documents: manifesto (philosophy) and architecture (spec), rendered like the corpus
+  for (const doc of [
+    { slug: "manifesto", src: "manifesto.md", title: "Manifesto", desc: "The Heliacon manifesto. A studio and a consultancy, built on a canonical origin." },
+    { slug: "architecture", src: join("docs", "architecture.md"), title: "Architecture", desc: "How Heliacon is built. One canonical origin, many projections, negotiated for whoever asks." },
+  ]) {
+    const md = readFileSync(join(ROOT, doc.src), "utf8");
+    const htmlBody = await marked.parse(md);
+    write(join(DIST, doc.slug, "index.html"), minifyHtml(page(`${doc.title} · Heliacon`,
+      `<a class="back" href="/">&larr; Heliacon</a><article>${htmlBody}</article>`,
+      `/${doc.slug}/`, { description: doc.desc, alternates: { "text/markdown": `${CANON}/${doc.slug}.md` } })));
+    write(join(DIST, `${doc.slug}.md`), md);
   }
 
   // discovery + crawl projections
