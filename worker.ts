@@ -40,6 +40,48 @@ const jsonResponse = (body: unknown, status = 200): Response =>
     },
   });
 
+const CORS = { "access-control-allow-origin": "*", "access-control-allow-headers": "content-type", "access-control-allow-methods": "GET, POST, OPTIONS" };
+const STOP = new Set("a an the and or but of to in on at for with by from as is are was were be it its this that these those what which who how why when where do does did not no can will your you we our they their more most other some such than too very into over".split(" "));
+const tokenise = (s: string): string[] => (s.toLowerCase().match(/[a-z0-9]+/g) ?? []).filter((t) => t.length >= 3 && !STOP.has(t));
+
+// The ask capability. Retrieve the corpus passages that answer a question, each with its
+// citation. Lexical scoring at the edge, no model, so no answer is invented.
+async function ask(request: Request, url: URL, env: Env): Promise<Response> {
+  if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
+  const body = request.method === "POST" ? await request.json<{ q?: string }>().catch(() => ({})) : {};
+  const q = (url.searchParams.get("q") ?? body.q ?? "").trim();
+  if (!q) return jsonResponse({ error: "provide q, e.g. /ask?q=what is an origin" }, 400);
+
+  const res = await env.ASSETS.fetch(new URL("/ask-index.json", url.origin));
+  if (!res.ok) return jsonResponse({ error: "index unavailable" }, 503);
+  const { passages } = (await res.json()) as { passages: { id: string; title: string; url: string; source: string; text: string }[] };
+
+  const terms = [...new Set(tokenise(q))];
+  const answers = passages
+    .map((p) => {
+      const title = p.title.toLowerCase();
+      const text = p.text.toLowerCase();
+      // title match weighs heavily; body matches count by frequency
+      const score = terms.reduce((s, t) => s + (title.includes(t) ? 5 : 0) + (text.split(t).length - 1), 0);
+      return { p, score };
+    })
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 4)
+    .map(({ p, score }) => ({
+      text: p.text.length > 420 ? p.text.slice(0, 420).replace(/\s+\S*$/, "") + "..." : p.text,
+      score,
+      citation: { id: p.id, title: p.title, url: p.url, source: p.source },
+    }));
+
+  return jsonResponse({
+    question: q,
+    matched: answers.length,
+    answers,
+    note: "Retrieval over the Heliacon corpus. Each answer is a canonical passage with its provenance. No answer is generated.",
+  });
+}
+
 // The provenance capability. /provenance returns the whole record, /provenance/:id one item.
 async function provenance(pathname: string, env: Env, origin: string): Promise<Response> {
   const res = await env.ASSETS.fetch(new URL("/provenance.json", origin));
@@ -61,7 +103,8 @@ export default {
       return Response.redirect(url.toString(), 301);
     }
 
-    // The provenance capability, invocable at a stable path.
+    // Capabilities, invocable at stable paths.
+    if (url.pathname === "/ask") return ask(request, url, env);
     if (url.pathname === "/provenance" || url.pathname.startsWith("/provenance/")) {
       return provenance(url.pathname, env, url.origin);
     }

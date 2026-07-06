@@ -41,9 +41,7 @@ capabilities:
 
   - ask
   - definitions
-  - citations
   - provenance
-  - research
 
 corpus:
 

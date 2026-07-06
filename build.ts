@@ -301,6 +301,7 @@ function llmsTxt(origin: Dict, defs: Dict[], corpus: Dict[]): string {
     `> ${collapse(origin.description)}`, "",
     `Tagline: ${origin.tagline}`,
     `Canonical: ${CANON}`,
+    `Ask: ${CANON}/ask?q=`,
     `Provenance: ${CANON}/provenance`,
     `Feed: ${CANON}/feed.xml`, "",
     "One origin, many projections. This file is the projection for language models.",
@@ -316,20 +317,18 @@ function llmsTxt(origin: Dict, defs: Dict[], corpus: Dict[]): string {
   return l.join("\n") + "\n";
 }
 
+// Only the capabilities that actually resolve. Each tool names its live endpoint.
 function mcpManifest(origin: Dict): Dict {
-  const desc: Record<string, string> = {
-    ask: "Resolve a question against the Heliacon corpus and return a cited answer.",
-    definitions: "Return a canonical definition and its relationships.",
-    citations: "Return the citation and source for a claim.",
-    provenance: "Return the verifiable provenance of a claim or capability.",
-    research: "Retrieve a body of research for reasoning.",
-  };
   return {
     schema_version: "2026-03-01",
     name: "heliacon-origin",
     description: collapse(origin.description),
     canonical: CANON,
-    tools: (origin.capabilities ?? []).map((c: string) => ({ name: c, description: desc[c] ?? c })),
+    tools: [
+      { name: "ask", description: "Retrieve the passages of the Heliacon corpus that answer a question, each with its citation.", endpoint: `${CANON}/ask`, method: "GET", params: { q: "the question" } },
+      { name: "definitions", description: "Return a canonical definition as JSON.", endpoint: `${CANON}/definitions/{id}`, method: "GET", params: { id: "definition id" } },
+      { name: "provenance", description: "Return the source and version of any item.", endpoint: `${CANON}/provenance/{id}`, method: "GET", params: { id: "item id" } },
+    ],
   };
 }
 
@@ -382,6 +381,24 @@ ${entries}
 `;
 }
 
+// ask: a retrieval index over the corpus. Each passage carries its citation, so the worker can
+// answer a question with canonical passages and their provenance, no generation.
+function askIndex(defs: Dict[], corpus: Dict[]): Dict {
+  const passages: Dict[] = [];
+  for (const d of defs) {
+    const text = [collapse(d.summary), collapse(d.definition), ...(d.rationale ?? [])].filter(Boolean).join(" ");
+    passages.push({ id: d.id, kind: "definition", title: d.title, url: `${CANON}/definitions/${d.id}/`, source: `${CANON}/definitions/${d.id}.md`, text });
+  }
+  for (const c of corpus) {
+    const paras = (c.body_md ?? "").split(/\n\n+/)
+      .map((p: string) => collapse(p.replace(/^#.*$/m, "").replace(/[#*_`>-]/g, " ")))
+      .filter((p: string) => p.length > 40);
+    paras.forEach((text: string, part: number) =>
+      passages.push({ id: c.slug, kind: "essay", title: c.title, url: `${CANON}/corpus/${c.slug}/`, source: `${CANON}/corpus/${c.slug}.md`, text, part }));
+  }
+  return { count: passages.length, passages };
+}
+
 const robotsTxt = () => `User-agent: *\nAllow: /\n\nSitemap: ${CANON}/sitemap.xml\n`;
 
 // Security headers on everything, then content types and CORS for the machine projections
@@ -397,6 +414,9 @@ const HEADERS_FILE = `/*
   Content-Type: application/ld+json; charset=utf-8
   Access-Control-Allow-Origin: *
 /provenance.json
+  Content-Type: application/json; charset=utf-8
+  Access-Control-Allow-Origin: *
+/ask-index.json
   Content-Type: application/json; charset=utf-8
   Access-Control-Allow-Origin: *
 /feed.xml
@@ -476,6 +496,7 @@ async function main(): Promise<void> {
   write(join(DIST, "robots.txt"), robotsTxt());
   write(join(DIST, "_headers"), HEADERS_FILE);
   write(join(DIST, "provenance.json"), provenanceIndex(defs, corpus));
+  write(join(DIST, "ask-index.json"), askIndex(defs, corpus));
   write(join(DIST, "feed.xml"), atomFeed(origin, corpus));
   write(join(DIST, "llms.txt"), llmsTxt(origin, defs, corpus));
   write(join(DIST, ".well-known", "mcp.json"), mcpManifest(origin));
