@@ -55,6 +55,22 @@ function loadCorpus(): Dict[] {
 const loadDefinitions = (): Dict[] =>
   listFiles("definitions", ".yaml").map((f) => loadYaml(join(ROOT, "definitions", f)));
 
+// The notes stream: posts, newest first.
+function loadPosts(): Dict[] {
+  return listFiles("posts", ".md")
+    .map((f): Dict => {
+      const { meta, body } = parseFrontmatter(readFileSync(join(ROOT, "posts", f), "utf8"));
+      return { ...meta, body_md: body, slug: meta.id ?? f.replace(/\.md$/, "") };
+    })
+    .sort((a, b) => String(b.published ?? "").localeCompare(String(a.published ?? "")));
+}
+
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+function fmtDate(d: unknown): string {
+  const [y, m, day] = String(d ?? "").split("-");
+  return m ? `${Number(day)} ${MONTHS[Number(m) - 1]} ${y}` : String(d ?? "");
+}
+
 // ── helpers ──────────────────────────────────────────────────────────────────
 const esc = (s: unknown): string =>
   String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
@@ -97,6 +113,10 @@ ul{padding-left:1.1em}li{margin:6px 0}
 .card p{margin:0;color:var(--dim);font-size:16px}
 .diagram{margin:40px 0 8px}.diagram img{width:100%;height:auto;display:block}
 .center{text-align:center}
+.post-meta{font:600 13px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.04em;color:var(--dim);margin:0 0 30px}
+.post h2{font-family:Cinzel,"Iowan Old Style",Palatino,Georgia,serif;font-size:23px;letter-spacing:.02em;text-transform:none;color:var(--cream);margin:38px 0 14px}
+.post blockquote{margin:26px 0;padding:14px 20px;border-left:2px solid var(--gold);background:#141a38;border-radius:0 10px 10px 0}
+.post blockquote p{margin:0;color:var(--dim);font-size:15px;line-height:1.6}
 .hero{position:relative;left:50%;right:50%;width:100vw;margin-left:-50vw;margin-right:-50vw;margin-top:-44px;min-height:94vh;display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(11,16,41,.95),rgba(11,16,41,.7) 30%,rgba(11,16,41,.2) 52%,rgba(11,16,41,.6)),url(/assets/hero.jpg) center 20%/cover no-repeat;background-color:var(--ink)}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 26px}
 .topbar .wm img{width:150px;height:auto;display:block}
@@ -176,6 +196,7 @@ function page(title: string, body: string, canonicalPath: string, opts: PageOpts
 <div class="wrap">
 <main>${body}</main>
 <footer>
+  <a href="/notes/">Notes</a> ·
   <a href="/manifesto/">Manifesto</a> ·
   <a href="/architecture/">Architecture</a> ·
   <a href="/llms.txt">llms.txt</a> ·
@@ -214,8 +235,11 @@ const PILLAR_LINE: Record<string, string> = {
   sovereignty: "You hold the origin. No one rents it to you.",
 };
 
-function homeHtml(origin: Dict, defs: Dict[]): string {
+function homeHtml(origin: Dict, defs: Dict[], posts: Dict[]): string {
   const byId = Object.fromEntries(defs.map((d) => [d.id, d]));
+  const notes = posts.slice(0, 3).map((p) =>
+    `<a class="card" href="/notes/${p.slug}/"><span class="k">${fmtDate(p.published)}</span>` +
+    `<h3>${esc(p.title)}</h3><p>${esc(collapse(p.summary ?? ""))}</p></a>`).join("");
   const order = ["origin", "projection", "invocation", "capability", "provenance", "privacy", "sovereignty"];
   const pillars = order.map((id) => byId[id]).filter(Boolean).map((d) =>
     `<a class="pillar" href="/definitions/${d.id}/">${icon(d.id)}` +
@@ -248,6 +272,8 @@ negotiates the projection most appropriate for it, from one source of truth.</p>
 
 <figure class="diagram"><img src="/assets/diagram.svg" width="920" height="460"
   alt="One origin, origin.yaml and the corpus, projected to HTML for browsers, JSON for agents, JSON-LD for crawlers, Markdown for writers, llms.txt for models and MCP for tools, negotiated by Accept"></figure>
+
+${notes ? `<h2>Notes</h2>\n${notes}\n<p class="proj"><a href="/notes/">All notes</a> · <a href="/feed.xml">Feed</a></p>` : ""}
 
 <h2>Invoke</h2>
 <p class="proj">The same origin, negotiated for whoever asks:
@@ -349,7 +375,7 @@ function jsonld(origin: Dict, defs: Dict[]): Dict {
   };
 }
 
-function llmsTxt(origin: Dict, defs: Dict[], corpus: Dict[]): string {
+function llmsTxt(origin: Dict, defs: Dict[], corpus: Dict[], posts: Dict[]): string {
   const l: string[] = [
     `# ${origin.name}`, "",
     `> ${collapse(origin.description)}`, "",
@@ -357,11 +383,14 @@ function llmsTxt(origin: Dict, defs: Dict[], corpus: Dict[]): string {
     `Canonical: ${CANON}`,
     `Manifesto: ${CANON}/manifesto`,
     `Architecture: ${CANON}/architecture`,
+    `Notes: ${CANON}/notes`,
     `Ask: ${CANON}/ask?q=`,
     `MCP: ${CANON}/mcp`,
     `Provenance: ${CANON}/provenance`,
     `Feed: ${CANON}/feed.xml`, "",
     "One origin, many projections. This file is the projection for language models.",
+    "", "## Notes",
+    ...posts.map((p) => `- [${p.title}](${CANON}/notes/${p.slug}.md): ${collapse(p.summary ?? "")}`),
     "", "## Definitions",
     ...defs.map((d) => `- [${d.title}](${CANON}/definitions/${d.id}.md): ${collapse(d.summary)}`),
     "", "## Corpus",
@@ -390,8 +419,11 @@ function mcpManifest(origin: Dict): Dict {
   };
 }
 
-function sitemapXml(defs: Dict[], corpus: Dict[]): string {
-  const urls = ["/", "/manifesto/", "/architecture/", ...defs.map((d) => `/definitions/${d.id}/`), ...corpus.map((c) => `/corpus/${c.slug}/`)];
+function sitemapXml(defs: Dict[], corpus: Dict[], posts: Dict[]): string {
+  const urls = ["/", "/manifesto/", "/architecture/", "/notes/",
+    ...posts.map((p) => `/notes/${p.slug}/`),
+    ...defs.map((d) => `/definitions/${d.id}/`),
+    ...corpus.map((c) => `/corpus/${c.slug}/`)];
   const items = urls.map((u) => `  <url><loc>${CANON}${u}</loc></url>`).join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${items}\n</urlset>\n`;
 }
@@ -416,15 +448,15 @@ function provenanceIndex(defs: Dict[], corpus: Dict[]): Dict {
   return { origin: "heliacon", count: items.length, items };
 }
 
-function atomFeed(origin: Dict, corpus: Dict[]): string {
-  const latest = corpus.map((c) => c.updated).filter(Boolean).sort().pop() ?? "2026-01-01";
-  const summary = (c: Dict) => collapse((c.body_md ?? "").replace(/^#.*$/m, "").replace(/[#*_`>-]/g, "")).slice(0, 200);
-  const entries = corpus.map((c) => `  <entry>
-    <title>${esc(c.title)}</title>
-    <link href="${CANON}/corpus/${c.slug}/"/>
-    <id>${CANON}/corpus/${c.slug}/</id>
-    <updated>${c.updated ?? latest}T00:00:00Z</updated>
-    <summary>${esc(summary(c))}</summary>
+function atomFeed(origin: Dict, posts: Dict[]): string {
+  const latest = posts.map((p) => p.updated ?? p.published).filter(Boolean).sort().pop() ?? "2026-01-01";
+  const summary = (p: Dict) => collapse(String(p.summary ?? (p.body_md ?? "").replace(/^#.*$/m, "").replace(/[#*_`>-]/g, ""))).slice(0, 240);
+  const entries = posts.map((p) => `  <entry>
+    <title>${esc(p.title)}</title>
+    <link href="${CANON}/notes/${p.slug}/"/>
+    <id>${CANON}/notes/${p.slug}/</id>
+    <updated>${p.updated ?? p.published ?? latest}T00:00:00Z</updated>
+    <summary>${esc(summary(p))}</summary>
   </entry>`).join("\n");
   return `<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
@@ -504,6 +536,7 @@ async function main(): Promise<void> {
   const origin = loadYaml(join(ROOT, "origin.yaml"));
   const defs = loadDefinitions();
   const corpus = loadCorpus();
+  const posts = loadPosts();
 
   if (existsSync(DIST)) rmSync(DIST, { recursive: true });
   mkdirSync(DIST);
@@ -518,7 +551,7 @@ async function main(): Promise<void> {
   write(join(DIST, "styles.css"), minifyCss(CSS));
 
   // homepage (HTML projection of the origin)
-  write(join(DIST, "index.html"), minifyHtml(homeHtml(origin, defs)));
+  write(join(DIST, "index.html"), minifyHtml(homeHtml(origin, defs, posts)));
 
   // 404 (served by the Worker's not_found_handling)
   write(join(DIST, "404.html"), minifyHtml(page("Not found · Heliacon",
@@ -562,16 +595,43 @@ async function main(): Promise<void> {
     write(join(DIST, `${doc.slug}.md`), md);
   }
 
+  // notes: the posts stream (index + each post, html and markdown projections)
+  const notesCards = posts.map((p) =>
+    `<a class="card" href="/notes/${p.slug}/"><span class="k">${fmtDate(p.published)}</span>` +
+    `<h3>${esc(p.title)}</h3><p>${esc(collapse(p.summary ?? ""))}</p></a>`).join("");
+  write(join(DIST, "notes", "index.html"), minifyHtml(page("Notes · Heliacon",
+    `<a class="back" href="/">&larr; Heliacon</a>
+     <h1 style="margin-top:32px">Notes</h1>
+     <p class="lede">Field notes and essays from the work. Published here first, and canonical here always.</p>
+     ${notesCards}`,
+    "/notes/", { description: "Field notes and essays from Heliacon. Published here first, canonical here always." })));
+
+  for (const p of posts) {
+    const htmlBody = await marked.parse(p.body_md.replace(/^#\s+.*\n/, ""));
+    const syn = Array.isArray(p.syndicated) && p.syndicated[0]
+      ? ` · originally on <a href="${p.syndicated[0]}" rel="noopener">LinkedIn</a>` : "";
+    write(join(DIST, "notes", p.slug, "index.html"), minifyHtml(page(`${p.title} · Heliacon`,
+      `<a class="back" href="/notes/">&larr; Notes</a>
+       <article class="post"><h1>${esc(p.title)}</h1>
+       <p class="post-meta">${fmtDate(p.published)} · ${esc(p.author ?? "Pete Dainty")}${syn}</p>
+       ${htmlBody}</article>`,
+      `/notes/${p.slug}/`, {
+        description: collapse(p.summary ?? "").slice(0, 155),
+        alternates: { "text/markdown": `${CANON}/notes/${p.slug}.md` },
+      })));
+    write(join(DIST, "notes", `${p.slug}.md`), p.body_md);
+  }
+
   // discovery + crawl projections
-  write(join(DIST, "sitemap.xml"), sitemapXml(defs, corpus));
+  write(join(DIST, "sitemap.xml"), sitemapXml(defs, corpus, posts));
   write(join(DIST, "robots.txt"), robotsTxt());
   write(join(DIST, "_headers"), HEADERS_FILE);
   write(join(DIST, "provenance.json"), provenanceIndex(defs, corpus));
   write(join(DIST, "ask-index.json"), askIndex(defs, corpus));
-  write(join(DIST, "feed.xml"), atomFeed(origin, corpus));
-  write(join(DIST, "llms.txt"), llmsTxt(origin, defs, corpus));
+  write(join(DIST, "feed.xml"), atomFeed(origin, posts));
+  write(join(DIST, "llms.txt"), llmsTxt(origin, defs, corpus, posts));
   write(join(DIST, ".well-known", "mcp.json"), mcpManifest(origin));
-  write(join(DIST, ".well-known", "llms.txt"), llmsTxt(origin, defs, corpus));
+  write(join(DIST, ".well-known", "llms.txt"), llmsTxt(origin, defs, corpus, posts));
   write(join(DIST, "schemas", "definition.schema.json"),
     readFileSync(join(ROOT, "schemas", "definition.schema.json"), "utf8"));
 
