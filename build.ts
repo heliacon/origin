@@ -121,6 +121,8 @@ ul{padding-left:1.1em}li{margin:6px 0}
 .post figure.fig img{width:100%;display:block;border-radius:12px;border:1px solid #2a3050}
 .post figcaption{margin-top:10px;color:var(--dim);font-size:14px;line-height:1.55}
 .post figcaption strong{color:var(--cream)}
+.cta{display:inline-block;background:var(--gold);color:var(--ink);font:600 15px/1 ui-sans-serif,system-ui,sans-serif;padding:14px 24px;border-radius:12px;margin-top:6px}
+.cta:hover{filter:brightness(1.08);text-decoration:none}
 .hero{position:relative;left:50%;right:50%;width:100vw;margin-left:-50vw;margin-right:-50vw;margin-top:-44px;min-height:94vh;display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(11,16,41,.95),rgba(11,16,41,.7) 30%,rgba(11,16,41,.2) 52%,rgba(11,16,41,.6)),url(/assets/hero.jpg) center 20%/cover no-repeat;background-color:var(--ink)}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 26px}
 .topbar .wm img{width:150px;height:auto;display:block}
@@ -200,6 +202,8 @@ function page(title: string, body: string, canonicalPath: string, opts: PageOpts
 <div class="wrap">
 <main>${body}</main>
 <footer>
+  <a href="/consulting/">Consulting</a> ·
+  <a href="/products/">Products</a> ·
   <a href="/notes/">Notes</a> ·
   <a href="/manifesto/">Manifesto</a> ·
   <a href="/architecture/">Architecture</a> ·
@@ -273,6 +277,10 @@ function homeHtml(origin: Dict, defs: Dict[], posts: Dict[]): string {
 
 <p class="lede center">The browser is not privileged. Neither is the agent. Every consumer
 negotiates the projection most appropriate for it, from one source of truth.</p>
+
+<h2>Work with Heliacon</h2>
+<a class="card" href="/consulting/"><span class="k">Consulting</span><h3>Be found, trusted and invoked</h3><p>Origin-first SEO, AEO, GEO and agentic consulting, for companies who need to be read by machines.</p></a>
+<a class="card" href="/products/"><span class="k">Studio</span><h3>Apps, tools and games</h3><p>Products that prove the research. In development.</p></a>
 
 <figure class="diagram"><img src="/assets/diagram.svg" width="920" height="460"
   alt="One origin, origin.yaml and the corpus, projected to HTML for browsers, JSON for agents, JSON-LD for crawlers, Markdown for writers, llms.txt for models and MCP for tools, negotiated by Accept"></figure>
@@ -387,6 +395,8 @@ function llmsTxt(origin: Dict, defs: Dict[], corpus: Dict[], posts: Dict[]): str
     `Canonical: ${CANON}`,
     `Manifesto: ${CANON}/manifesto`,
     `Architecture: ${CANON}/architecture`,
+    `Consulting: ${CANON}/consulting`,
+    `Products: ${CANON}/products`,
     `Notes: ${CANON}/notes`,
     `Ask: ${CANON}/ask?q=`,
     `MCP: ${CANON}/mcp`,
@@ -424,7 +434,7 @@ function mcpManifest(origin: Dict): Dict {
 }
 
 function sitemapXml(defs: Dict[], corpus: Dict[], posts: Dict[]): string {
-  const urls = ["/", "/manifesto/", "/architecture/", "/notes/",
+  const urls = ["/", "/consulting/", "/products/", "/manifesto/", "/architecture/", "/notes/",
     ...posts.map((p) => `/notes/${p.slug}/`),
     ...defs.map((d) => `/definitions/${d.id}/`),
     ...corpus.map((c) => `/corpus/${c.slug}/`)];
@@ -590,6 +600,8 @@ async function main(): Promise<void> {
   for (const doc of [
     { slug: "manifesto", src: "manifesto.md", title: "Manifesto", desc: "The Heliacon manifesto. A studio and a consultancy, built on a canonical origin." },
     { slug: "architecture", src: join("docs", "architecture.md"), title: "Architecture", desc: "How Heliacon is built. One canonical origin, many projections, negotiated for whoever asks." },
+    { slug: "consulting", src: "consulting.md", title: "Consulting", desc: "Origin-first consulting. Be found, trusted and invoked. SEO, AEO, GEO and agentic, for a world where the reader is often a machine." },
+    { slug: "products", src: "products.md", title: "Products", desc: "Apps, tools and games that prove the research. Each a projection of the same origin." },
   ]) {
     const md = readFileSync(join(ROOT, doc.src), "utf8");
     const htmlBody = await marked.parse(md);
