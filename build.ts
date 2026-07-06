@@ -96,6 +96,35 @@ ul{padding-left:1.1em}li{margin:6px 0}
 .card h3{margin:8px 0 4px;color:var(--cream)}
 .card p{margin:0;color:var(--dim);font-size:16px}
 .diagram{margin:40px 0 8px}.diagram img{width:100%;height:auto;display:block}
+.center{text-align:center}
+.hero{position:relative;left:50%;right:50%;width:100vw;margin-left:-50vw;margin-right:-50vw;margin-top:-44px;min-height:94vh;display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(11,16,41,.95),rgba(11,16,41,.7) 30%,rgba(11,16,41,.2) 52%,rgba(11,16,41,.6)),url(/assets/hero.jpg) center 20%/cover no-repeat;background-color:var(--ink)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 26px}
+.topbar .wm img{width:150px;height:auto;display:block}
+.status{font:600 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.05em;color:var(--dim);display:flex;align-items:center;gap:7px}
+.status i{width:7px;height:7px;border-radius:50%;background:#33a06a;box-shadow:0 0 9px #33a06a}
+.status.off i{background:#8890b4;box-shadow:none}
+.hero-in{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:100%;max-width:760px;margin:0 auto;padding:20px 24px 90px}
+.fl{font-size:clamp(40px,7vw,66px);line-height:1.05;margin:0 0 12px;color:var(--cream);text-shadow:0 2px 34px rgba(0,0,0,.55)}
+.fl .gold{color:var(--gold)}
+.sub{font-size:20px;color:#e3e7f5;margin:0 0 34px;text-shadow:0 1px 22px rgba(0,0,0,.7)}
+.askbox{display:flex;align-items:center;gap:8px;width:min(640px,100%);background:rgba(18,24,54,.66);backdrop-filter:blur(8px);border:1px solid #3a4778;border-radius:14px;padding:6px 6px 6px 20px;transition:border-color .15s}
+.askbox:focus-within{border-color:var(--gold)}
+.askbox input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--cream);font:400 17px/1.4 "Iowan Old Style",Palatino,Georgia,serif;padding:14px 0}
+.askbox input::placeholder{color:#8f97ba}
+.askbox button{flex:none;width:44px;height:44px;border-radius:10px;border:0;background:var(--gold);color:var(--ink);font:700 20px/1 serif;cursor:pointer}
+.askbox button:hover{filter:brightness(1.08)}
+.hint{font-size:14px;color:#8f97ba;margin:16px 0 0}
+.answers{width:min(640px,100%);margin:22px auto 0;display:grid;gap:10px;text-align:left}
+.answers .ans{display:block;padding:14px 16px;border:1px solid #2a3050;border-radius:12px;background:rgba(18,24,54,.72)}
+.answers .ans:hover{border-color:var(--gold);text-decoration:none}
+.answers .ans-t{display:block;font:600 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.answers .ans-x{display:block;color:#c9cee6;font-size:15px}
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:10px 0 44px}
+.pillar{display:block;padding:18px 18px 20px;border:1px solid #2a3050;border-radius:14px;background:#141a38;transition:border-color .15s,transform .1s}
+.pillar:hover{border-color:var(--gold);transform:translateY(-1px);text-decoration:none}
+.pillar svg{width:24px;height:24px;stroke:var(--gold);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;display:block;margin-bottom:12px}
+.pillar .p-n{display:block;font-family:Cinzel,"Iowan Old Style",Palatino,Georgia,serif;font-size:19px;color:var(--cream);letter-spacing:.02em;margin-bottom:5px}
+.pillar .p-l{display:block;color:var(--dim);font-size:14px;line-height:1.5}
 .proj{font:500 13px/1.8 ui-sans-serif,system-ui,sans-serif;color:var(--dim)}
 .proj a{color:var(--dim);border:1px solid #2a3050;border-radius:999px;padding:4px 12px;margin:0 6px 8px 0;display:inline-block}
 .proj a:hover{color:var(--gold);border-color:var(--gold);text-decoration:none}
@@ -162,51 +191,75 @@ function page(title: string, body: string, canonicalPath: string, opts: PageOpts
 // inlining ~12KB of SVG into the homepage HTML.
 const logoImg = (): string => '<img src="/assets/logo/wordmark.svg" alt="Heliacon">';
 
-function homeHtml(origin: Dict, defs: Dict[]): string {
-  const caps = (origin.capabilities ?? []).map((c: string) => `<li><code>${esc(c)}</code></li>`).join("");
-  const prin = ["Provenance by default.", "Privacy by architecture.", "Capability over content.",
-    "Invocation over attention.", "One origin. Many projections."]
-    .map((x) => `<li>${esc(x)}</li>`).join("");
-  const byId = Object.fromEntries(defs.map((d) => [d.id, d]));
-  const cards = ["origin", "projection", "invocation", "capability", "provenance", "privacy", "sovereignty"]
-    .map((id) => byId[id]).filter(Boolean)
-    .map((d) =>
-      `<a class="card" href="/definitions/${d.id}/"><span class="k">Definition</span>` +
-      `<h3>${esc(d.title)}</h3><p>${esc(collapse(d.summary))}</p></a>`).join("");
-  const body = `
-<h1 class="sr-only">Heliacon: a trusted origin for knowledge, capability and provenance</h1>
-<header class="mast">
-  <a href="/" aria-label="Heliacon" style="display:block">${logoImg()}</a>
-  <div class="tag">Be first light</div>
-</header>
+// Minimal line icons for the seven pillars, drawn to a common 24x24 grid.
+const ICON: Record<string, string> = {
+  origin: '<circle cx="12" cy="12" r="3.4"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.2 5.2l1.9 1.9M16.9 16.9l1.9 1.9M18.8 5.2l-1.9 1.9M7.1 16.9l-1.9 1.9"/>',
+  projection: '<circle cx="4.5" cy="12" r="1.6"/><path d="M6 12h14M6.4 11l13-5.4M6.4 13l13 5.4"/>',
+  invocation: '<path d="M13 2.5 4.5 13.5H11l-1.5 8 8.5-11H11z"/>',
+  capability: '<path d="M12 2.6l8.2 4.7v9.4L12 21.4 3.8 16.7V7.3z"/>',
+  provenance: '<path d="M12 2.6l7.4 2.7v5.6c0 4.6-3.2 7.4-7.4 9-4.2-1.6-7.4-4.4-7.4-9V5.3z"/><path d="M8.8 12l2.2 2.2 4.2-4.4"/>',
+  privacy: '<rect x="5" y="10.6" width="14" height="9.4" rx="2"/><path d="M8 10.6V7a4 4 0 0 1 8 0v3.6"/>',
+  sovereignty: '<path d="M4 18.5h16M4.5 18l1.1-9.2 4.7 3.9L12 6l1.7 6.7 4.7-3.9 1.1 9.2"/>',
+};
+const icon = (id: string): string => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICON[id] ?? ICON.origin}</svg>`;
 
-<p class="lede">Heliacon is a trusted origin for knowledge, capability and provenance. It is the
-canonical source from which every projection is derived.</p>
-<p>The browser is not privileged. Neither is the agent. Every consumer negotiates the
-projection most appropriate for its capabilities, from one source of truth.</p>
+const PILLAR_LINE: Record<string, string> = {
+  origin: "One canonical source. Everything derives from it.",
+  projection: "HTML, JSON, MCP. Rendered for whoever asks.",
+  invocation: "Measured by use, not attention.",
+  capability: "What an origin can do, not just publish.",
+  provenance: "Citable. Verifiable. Always.",
+  privacy: "No tracking. No profiling. Yours stays yours.",
+  sovereignty: "You hold the origin. No one rents it to you.",
+};
+
+function homeHtml(origin: Dict, defs: Dict[]): string {
+  const byId = Object.fromEntries(defs.map((d) => [d.id, d]));
+  const order = ["origin", "projection", "invocation", "capability", "provenance", "privacy", "sovereignty"];
+  const pillars = order.map((id) => byId[id]).filter(Boolean).map((d) =>
+    `<a class="pillar" href="/definitions/${d.id}/">${icon(d.id)}` +
+    `<span class="p-n">${esc(d.title)}</span>` +
+    `<span class="p-l">${esc(PILLAR_LINE[d.id] ?? collapse(d.summary))}</span></a>`).join("");
+
+  const body = `
+<section class="hero">
+  <header class="topbar">
+    <a href="/" aria-label="Heliacon" class="wm">${logoImg()}</a>
+    <span class="status" id="status"><i></i>Origin online</span>
+  </header>
+  <div class="hero-in">
+    <h1 class="fl">Be <span class="gold">first light</span>.</h1>
+    <p class="sub">A trusted origin for capability.</p>
+    <form class="askbox" id="ask" action="/ask" method="get">
+      <input id="q" name="q" placeholder="What are you trying to accomplish?" autocomplete="off" aria-label="Ask the origin">
+      <button type="submit" aria-label="Ask">&rarr;</button>
+    </form>
+    <p class="hint">Tell us your intent. We will show you what is relevant.</p>
+    <div class="answers" id="answers"></div>
+  </div>
+</section>
+
+<h2 class="center">The pillars</h2>
+<div class="pillars">${pillars}</div>
+
+<p class="lede center">The browser is not privileged. Neither is the agent. Every consumer
+negotiates the projection most appropriate for it, from one source of truth.</p>
 
 <figure class="diagram"><img src="/assets/diagram.svg" width="920" height="460"
   alt="One origin, origin.yaml and the corpus, projected to HTML for browsers, JSON for agents, JSON-LD for crawlers, Markdown for writers, llms.txt for models and MCP for tools, negotiated by Accept"></figure>
 
-<h2>The definitions</h2>
-${cards}
-
-<h2>Principles</h2>
-<ul>${prin}</ul>
-
-<h2>Capabilities</h2>
-<ul>${caps}</ul>
-
-<h2>Projections</h2>
+<h2>Invoke</h2>
 <p class="proj">The same origin, negotiated for whoever asks:
+  <a href="/ask?q=what+is+an+origin">Ask</a>
+  <a href="/.well-known/mcp.json">MCP</a>
+  <a href="/provenance">Provenance</a>
   <a href="/origin.md">Markdown</a>
   <a href="/origin.json">JSON</a>
   <a href="/origin.jsonld">JSON-LD</a>
   <a href="/llms.txt">llms.txt</a>
-  <a href="/.well-known/mcp.json">MCP</a>
-  <a href="/provenance">Provenance</a>
   <a href="/feed.xml">Feed</a>
-</p>`;
+</p>
+<script src="/assets/app.js" defer></script>`;
   return page("Heliacon · Be first light", body, "/", {
     description: collapse(origin.description),
     jsonld: jsonld(origin, defs),
