@@ -18,9 +18,16 @@ URL. Everything else falls through to the static assets. It also forces HTTPS.
 
 ## Auto-deploy (Workers Builds)
 
-The `heliacon-origin` worker exists already, created by `wrangler deploy` from the CLI. A worker
-created that way has **no Git connection**, which is why a plain `git push` does not redeploy.
-Connect it once and pushes deploy themselves:
+Connected and working. A push to `main` builds and deploys automatically in about a minute, so
+`npm run deploy` is only needed for a manual out-of-band deploy. Watch runs under the Worker's
+**Builds** tab.
+
+The one thing that had it silently not firing: the Cloudflare GitHub App did not have access to
+`heliacon/origin`. Because the repo is on the separate **`heliacon`** account, the grant has to be
+made there (`github.com/settings/installations` while signed in as `heliacon`), not on the main
+account. If auto-deploy ever stops, check that first.
+
+For reference, the original one-time connection was:
 
 1. Cloudflare dashboard → **Compute → Workers** (2026 sidebar; Workers & Pages moved under
    **Compute**) → open **`heliacon-origin`** → **Settings → Builds**.
