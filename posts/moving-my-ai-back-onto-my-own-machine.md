@@ -31,13 +31,19 @@ The big AI companies are about to go public and the moment a company has shareho
 
 The cost of any given level of capability has dropped roughly 10x a year but the flagship models you want to use have currently stopped getting cheaper and have started going back up (Fig. 1). My bill is also likely going up because not only do they need to profit and justify the hype and high valuations but also because we're using way more of it whether we realise it or not.
 
-> **Figure 1. Frontier flagship costs got cheaper but have started to climb.** Frontier flagship output token price per million tokens, by lab. Each line tracks that lab's most capable model at each date; excludes mini, fast and mid-tier variants. Standard-tier list prices, not Fast Mode, caching or batch discounts. Data: pricepertoken.com/trends and vendor pricing pages (OpenAI, Anthropic, Google).
+<figure class="fig">
+<img src="/assets/notes/fig1-frontier-cost.png" alt="Line chart of frontier flagship output cost per million tokens by lab from 2023 to 2026, falling sharply then climbing again.">
+<figcaption><strong>Figure 1. Frontier flagship costs got cheaper but have started to climb.</strong> Frontier flagship output token price per million tokens, by lab. Each line tracks that lab's most capable model at each date; excludes mini, fast and mid-tier variants. Standard-tier list prices, not Fast Mode, caching or batch discounts. Data: pricepertoken.com/trends and vendor pricing pages (OpenAI, Anthropic, Google).</figcaption>
+</figure>
 
 Modern AI agents don't just answer a question, they think, loop, double check themselves, run several copies at once etc. In order to improve the quality, each task now munches through more tokens than a simple chat used to. So even though each token costs a fraction of what it did, the bill still goes up, because you're using more of them (Fig. 2).
 
 Whether or not they need to, everyone is also putting an LLM call into their workflows and specific components which all adds up too in numerous ways, not just $ cost but also things like latency and complexity for example. All those data centres also need to be funded somehow, paying back the massive investments and keeping the promises that have been made.
 
-> **Figure 2. What one task actually costs by interaction type.** An agentic task uses ~3500x the tokens of a single reasoning query (~1200x a multi-round chat), driven by the same context being re-read every round. The dollar gap is smaller than the token gap because most of the re-read context is cached and billed at a discount. Source: "How Do AI Agents Spend Your Money?", arXiv:2604.22750 (Stanford / Michigan / All Hands AI, 2026), measured on SWE-bench coding tasks across 8 frontier models. <https://arxiv.org/abs/2604.22750>
+<figure class="fig">
+<img src="/assets/notes/fig2-token-cost.png" alt="Two bar charts comparing an agentic coding task with a reasoning query and a chat: token usage about 4.17 million versus near zero, and cost about 1.87 dollars versus a few cents.">
+<figcaption><strong>Figure 2. What one task actually costs by interaction type.</strong> An agentic task uses ~3500x the tokens of a single reasoning query (~1200x a multi-round chat), driven by the same context being re-read every round. The dollar gap is smaller than the token gap because most of the re-read context is cached and billed at a discount. Source: "How Do AI Agents Spend Your Money?", arXiv:2604.22750 (Stanford / Michigan / All Hands AI, 2026), measured on SWE-bench coding tasks across 8 frontier models. <a href="https://arxiv.org/abs/2604.22750">arxiv.org/abs/2604.22750</a></figcaption>
+</figure>
 
 I found when I wanted to commit to Github or navigate files for example via a prompt, instead of calling an LLM to understand what I wanted, I wrote a lightweight classifier ahead of the LLM to run the actions. My tool classifier handled the commands in under 5ms instead of ~20 seconds and still matched the LLMs 96% to 100% of the time. AI is being used to replace any mundane task even when there are cheaper ways to achieve the same thing and if every task is being completed this way, then costs will rise. Of course I could also just type the commands myself but when AI works well it saves so much time.
 
@@ -87,7 +93,10 @@ But perhaps a better comparison are ad blockers where it's a one click install a
 
 As an additional parallel, look at the trends for home PC and smartphone adoption in the US and this is moving faster (Fig. 3).
 
-> **Figure 3. Technology adoption trends.** US adoption of three technologies by years since first tracked. Sources: US Census Bureau, Current Population Survey (household computer ownership, 1984 to 2016); Pew Research Center (US adult smartphone ownership, 2011 to 2025); Pew Research Center (US adults who've used ChatGPT) and St. Louis Fed / Bick, Blandin & Deming (generative AI usage, adults 18 to 64). Years since first tracked counts from each technology's first survey data point and not its launch, e.g. smartphones were first measured in 2011, about 4 years after the iPhone. Denominators differ, households for computers, adults for smartphones and AI, so the comparison is indicative and not exact.
+<figure class="fig">
+<img src="/assets/notes/fig3-adoption.png" alt="Line chart of US adoption of home computers, smartphones and generative AI by years since first tracked, with generative AI rising fastest.">
+<figcaption><strong>Figure 3. Technology adoption trends.</strong> US adoption of three technologies by years since first tracked. Sources: US Census Bureau, Current Population Survey (household computer ownership, 1984 to 2016); Pew Research Center (US adult smartphone ownership, 2011 to 2025); Pew Research Center (US adults who've used ChatGPT) and St. Louis Fed / Bick, Blandin & Deming (generative AI usage, adults 18 to 64). Years since first tracked counts from each technology's first survey data point and not its launch, e.g. smartphones were first measured in 2011, about 4 years after the iPhone. Denominators differ, households for computers, adults for smartphones and AI, so the comparison is indicative and not exact.</figcaption>
+</figure>
 
 But I also think that this goes even further. Right now most are bolting AI onto existing software, a little assistant in the corner of the app or whatever. I think that flips entirely and AI basically becomes the operating system and you'll really want that living on hardware you own. For example, Microsoft is already reorganising Windows around an agentic future.
 

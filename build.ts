@@ -117,6 +117,10 @@ ul{padding-left:1.1em}li{margin:6px 0}
 .post h2{font-family:Cinzel,"Iowan Old Style",Palatino,Georgia,serif;font-size:23px;letter-spacing:.02em;text-transform:none;color:var(--cream);margin:38px 0 14px}
 .post blockquote{margin:26px 0;padding:14px 20px;border-left:2px solid var(--gold);background:#141a38;border-radius:0 10px 10px 0}
 .post blockquote p{margin:0;color:var(--dim);font-size:15px;line-height:1.6}
+.post figure.fig{margin:28px 0}
+.post figure.fig img{width:100%;display:block;border-radius:12px;border:1px solid #2a3050}
+.post figcaption{margin-top:10px;color:var(--dim);font-size:14px;line-height:1.55}
+.post figcaption strong{color:var(--cream)}
 .hero{position:relative;left:50%;right:50%;width:100vw;margin-left:-50vw;margin-right:-50vw;margin-top:-44px;min-height:94vh;display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(11,16,41,.95),rgba(11,16,41,.7) 30%,rgba(11,16,41,.2) 52%,rgba(11,16,41,.6)),url(/assets/hero.jpg) center 20%/cover no-repeat;background-color:var(--ink)}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 26px}
 .topbar .wm img{width:150px;height:auto;display:block}
