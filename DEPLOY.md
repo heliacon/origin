@@ -16,18 +16,26 @@ URL. Everything else falls through to the static assets. It also forces HTTPS.
 - Config: `wrangler.jsonc`. `name: heliacon-origin`, `main: worker.ts`, `assets.directory: ./dist`.
 - Output: `dist/`. HTML plus JSON, JSON-LD, Markdown, llms.txt and MCP projections.
 
-## Dashboard setup (one-time)
+## Auto-deploy (Workers Builds)
 
-Repo is already pushed to `github.com/heliacon/origin`.
+The `heliacon-origin` worker exists already, created by `wrangler deploy` from the CLI. A worker
+created that way has **no Git connection**, which is why a plain `git push` does not redeploy.
+Connect it once and pushes deploy themselves:
 
-1. Cloudflare dashboard → **Compute → Workers** (new 2026 sidebar; Workers & Pages moved
-   under **Compute**) → **Create** → **Import a repository** / **Connect to Git**.
-2. Authorize the **`heliacon`** GitHub account → pick **`heliacon/origin`** → branch `main`.
+1. Cloudflare dashboard → **Compute → Workers** (2026 sidebar; Workers & Pages moved under
+   **Compute**) → open **`heliacon-origin`** → **Settings → Builds**.
+2. **Connect** → authorize the **`heliacon`** GitHub account → repo **`heliacon/origin`** →
+   branch `main`.
 3. Build settings:
    - Build command: `npm run build`
-   - Deploy command: `npx wrangler deploy`   (default — leave as is)
+   - Deploy command: `npx wrangler deploy`   (default, leave as is)
    - Root directory: `/`   (leave default)
-4. Deploy → you get `heliacon-origin.<subdomain>.workers.dev`.
+4. Save. The next push to `main` triggers a build and deploy. Watch it under the worker's
+   **Builds** tab.
+
+If it still does not fire: the connected branch must be `main`, the GitHub App must have access
+to the `heliacon/origin` repo, and the build must pass `npm run build` (check the Builds log).
+Until connected, keep deploying with `npm run deploy`.
 
 ### Custom domain
 Worker → **Settings → Domains & Routes → Add → Custom domain** → `heliacon.com` (and `www`).

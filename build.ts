@@ -95,6 +95,7 @@ ul{padding-left:1.1em}li{margin:6px 0}
 .card .k{font:600 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
 .card h3{margin:8px 0 4px;color:var(--cream)}
 .card p{margin:0;color:var(--dim);font-size:16px}
+.diagram{margin:40px 0 8px}.diagram img{width:100%;height:auto;display:block}
 .proj{font:500 13px/1.8 ui-sans-serif,system-ui,sans-serif;color:var(--dim)}
 .proj a{color:var(--dim);border:1px solid #2a3050;border-radius:999px;padding:4px 12px;margin:0 6px 8px 0;display:inline-block}
 .proj a:hover{color:var(--gold);border-color:var(--gold);text-decoration:none}
@@ -184,6 +185,9 @@ canonical source from which every projection is derived.</p>
 <p>The browser is not privileged. Neither is the agent. Every consumer negotiates the
 projection most appropriate for its capabilities, from one source of truth.</p>
 
+<figure class="diagram"><img src="/assets/diagram.svg" width="920" height="460"
+  alt="One origin, origin.yaml and the corpus, projected to HTML for browsers, JSON for agents, JSON-LD for crawlers, Markdown for writers, llms.txt for models and MCP for tools, negotiated by Accept"></figure>
+
 <h2>The definitions</h2>
 ${cards}
 
@@ -200,6 +204,8 @@ ${cards}
   <a href="/origin.jsonld">JSON-LD</a>
   <a href="/llms.txt">llms.txt</a>
   <a href="/.well-known/mcp.json">MCP</a>
+  <a href="/provenance">Provenance</a>
+  <a href="/feed.xml">Feed</a>
 </p>`;
   return page("Heliacon · Be first light", body, "/", {
     description: collapse(origin.description),
@@ -208,6 +214,7 @@ ${cards}
       "text/markdown": `${CANON}/origin.md`,
       "application/json": `${CANON}/origin.json`,
       "application/ld+json": `${CANON}/origin.jsonld`,
+      "application/atom+xml": `${CANON}/feed.xml`,
     },
   });
 }
@@ -293,7 +300,9 @@ function llmsTxt(origin: Dict, defs: Dict[], corpus: Dict[]): string {
     `# ${origin.name}`, "",
     `> ${collapse(origin.description)}`, "",
     `Tagline: ${origin.tagline}`,
-    `Canonical: ${CANON}`, "",
+    `Canonical: ${CANON}`,
+    `Provenance: ${CANON}/provenance`,
+    `Feed: ${CANON}/feed.xml`, "",
     "One origin, many projections. This file is the projection for language models.",
     "", "## Definitions",
     ...defs.map((d) => `- [${d.title}](${CANON}/definitions/${d.id}.md): ${collapse(d.summary)}`),
@@ -330,6 +339,49 @@ function sitemapXml(defs: Dict[], corpus: Dict[]): string {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${items}\n</urlset>\n`;
 }
 
+// provenance: for every item, where it came from and which version. The verifiable record
+// behind each projection. Served whole at /provenance.json and per item by the worker.
+function provenanceIndex(defs: Dict[], corpus: Dict[]): Dict {
+  const items = [
+    ...defs.map((d) => ({
+      id: d.id, kind: "definition", title: d.title,
+      version: String(d.version ?? "0.1"), status: d.status ?? "draft",
+      author: d.author ?? "Heliacon", updated: d.updated ?? null,
+      canonical: `${CANON}/definitions/${d.id}/`, source: `${CANON}/definitions/${d.id}.md`,
+    })),
+    ...corpus.map((c) => ({
+      id: c.slug, kind: "essay", title: c.title,
+      version: String(c.version ?? "0.1"), status: c.status ?? "draft",
+      author: c.author ?? "Heliacon", updated: c.updated ?? null,
+      canonical: `${CANON}/corpus/${c.slug}/`, source: `${CANON}/corpus/${c.slug}.md`,
+    })),
+  ];
+  return { origin: "heliacon", count: items.length, items };
+}
+
+function atomFeed(origin: Dict, corpus: Dict[]): string {
+  const latest = corpus.map((c) => c.updated).filter(Boolean).sort().pop() ?? "2026-01-01";
+  const summary = (c: Dict) => collapse((c.body_md ?? "").replace(/^#.*$/m, "").replace(/[#*_`>-]/g, "")).slice(0, 200);
+  const entries = corpus.map((c) => `  <entry>
+    <title>${esc(c.title)}</title>
+    <link href="${CANON}/corpus/${c.slug}/"/>
+    <id>${CANON}/corpus/${c.slug}/</id>
+    <updated>${c.updated ?? latest}T00:00:00Z</updated>
+    <summary>${esc(summary(c))}</summary>
+  </entry>`).join("\n");
+  return `<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>${esc(origin.name)}</title>
+  <subtitle>${esc(collapse(origin.description))}</subtitle>
+  <link href="${CANON}/feed.xml" rel="self"/>
+  <link href="${CANON}/"/>
+  <id>${CANON}/</id>
+  <updated>${latest}T00:00:00Z</updated>
+${entries}
+</feed>
+`;
+}
+
 const robotsTxt = () => `User-agent: *\nAllow: /\n\nSitemap: ${CANON}/sitemap.xml\n`;
 
 // Security headers on everything, then content types and CORS for the machine projections
@@ -343,6 +395,12 @@ const HEADERS_FILE = `/*
   Access-Control-Allow-Origin: *
 /origin.jsonld
   Content-Type: application/ld+json; charset=utf-8
+  Access-Control-Allow-Origin: *
+/provenance.json
+  Content-Type: application/json; charset=utf-8
+  Access-Control-Allow-Origin: *
+/feed.xml
+  Content-Type: application/atom+xml; charset=utf-8
   Access-Control-Allow-Origin: *
 /llms.txt
   Content-Type: text/plain; charset=utf-8
@@ -417,6 +475,8 @@ async function main(): Promise<void> {
   write(join(DIST, "sitemap.xml"), sitemapXml(defs, corpus));
   write(join(DIST, "robots.txt"), robotsTxt());
   write(join(DIST, "_headers"), HEADERS_FILE);
+  write(join(DIST, "provenance.json"), provenanceIndex(defs, corpus));
+  write(join(DIST, "feed.xml"), atomFeed(origin, corpus));
   write(join(DIST, "llms.txt"), llmsTxt(origin, defs, corpus));
   write(join(DIST, ".well-known", "mcp.json"), mcpManifest(origin));
   write(join(DIST, ".well-known", "llms.txt"), llmsTxt(origin, defs, corpus));

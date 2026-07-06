@@ -30,14 +30,40 @@ function jsonProjection(pathname: string, kind: "json" | "jsonld"): string | nul
   return null;
 }
 
+const jsonResponse = (body: unknown, status = 200): Response =>
+  new Response(JSON.stringify(body, null, 2), {
+    status,
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      "access-control-allow-origin": "*",
+      "vary": "Accept",
+    },
+  });
+
+// The provenance capability. /provenance returns the whole record, /provenance/:id one item.
+async function provenance(pathname: string, env: Env, origin: string): Promise<Response> {
+  const res = await env.ASSETS.fetch(new URL("/provenance.json", origin));
+  if (!res.ok) return jsonResponse({ error: "provenance unavailable" }, 503);
+  const index = (await res.json()) as { items: { id: string }[] };
+  if (pathname === "/provenance" || pathname === "/provenance/") return jsonResponse(index);
+  const id = decodeURIComponent(pathname.slice("/provenance/".length));
+  const item = index.items.find((i) => i.id === id);
+  return item ? jsonResponse(item) : jsonResponse({ error: "not found", id }, 404);
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
-    // Always HTTPS.
-    if (url.protocol === "http:") {
+    // Always HTTPS, except on local hosts where dev runs over http.
+    if (url.protocol === "http:" && url.hostname !== "localhost" && url.hostname !== "127.0.0.1") {
       url.protocol = "https:";
       return Response.redirect(url.toString(), 301);
+    }
+
+    // The provenance capability, invocable at a stable path.
+    if (url.pathname === "/provenance" || url.pathname.startsWith("/provenance/")) {
+      return provenance(url.pathname, env, url.origin);
     }
 
     const kind = preferred(request.headers.get("accept") ?? "");

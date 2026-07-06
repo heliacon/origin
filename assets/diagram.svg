@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 460" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
+  <defs>
+    <style>
+      .fmt{fill:#F4ECD8;font-weight:600;font-size:17px}
+      .who{fill:#9aa0b8;font-size:12.5px}
+      .node{fill:#141a38;stroke:#2a3050;stroke-width:1}
+      .wire{stroke:#E7B23C;stroke-width:1.5;fill:none;opacity:.55}
+      .dot{fill:#E7B23C}
+    </style>
+  </defs>
+
+  <!-- connectors: one origin, many projections -->
+  <path class="wire" d="M260 230 C 430 230 470 65 640 65"/>
+  <path class="wire" d="M260 230 C 430 230 470 131 640 131"/>
+  <path class="wire" d="M260 230 C 430 230 470 197 640 197"/>
+  <path class="wire" d="M260 230 C 430 230 470 263 640 263"/>
+  <path class="wire" d="M260 230 C 430 230 470 329 640 329"/>
+  <path class="wire" d="M260 230 C 430 230 470 395 640 395"/>
+
+  <!-- origin -->
+  <rect x="40" y="180" width="220" height="100" rx="16" fill="#141a38" stroke="#E7B23C" stroke-width="2"/>
+  <text x="150" y="228" text-anchor="middle" fill="#F4ECD8" font-weight="700" font-size="25">origin</text>
+  <text x="150" y="254" text-anchor="middle" class="who">origin.yaml · corpus</text>
+  <circle class="dot" cx="260" cy="230" r="4"/>
+
+  <!-- projections -->
+  <g>
+    <rect class="node" x="640" y="40"  width="240" height="50" rx="12"/>
+    <text class="fmt" x="662" y="71">HTML</text><text class="who" x="858" y="70" text-anchor="end">for browsers</text>
+    <circle class="dot" cx="640" cy="65" r="3.5"/>
+
+    <rect class="node" x="640" y="106" width="240" height="50" rx="12"/>
+    <text class="fmt" x="662" y="137">JSON</text><text class="who" x="858" y="136" text-anchor="end">for agents</text>
+    <circle class="dot" cx="640" cy="131" r="3.5"/>
+
+    <rect class="node" x="640" y="172" width="240" height="50" rx="12"/>
+    <text class="fmt" x="662" y="203">JSON-LD</text><text class="who" x="858" y="202" text-anchor="end">for crawlers</text>
+    <circle class="dot" cx="640" cy="197" r="3.5"/>
+
+    <rect class="node" x="640" y="238" width="240" height="50" rx="12"/>
+    <text class="fmt" x="662" y="269">Markdown</text><text class="who" x="858" y="268" text-anchor="end">for writers</text>
+    <circle class="dot" cx="640" cy="263" r="3.5"/>
+
+    <rect class="node" x="640" y="304" width="240" height="50" rx="12"/>
+    <text class="fmt" x="662" y="335">llms.txt</text><text class="who" x="858" y="334" text-anchor="end">for models</text>
+    <circle class="dot" cx="640" cy="329" r="3.5"/>
+
+    <rect class="node" x="640" y="370" width="240" height="50" rx="12"/>
+    <text class="fmt" x="662" y="401">MCP</text><text class="who" x="858" y="400" text-anchor="end">for tools</text>
+    <circle class="dot" cx="640" cy="395" r="3.5"/>
+  </g>
+
+  <text x="450" y="446" text-anchor="middle" class="who" font-size="13" letter-spacing="1.5">negotiated by Accept, from one source of truth</text>
+</svg>
