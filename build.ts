@@ -302,6 +302,7 @@ function llmsTxt(origin: Dict, defs: Dict[], corpus: Dict[]): string {
     `Tagline: ${origin.tagline}`,
     `Canonical: ${CANON}`,
     `Ask: ${CANON}/ask?q=`,
+    `MCP: ${CANON}/mcp`,
     `Provenance: ${CANON}/provenance`,
     `Feed: ${CANON}/feed.xml`, "",
     "One origin, many projections. This file is the projection for language models.",
@@ -324,6 +325,7 @@ function mcpManifest(origin: Dict): Dict {
     name: "heliacon-origin",
     description: collapse(origin.description),
     canonical: CANON,
+    mcp: { endpoint: `${CANON}/mcp`, transport: "streamable-http" },
     tools: [
       { name: "ask", description: "Retrieve the passages of the Heliacon corpus that answer a question, each with its citation.", endpoint: `${CANON}/ask`, method: "GET", params: { q: "the question" } },
       { name: "definitions", description: "Return a canonical definition as JSON.", endpoint: `${CANON}/definitions/{id}`, method: "GET", params: { id: "definition id" } },
