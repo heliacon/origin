@@ -14,6 +14,12 @@ status: draft
 
 author:
   name: Pete Dainty
+  linkedin: https://www.linkedin.com/in/petedainty
+
+contact: hello@heliacon.com
+
+sameas:
+  - https://github.com/heliacon
 
 published: 2026-07-04
 

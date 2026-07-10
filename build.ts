@@ -373,7 +373,32 @@ function jsonld(origin: Dict, defs: Dict[]): Dict {
         url: CANON,
         slogan: origin.tagline,
         description: collapse(origin.description),
-        founder: { "@type": "Person", name: origin.author?.name },
+        ...(origin.contact ? { email: origin.contact } : {}),
+        ...(origin.contact
+          ? { contactPoint: { "@type": "ContactPoint", email: origin.contact, contactType: "business" } }
+          : {}),
+        ...(origin.sameas?.length ? { sameAs: origin.sameas } : {}),
+        founder: {
+          "@type": "Person",
+          "@id": `${CANON}/#${(origin.author?.name ?? "founder").toLowerCase().replace(/\s+/g, "-")}`,
+          name: origin.author?.name,
+          jobTitle: "Founder",
+          ...(origin.author?.linkedin ? { sameAs: [origin.author.linkedin] } : {}),
+        },
+      },
+      {
+        // Advertise the live query capability so an agent (or Google) knows the origin is
+        // askable, not just readable. The MCP endpoint stays discoverable via /.well-known/mcp.json.
+        "@type": "WebSite",
+        "@id": `${CANON}/#website`,
+        url: CANON,
+        name: origin.name,
+        publisher: { "@id": `${CANON}/#organization` },
+        potentialAction: {
+          "@type": "SearchAction",
+          target: { "@type": "EntryPoint", urlTemplate: `${CANON}/ask?q={search_term_string}` },
+          "query-input": "required name=search_term_string",
+        },
       },
       ...defs.map((d) => ({
         "@type": "DefinedTerm",
