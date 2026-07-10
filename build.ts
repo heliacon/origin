@@ -101,7 +101,7 @@ header.mast img{width:min(340px,72%);height:auto;display:block}
 h1,h2,h3{font-weight:600;letter-spacing:-.01em;line-height:1.15}
 h1,h3{font-family:Cinzel,"Iowan Old Style",Palatino,Georgia,serif;letter-spacing:.02em}
 h1{font-size:38px;margin:0 0 8px}
-h2{font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);font-family:ui-sans-serif,system-ui,sans-serif;margin:56px 0 18px}
+h2{font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);font-family:ui-sans-serif,system-ui,sans-serif;margin:78px 0 20px}
 h3{font-size:24px;margin:0 0 6px}
 p{margin:0 0 18px}
 .lede{font-size:22px;color:var(--cream)}
@@ -111,6 +111,13 @@ ul{padding-left:1.1em}li{margin:6px 0}
 .card .k{font:600 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
 .card h3{margin:8px 0 4px;color:var(--cream)}
 .card p{margin:0;color:var(--dim);font-size:16px}
+.archive{margin:18px 0 10px;border-top:1px solid #2a3050}
+.arow{display:block;padding:22px 4px;border-bottom:1px solid #2a3050;transition:padding-left .12s ease}
+.arow:hover{padding-left:10px;text-decoration:none}
+.arow .ad{display:block;font:600 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.arow .at{display:block;font-family:Cinzel,"Iowan Old Style",Palatino,Georgia,serif;font-size:22px;color:var(--cream);letter-spacing:.02em;margin:7px 0 5px;line-height:1.2}
+.arow:hover .at{color:var(--gold)}
+.arow .ax{display:block;color:var(--dim);font-size:16px;line-height:1.5}
 .diagram{margin:40px 0 8px}.diagram img{width:100%;height:auto;display:block}
 .center{text-align:center}
 .post-meta{font:600 13px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.04em;color:var(--dim);margin:0 0 30px}
@@ -122,6 +129,10 @@ ul{padding-left:1.1em}li{margin:6px 0}
 .post figcaption{margin-top:10px;color:var(--dim);font-size:14px;line-height:1.55}
 .post figcaption strong{color:var(--cream)}
 .cta{display:inline-block;background:var(--gold);color:var(--ink);font:600 15px/1 ui-sans-serif,system-ui,sans-serif;padding:14px 24px;border-radius:12px;margin-top:6px}
+.cta-row{display:flex;gap:18px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.more{color:var(--cream);opacity:.85;font:600 14px/1 ui-sans-serif,system-ui,sans-serif;text-decoration:none;border-bottom:1px solid rgba(244,236,216,.3);padding-bottom:3px}
+.more:hover{opacity:1;border-bottom-color:var(--gold)}
+.fineprint{font-size:13px;color:var(--dim);max-width:640px;margin-top:14px}
 .cta:hover{filter:brightness(1.08);text-decoration:none}
 .hero{position:relative;left:50%;right:50%;width:100vw;margin-left:-50vw;margin-right:-50vw;margin-top:-44px;min-height:94vh;display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(11,16,41,.95),rgba(11,16,41,.7) 30%,rgba(11,16,41,.2) 52%,rgba(11,16,41,.6)),url(/assets/hero.jpg) center 20%/cover no-repeat;background-color:var(--ink)}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 26px}
@@ -207,7 +218,6 @@ function page(title: string, body: string, canonicalPath: string, opts: PageOpts
   <a href="/notes/">Notes</a> ·
   <a href="/manifesto/">Manifesto</a> ·
   <a href="/architecture/">Architecture</a> ·
-  <a href="/llms.txt">llms.txt</a> ·
   <a href="/.well-known/mcp.json">MCP</a> ·
   <a href="/origin.json">JSON</a><br>
   One origin, many projections · © 2026 Heliacon LLC
@@ -245,9 +255,9 @@ const PILLAR_LINE: Record<string, string> = {
 
 function homeHtml(origin: Dict, defs: Dict[], posts: Dict[]): string {
   const byId = Object.fromEntries(defs.map((d) => [d.id, d]));
-  const notes = posts.slice(0, 3).map((p) =>
-    `<a class="card" href="/notes/${p.slug}/"><span class="k">${fmtDate(p.published)}</span>` +
-    `<h3>${esc(p.title)}</h3><p>${esc(collapse(p.summary ?? ""))}</p></a>`).join("");
+  const notes = posts.slice(0, 6).map((p) =>
+    `<a class="arow" href="/notes/${p.slug}/"><span class="ad">${fmtDate(p.published)}</span>` +
+    `<span class="at">${esc(p.title)}</span><span class="ax">${esc(collapse(p.summary ?? ""))}</span></a>`).join("");
   const order = ["origin", "projection", "invocation", "capability", "provenance", "privacy", "sovereignty"];
   const pillars = order.map((id) => byId[id]).filter(Boolean).map((d) =>
     `<a class="pillar" href="/definitions/${d.id}/">${icon(d.id)}` +
@@ -261,45 +271,50 @@ function homeHtml(origin: Dict, defs: Dict[], posts: Dict[]): string {
     <span class="status" id="status"><i></i>Origin online</span>
   </header>
   <div class="hero-in">
-    <h1 class="fl">Be <span class="gold">first light</span>.</h1>
-    <p class="sub">A trusted origin for capability.</p>
-    <form class="askbox" id="ask" action="/ask" method="get">
-      <input id="q" name="q" placeholder="What are you trying to accomplish?" autocomplete="off" aria-label="Ask the origin">
-      <button type="submit" aria-label="Ask">&rarr;</button>
-    </form>
-    <p class="hint">Tell us your intent. We will show you what is relevant.</p>
-    <div class="answers" id="answers"></div>
+    <h1 class="fl">Be <span class="gold">the first light</span>.</h1>
+    <p class="sub">Heliacon is a studio and consultancy. We make you the origin machines find, trust and invoke, not the page they skip.</p>
+    <p class="cta-row"><a class="cta" href="#ask-panel">Ask our knowledge</a> <a class="more" href="/consulting/">or work with Heliacon &rarr;</a></p>
   </div>
 </section>
 
-<h2 class="center">The pillars</h2>
-<div class="pillars">${pillars}</div>
-
-<p class="lede center">The browser is not privileged. Neither is the agent. Every consumer
-negotiates the projection most appropriate for it, from one source of truth.</p>
-
-<h2>Work with Heliacon</h2>
-<a class="card" href="/consulting/"><span class="k">Consulting</span><h3>Be found, trusted and invoked</h3><p>We make you origin-first: the source machines cite and invoke, not the page they skip. SEO, AEO and GEO, one level deeper.</p></a>
-<a class="card" href="/products/"><span class="k">Studio</span><h3>Apps, tools and games</h3><p>Products that prove the research. In development.</p></a>
-
-<figure class="diagram"><img src="/assets/diagram.svg" width="920" height="460"
-  alt="One origin, origin.yaml and the corpus, projected to HTML for browsers, JSON for agents, JSON-LD for crawlers, Markdown for writers, llms.txt for models and MCP for tools, negotiated by Accept"></figure>
-
-${notes ? `<h2>Notes</h2>\n${notes}\n<p class="proj"><a href="/notes/">All notes</a> · <a href="/feed.xml">Feed</a></p>` : ""}
-
-<h2>Invoke</h2>
-<p class="proj">The same origin, negotiated for whoever asks:
+<h2 id="ask-panel">Ask our knowledge</h2>
+<p class="lede">Do not take our word for it. Ask our origin a question. It answers from our corpus and every answer cites its source. This is what we build for clients: knowledge a machine can find, trust and invoke.</p>
+<form class="askbox" id="ask" action="/ask" method="get">
+  <input id="q" name="q" placeholder="What is an origin? How do I become invocable?" autocomplete="off" aria-label="Ask the origin">
+  <button type="submit" aria-label="Ask">&rarr;</button>
+</form>
+<div class="answers" id="answers"></div>
+<p class="proj">Or call it directly, no browser required:
   <a href="/ask?q=what+is+an+origin">Ask</a>
   <a href="/.well-known/mcp.json">MCP</a>
   <a href="/provenance">Provenance</a>
   <a href="/origin.md">Markdown</a>
   <a href="/origin.json">JSON</a>
   <a href="/origin.jsonld">JSON-LD</a>
-  <a href="/llms.txt">llms.txt</a>
   <a href="/feed.xml">Feed</a>
 </p>
+<p class="fineprint">This site runs a working MCP server, a citation-first ask endpoint and a provenance API. It is source-available. Inspect it.</p>
+
+${notes ? `<h2>Notes</h2>\n<p class="lede">We think in public. Dated notes and definitions, each carrying its provenance.</p>\n<div class="archive">${notes}</div>\n<p class="proj"><a href="/notes/">All notes</a> · <a href="/feed.xml">Feed</a> · <a href="/definitions/origin/">Definitions</a></p>` : ""}
+
+<h2>Studio</h2>
+<p class="lede">Products prove the research. Apps, tools and games built on the same origin, each a projection of it.</p>
+<a class="card" href="/products/"><span class="k">Studio</span><h3>Apps, tools and games</h3><p>In development. Each one stands on its own and traces back to the research it proves.</p></a>
+
+<h2>Work with Heliacon</h2>
+<p class="lede">The reader is now as often a machine as a person. We make you origin-first: found and cited by the models that summarise the web, and invocable by the agents that act on it. Alongside: experimentation and measurement, search and relevance, agentic product and fractional product leadership.</p>
+<a class="card" href="/consulting/"><span class="k">Consulting</span><h3>Be found, trusted and invoked</h3><p>SEO, AEO and GEO, one level deeper. We measure by invocation, and hand you the research, the reference implementation and the tools behind it.</p></a>
+<p class="proj">Start a conversation. <a href="mailto:hello@heliacon.com?subject=Consulting">hello@heliacon.com</a> · <a href="https://www.linkedin.com/in/petedainty">Pete on LinkedIn</a></p>
+
+<h2>How we think</h2>
+<p class="lede">One origin, many projections. The browser is not privileged. Neither is the agent. Every consumer negotiates the projection most appropriate for it, from one source of truth.</p>
+<div class="pillars">${pillars}</div>
+<p class="proj"><a href="/manifesto/">Read the manifesto</a></p>
+
+<figure class="diagram"><img src="/assets/diagram.svg" width="920" height="460"
+  alt="One origin, origin.yaml and the corpus, projected to HTML for browsers, JSON for agents, JSON-LD for crawlers, Markdown for writers and MCP for tools, negotiated by Accept"></figure>
 <script src="/assets/app.js" defer></script>`;
-  return page("Heliacon · Be first light", body, "/", {
+  return page("Heliacon · Be the first light", body, "/", {
     description: collapse(origin.description),
     jsonld: jsonld(origin, defs),
     alternates: {
@@ -551,14 +566,8 @@ const HEADERS_FILE = `/*
 /feed.xml
   Content-Type: application/atom+xml; charset=utf-8
   Access-Control-Allow-Origin: *
-/llms.txt
-  Content-Type: text/plain; charset=utf-8
-  Access-Control-Allow-Origin: *
 /.well-known/mcp.json
   Content-Type: application/json; charset=utf-8
-  Access-Control-Allow-Origin: *
-/.well-known/llms.txt
-  Content-Type: text/plain; charset=utf-8
   Access-Control-Allow-Origin: *
 /definitions/*
   Access-Control-Allow-Origin: *
@@ -670,9 +679,7 @@ async function main(): Promise<void> {
   write(join(DIST, "provenance.json"), provenanceIndex(defs, corpus));
   write(join(DIST, "ask-index.json"), askIndex(defs, corpus));
   write(join(DIST, "feed.xml"), atomFeed(origin, posts));
-  write(join(DIST, "llms.txt"), llmsTxt(origin, defs, corpus, posts));
   write(join(DIST, ".well-known", "mcp.json"), mcpManifest(origin));
-  write(join(DIST, ".well-known", "llms.txt"), llmsTxt(origin, defs, corpus, posts));
   write(join(DIST, "schemas", "definition.schema.json"),
     readFileSync(join(ROOT, "schemas", "definition.schema.json"), "utf8"));
 

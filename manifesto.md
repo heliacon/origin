@@ -34,6 +34,6 @@ Because trust is the scarce thing. When machines synthesise answers from a dozen
 
 Because the discipline is the product. Every change answers one question. Does this make the origin more canonical. Not, does this make the website prettier.
 
-## Be first light
+## Be the first light
 
 Heliacal rising is the moment a star returns to the dawn sky after its season out of sight. First light. That is the intent. To be the thing that rises first and is trusted when it does.

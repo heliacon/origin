@@ -4,7 +4,7 @@ id: heliacon
 
 name: Heliacon
 
-tagline: Be first light.
+tagline: Be the first light.
 
 description: >
   Heliacon is the canonical origin for an evolving body of knowledge, capability and
@@ -41,7 +41,6 @@ projections:
   - markdown
   - json
   - jsonld
-  - llms
   - mcp
 
 capabilities:

@@ -1,6 +1,6 @@
 # Heliacon
 
-**Be first light.**
+**Be the first light.**
 
 Heliacon is a trusted origin for knowledge, capability and provenance.
 

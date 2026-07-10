@@ -1,6 +1,6 @@
 # Heliacon Origin
 
-**Be first light.**
+**Be the first light.**
 
 This repository is the canonical origin for Heliacon. It is the single source of truth from
 which every projection is derived.
