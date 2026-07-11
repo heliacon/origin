@@ -59,10 +59,10 @@ Goal it is measured against: read primarily as a studio/agency/professional-serv
 
 | ID | Title | Disc | Sev | Status |
 |----|-------|------|-----|--------|
-| HEL-001 | No About/Founder page — a founder-led firm selling fractional leadership; the founder IS the product | mkt/ux/pm | critical | NEEDS-PETE |
+| HEL-001 | No About/Founder page — a founder-led firm selling fractional leadership; the founder IS the product | mkt/ux/pm | critical | DOING (about.md drafted, awaiting your content) |
 | HEL-002 | No Work/Proof — zero outcome evidence; make the live origin "Case Study Zero" | mkt/pm/analyst | critical | NEEDS-PETE |
 | HEL-005 | Conversion is mailto-only — add a booking link + qualifying form (mailto fallback improved in HEL-023) | mkt/ux/pm/analyst | critical | NEEDS-PETE |
-| HEL-009 | Hero fails the 5-second test — "Be the first light" carries no buyer meaning cold | mkt/pm/design | critical | NEEDS-PETE |
+| HEL-009 | Hero fails the 5-second test — "Be the first light" carries no buyer meaning cold | mkt/pm/design | critical | DONE (category-led hero live) |
 | HEL-010 | Leads with the invented category ("origin-first") not the one buyers know (AI search visibility / GEO) | mkt | critical | NEEDS-PETE |
 | HEL-003 | No engagement model — what you get, in what order, by when | pm/analyst | high | NEEDS-PETE |
 | HEL-004 | No pricing/packaging signal — add named tiers with a "from" floor | mkt/pm/analyst | high | NEEDS-PETE |
