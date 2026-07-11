@@ -316,9 +316,10 @@ function homeHtml(origin: Dict, defs: Dict[], posts: Dict[]): string {
     <nav class="topnav">${navLinks()}<span class="status" id="status"><i></i>Origin online</span></nav>
   </header>
   <div class="hero-in">
-    <h1 class="fl">Be <span class="gold">the first light</span>.</h1>
-    <p class="sub">Heliacon is a studio and consultancy. We make you the origin the machines that now read the web find, trust and invoke, not the page they skip.</p>
-    <p class="cta-row"><a class="cta" href="/consulting/">Work with us</a> <a class="more" href="#ask-panel">or ask our origin &rarr;</a></p>
+    <p class="tag" style="margin-bottom:16px;text-shadow:0 1px 20px rgba(0,0,0,.75)">Be the first light</p>
+    <h1 class="fl">Get cited by the AI <span class="gold">that is replacing search</span>.</h1>
+    <p class="sub">ChatGPT, Perplexity and the agents that assemble answers now decide what gets seen. We make you the source they trust and quote, not the page they skip.</p>
+    <p class="cta-row"><a class="cta" href="/consulting/">Work with us</a> <a class="more" href="#ask-panel">see how &rarr;</a></p>
   </div>
 </section>
 
