@@ -173,6 +173,11 @@ ul{padding-left:1.1em}li{margin:6px 0}
 .proj a:hover{color:var(--gold);border-color:var(--gold);text-decoration:none}
 footer{margin-top:72px;padding-top:24px;border-top:1px solid #2a3050;font:400 14px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--dim)}
 .back{font:600 13px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+.topnav{display:flex;gap:18px;flex-wrap:wrap;align-items:center;font:600 13px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.05em}
+.topnav a{color:var(--cream);opacity:.82}
+.topnav a:hover{color:var(--gold);opacity:1;text-decoration:none}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px 24px;flex-wrap:wrap;margin-bottom:44px;padding-bottom:18px;border-bottom:1px solid #2a3050}
+.nav-wm img{width:128px;height:auto;display:block}
 article h2{font-family:ui-sans-serif,system-ui,sans-serif}`;
 
 // Dependency-free minifiers. Safe for this project's hand-written CSS and generated markup.
@@ -186,12 +191,22 @@ function minifyHtml(html: string): string {
   return min.replace(/\x00(\d+)\x00/g, (_, i) => keep[Number(i)]);
 }
 
-interface PageOpts { description?: string; jsonld?: unknown; alternates?: Record<string, string>; }
+interface PageOpts { description?: string; jsonld?: unknown; alternates?: Record<string, string>; header?: boolean; }
 
-const DEFAULT_DESC = "Heliacon is a trusted origin for knowledge, capability and provenance.";
+const DEFAULT_DESC = "Heliacon is a studio and consultancy that makes companies origin-first: found, trusted and invoked by the machines that now read the web.";
+
+// Primary site navigation, buyer-first. Shared by the homepage hero and every interior header.
+const NAV_LINKS: [string, string][] = [
+  ["/consulting/", "Services"],
+  ["/products/", "Products"],
+  ["/notes/", "Research"],
+  ["/manifesto/", "Manifesto"],
+  ["mailto:hello@heliacon.com?subject=Consulting", "Contact"],
+];
+const navLinks = (): string => NAV_LINKS.map(([h, t]) => `<a href="${h}">${t}</a>`).join("");
 
 function page(title: string, body: string, canonicalPath: string, opts: PageOpts = {}): string {
-  const { description = DEFAULT_DESC, jsonld, alternates = {} } = opts;
+  const { description = DEFAULT_DESC, jsonld, alternates = {}, header = true } = opts;
   const url = `${CANON}${canonicalPath}`;
   const alt = Object.entries(alternates)
     .map(([t, href]) => `<link rel="alternate" type="${t}" href="${href}">`)
@@ -217,6 +232,7 @@ function page(title: string, body: string, canonicalPath: string, opts: PageOpts
 </head>
 <body>
 <div class="wrap">
+${header ? `<header class="nav"><a href="/" class="nav-wm" aria-label="Heliacon">${logoImg()}</a><nav class="topnav">${navLinks()}</nav></header>` : ""}
 <main>${body}</main>
 <footer>
   <a href="/consulting/">Consulting</a> ·
@@ -274,17 +290,23 @@ function homeHtml(origin: Dict, defs: Dict[], posts: Dict[]): string {
 <section class="hero">
   <header class="topbar">
     <a href="/" aria-label="Heliacon" class="wm">${logoImg()}</a>
-    <span class="status" id="status"><i></i>Origin online</span>
+    <nav class="topnav">${navLinks()}<span class="status" id="status"><i></i>Origin online</span></nav>
   </header>
   <div class="hero-in">
     <h1 class="fl">Be <span class="gold">the first light</span>.</h1>
-    <p class="sub">Heliacon is a studio and consultancy. We make you the origin machines find, trust and invoke, not the page they skip.</p>
-    <p class="cta-row"><a class="cta" href="#ask-panel">Ask our knowledge</a> <a class="more" href="/consulting/">or work with Heliacon &rarr;</a></p>
+    <p class="sub">Heliacon is a studio and consultancy. We make you the origin the machines that now read the web find, trust and invoke, not the page they skip.</p>
+    <p class="cta-row"><a class="cta" href="/consulting/">Work with us</a> <a class="more" href="#ask-panel">or ask our origin &rarr;</a></p>
   </div>
 </section>
 
-<h2 id="ask-panel">Ask our knowledge</h2>
-<p class="lede">Do not take our word for it. Ask our origin a question. It answers from our corpus and every answer cites its source. This is what we build for clients: knowledge a machine can find, trust and invoke.</p>
+<h2 id="services">Work with Heliacon</h2>
+<p class="lede">The reader is now as often a machine as a person. We make you origin-first: found and cited by the models that summarise the web, and invocable by the agents that act on it.</p>
+<a class="card" href="/consulting/"><span class="k">Consulting</span><h3>Be found, trusted and invoked</h3><p>SEO, AEO and GEO, one level deeper. We measure by invocation, and hand you the research, the reference implementation and the tools behind it.</p></a>
+<p class="lede" style="font-size:18px;margin:22px 0 0">Alongside: experimentation and measurement, search and relevance, agentic product, and fractional product leadership.</p>
+<p class="proj">Start a conversation. <a href="mailto:hello@heliacon.com?subject=Consulting">hello@heliacon.com</a> · <a href="https://www.linkedin.com/in/petedainty">Pete on LinkedIn</a></p>
+
+<h2 id="ask-panel">We practise what we sell</h2>
+<p class="lede">Do not take our word for it. Ask our own origin a question. It answers from our corpus and every answer cites its source. This is exactly what we build for clients: knowledge a machine can find, trust and invoke.</p>
 <form class="askbox" id="ask" action="/ask" method="get">
   <input id="q" name="q" placeholder="What is an origin? How do I become invocable?" autocomplete="off" aria-label="Ask the origin">
   <button type="submit" aria-label="Ask">&rarr;</button>
@@ -301,26 +323,21 @@ function homeHtml(origin: Dict, defs: Dict[], posts: Dict[]): string {
 </p>
 <p class="fineprint">This site runs a working MCP server, a citation-first ask endpoint and a provenance API. It is source-available. Inspect it.</p>
 
-${notes ? `<h2>Notes</h2>\n<p class="lede">We think in public. Dated notes and definitions, each carrying its provenance.</p>\n<div class="archive">${notes}</div>\n<p class="proj"><a href="/notes/">All notes</a> · <a href="/feed.xml">Feed</a> · <a href="/definitions/origin/">Definitions</a></p>` : ""}
-
-<h2>Studio</h2>
-<p class="lede">Products prove the research. Apps, tools and games built on the same origin, each a projection of it.</p>
-<a class="card" href="/products/"><span class="k">Studio</span><h3>Apps, tools and games</h3><p>In development. Each one stands on its own and traces back to the research it proves.</p></a>
-
-<h2>Work with Heliacon</h2>
-<p class="lede">The reader is now as often a machine as a person. We make you origin-first: found and cited by the models that summarise the web, and invocable by the agents that act on it. Alongside: experimentation and measurement, search and relevance, agentic product and fractional product leadership.</p>
-<a class="card" href="/consulting/"><span class="k">Consulting</span><h3>Be found, trusted and invoked</h3><p>SEO, AEO and GEO, one level deeper. We measure by invocation, and hand you the research, the reference implementation and the tools behind it.</p></a>
-<p class="proj">Start a conversation. <a href="mailto:hello@heliacon.com?subject=Consulting">hello@heliacon.com</a> · <a href="https://www.linkedin.com/in/petedainty">Pete on LinkedIn</a></p>
-
-<h2>How we think</h2>
-<p class="lede">One origin, many projections. The browser is not privileged. Neither is the agent. Every consumer negotiates the projection most appropriate for it, from one source of truth.</p>
+<h2>The lab behind the work</h2>
+<p class="lede">We think in public. The research the consulting applies, worked out in the open. One origin, many projections, each carrying its provenance.</p>
+${notes ? `<div class="archive">${notes}</div>\n<p class="proj"><a href="/notes/">All notes</a> · <a href="/manifesto/">Manifesto</a> · <a href="/definitions/origin/">Definitions</a> · <a href="/feed.xml">Feed</a></p>` : ""}
 <div class="pillars">${pillars}</div>
-<p class="proj"><a href="/manifesto/">Read the manifesto</a></p>
+
+<h2>What we build</h2>
+<p class="lede">Products prove the research. Apps, tools and games built on the same origin, each a projection of it.</p>
+<a class="card" href="/products/"><span class="k">Products</span><h3>Apps, tools and games</h3><p>In development. Each one stands on its own and traces back to the research it proves.</p></a>
 
 <figure class="diagram"><img src="/assets/diagram.svg" width="920" height="460"
   alt="One origin, origin.yaml and the corpus, projected to HTML for browsers, JSON for agents, JSON-LD for crawlers, Markdown for writers and MCP for tools, negotiated by Accept"></figure>
+<p class="cta-row" style="margin-top:8px"><a class="cta" href="/consulting/">Work with us</a> <a class="more" href="mailto:hello@heliacon.com?subject=Consulting">hello@heliacon.com &rarr;</a></p>
 <script src="/assets/app.js" defer></script>`;
   return page("Heliacon · Be the first light", body, "/", {
+    header: false,
     description: collapse(origin.description),
     jsonld: jsonld(origin, defs),
     alternates: {
@@ -388,7 +405,7 @@ function jsonld(origin: Dict, defs: Dict[]): Dict {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "Organization",
+        "@type": ["Organization", "ProfessionalService"],
         "@id": `${CANON}/#organization`,
         name: origin.name,
         url: CANON,
@@ -405,6 +422,21 @@ function jsonld(origin: Dict, defs: Dict[]): Dict {
           name: origin.author?.name,
           jobTitle: "Founder",
           ...(origin.author?.linkedin ? { sameAs: [origin.author.linkedin] } : {}),
+        },
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "Services",
+          itemListElement: [
+            ["Be found and cited", "The source an assistant quotes, retrievable and verifiable by the models that summarise the web."],
+            ["Be invocable", "Your capabilities exposed as things an agent can call, grounded and provenance-first, not just pages it can read."],
+            ["Experimentation and measurement", "Designing, running and reading tests, and building the velocity to ship far more of them."],
+            ["Search, discovery and personalisation", "Ranking, relevance and recommendations at scale."],
+            ["AI product and agentic workflows", "Putting models and agents to work in a product, without the theatre."],
+            ["Fractional product leadership", "Senior product and engineering leadership, by the engagement."],
+          ].map(([name, description]) => ({
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name, description, provider: { "@id": `${CANON}/#organization` } },
+          })),
         },
       },
       {
