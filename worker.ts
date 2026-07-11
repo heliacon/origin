@@ -19,13 +19,15 @@ export interface Env {
 type Dict = Record<string, unknown>;
 
 // The format the client prefers, read from Accept. Null means serve the default, which is HTML.
-function preferred(accept: string): "json" | "jsonld" | null {
+function preferred(accept: string): "json" | "jsonld" | "md" | null {
   const a = accept.toLowerCase();
   const html = a.indexOf("text/html");
   const ld = a.indexOf("application/ld+json");
   const json = a.indexOf("application/json");
+  const md = Math.max(a.indexOf("text/markdown"), a.indexOf("text/x-markdown"));
   if (ld !== -1 && (html === -1 || ld < html)) return "jsonld";
   if (json !== -1 && (html === -1 || json < html)) return "json";
+  if (md !== -1 && (html === -1 || md < html)) return "md";
   return null;
 }
 
@@ -34,6 +36,17 @@ function jsonProjection(pathname: string, kind: "json" | "jsonld"): string | nul
   if (pathname === "/") return kind === "jsonld" ? "/origin.jsonld" : "/origin.json";
   const def = pathname.match(/^\/definitions\/([a-z0-9-]+)\/?$/);
   if (def) return `/definitions/${def[1]}.json`;
+  return null;
+}
+
+// The markdown projection for a negotiable path. Every page advertises a .md alternate; this
+// makes Accept: text/markdown resolve it too, so the "negotiate by Accept" claim holds.
+function mdProjection(pathname: string): string | null {
+  if (pathname === "/") return "/origin.md";
+  const nested = pathname.match(/^\/(definitions|corpus|notes)\/([a-z0-9-]+)\/?$/);
+  if (nested) return `/${nested[1]}/${nested[2]}.md`;
+  const root = pathname.match(/^\/(manifesto|architecture|consulting|products)\/?$/);
+  if (root) return `/${root[1]}.md`;
   return null;
 }
 
@@ -206,13 +219,14 @@ export default {
     const kind = preferred(request.headers.get("accept") ?? "");
 
     if (kind && (request.method === "GET" || request.method === "HEAD")) {
-      const target = jsonProjection(url.pathname, kind);
+      const target = kind === "md" ? mdProjection(url.pathname) : jsonProjection(url.pathname, kind);
       if (target) {
         const res = await env.ASSETS.fetch(new URL(target, url.origin));
         if (res.ok) {
           const headers = new Headers(res.headers);
-          headers.set("content-type", target.endsWith(".jsonld")
-            ? "application/ld+json; charset=utf-8"
+          headers.set("content-type",
+            kind === "md" ? "text/markdown; charset=utf-8"
+            : target.endsWith(".jsonld") ? "application/ld+json; charset=utf-8"
             : "application/json; charset=utf-8");
           headers.set("access-control-allow-origin", "*");
           headers.set("vary", "Accept");

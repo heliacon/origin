@@ -14,7 +14,7 @@ Goal it is measured against: read primarily as a studio/agency/professional-serv
 | HEL-032 | JSON-LD block not escaped against `</script>` breakout | eng | med | DONE |
 | HEL-033 | `parseFrontmatter` split-based; missing closing fence silently swallows body | eng | med | DONE |
 | HEL-035 | Worker `/ask` throws on non-string `q`; no top-level error boundary | eng | low | DONE |
-| HEL-036 | Build aborts on one malformed file with no filename in the error | eng | low | OPEN |
+| HEL-036 | Build aborts on one malformed file with no filename in the error | eng | low | DONE |
 | HEL-029 | Definition pages emit `<h2>` metadata before `<h1>` (heading-order a11y) | eng/ux | med | DONE |
 | HEL-019 | `/corpus/` and `/definitions/` 404 for humans — 14 items unbrowsable; add index pages + a Research hub | ux/seo | high | DONE |
 | HEL-021 | Redundant `← Heliacon` back-link on every page now carrying the nav (regression from the nav change) | ux | med | DONE |
@@ -27,7 +27,7 @@ Goal it is measured against: read primarily as a studio/agency/professional-serv
 | HEL-044 | Sitemap has no `<lastmod>` despite dates being in hand | seo | high | DONE |
 | HEL-045 | MCP `definitions` tool endpoint returns HTML, not JSON | seo | med | DONE |
 | HEL-047 | No `BreadcrumbList` on interior pages | seo | low | DONE |
-| HEL-048 | `Accept: text/markdown` not negotiated by the worker | seo | low | OPEN |
+| HEL-048 | `Accept: text/markdown` not negotiated by the worker | seo | low | DONE |
 | HEL-049 | OG/Twitter metadata incomplete (no `og:site_name`, `og:locale`, twitter title/desc, `article:*`) | seo | low | DONE |
 | HEL-040 | Corpus pages carry no `Article`/`CreativeWork` schema | seo | med | DONE |
 | HEL-061 | A11y: `#answers` has no `aria-live`; no skip link; no `:focus-visible`; no `prefers-reduced-motion` | ux/eng | med | DONE |

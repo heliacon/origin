@@ -49,20 +49,27 @@ function listFiles(dir: string, ext: string): string[] {
 
 function loadCorpus(): Dict[] {
   return listFiles("corpus", ".md").map((f) => {
-    const { meta, body } = parseFrontmatter(readFileSync(join(ROOT, "corpus", f), "utf8"));
-    return { ...meta, body_md: body, slug: meta.id ?? f.replace(/\.md$/, "") };
+    try {
+      const { meta, body } = parseFrontmatter(readFileSync(join(ROOT, "corpus", f), "utf8"));
+      return { ...meta, body_md: body, slug: meta.id ?? f.replace(/\.md$/, "") };
+    } catch (e) { throw new Error(`corpus/${f}: ${(e as Error).message}`); }
   });
 }
 
 const loadDefinitions = (): Dict[] =>
-  listFiles("definitions", ".yaml").map((f) => loadYaml(join(ROOT, "definitions", f)));
+  listFiles("definitions", ".yaml").map((f) => {
+    try { return loadYaml(join(ROOT, "definitions", f)); }
+    catch (e) { throw new Error(`definitions/${f}: ${(e as Error).message}`); }
+  });
 
 // The notes stream: posts, newest first.
 function loadPosts(): Dict[] {
   return listFiles("posts", ".md")
     .map((f): Dict => {
-      const { meta, body } = parseFrontmatter(readFileSync(join(ROOT, "posts", f), "utf8"));
-      return { ...meta, body_md: body, slug: meta.id ?? f.replace(/\.md$/, "") };
+      try {
+        const { meta, body } = parseFrontmatter(readFileSync(join(ROOT, "posts", f), "utf8"));
+        return { ...meta, body_md: body, slug: meta.id ?? f.replace(/\.md$/, "") };
+      } catch (e) { throw new Error(`posts/${f}: ${(e as Error).message}`); }
     })
     .sort((a, b) => String(b.published ?? "").localeCompare(String(a.published ?? "")));
 }
