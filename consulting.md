@@ -1,4 +1,4 @@
-# Consulting
+# Services
 
 Heliacon helps companies be found, trusted and invoked in a world where the reader is as often a machine as a person.
 

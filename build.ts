@@ -32,10 +32,12 @@ function normDates(v: any): any {
 const loadYaml = (p: string): Dict => normDates((yaml.load(readFileSync(p, "utf8")) as Dict) ?? {});
 
 function parseFrontmatter(text: string): { meta: Dict; body: string } {
-  if (text.startsWith("---")) {
-    const parts = text.split("---");
-    const meta = normDates((yaml.load(parts[1]) as Dict) ?? {});
-    return { meta, body: parts.slice(2).join("---").trim() };
+  // Match an explicit fenced block. Splitting on '---' silently swallows the whole body when
+  // the closing fence is missing, and truncates on a '---' inside a value.
+  const m = text.match(/^---\n([\s\S]*?)\n---\n?/);
+  if (m) {
+    const meta = normDates((yaml.load(m[1]) as Dict) ?? {});
+    return { meta, body: text.slice(m[0].length).trim() };
   }
   return { meta: {}, body: text.trim() };
 }
@@ -178,6 +180,10 @@ footer{margin-top:72px;padding-top:24px;border-top:1px solid #2a3050;font:400 14
 .topnav a:hover{color:var(--gold);opacity:1;text-decoration:none}
 .nav{display:flex;align-items:center;justify-content:space-between;gap:16px 24px;flex-wrap:wrap;margin-bottom:44px;padding-bottom:18px;border-bottom:1px solid #2a3050}
 .nav-wm img{width:128px;height:auto;display:block}
+.skip{position:absolute;left:-9999px;top:0;background:var(--gold);color:var(--ink);padding:10px 16px;border-radius:0 0 10px 0;font:600 14px/1 ui-sans-serif,system-ui,sans-serif;z-index:20}
+.skip:focus{left:0}
+a:focus-visible,button:focus-visible,input:focus-visible,.cta:focus-visible,.card:focus-visible,.pillar:focus-visible,.arow:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none !important;animation:none !important}}
 article h2{font-family:ui-sans-serif,system-ui,sans-serif}`;
 
 // Dependency-free minifiers. Safe for this project's hand-written CSS and generated markup.
@@ -187,11 +193,14 @@ const minifyCss = (css: string): string =>
 function minifyHtml(html: string): string {
   const keep: string[] = [];
   const stashed = html.replace(/<(pre|code|textarea|script)[\s\S]*?<\/\1>/gi, (m) => `\x00${keep.push(m) - 1}\x00`);
-  const min = stashed.replace(/<!--[\s\S]*?-->/g, "").replace(/>\s+</g, "><").replace(/\s{2,}/g, " ").trim();
+  // NB: do not collapse `>\s+<` — that eats significant whitespace between adjacent inline
+  // elements (e.g. two links separated by only a space run together). Collapsing runs of 2+
+  // whitespace to a single space is enough and preserves inline spacing.
+  const min = stashed.replace(/<!--[\s\S]*?-->/g, "").replace(/\s{2,}/g, " ").trim();
   return min.replace(/\x00(\d+)\x00/g, (_, i) => keep[Number(i)]);
 }
 
-interface PageOpts { description?: string; jsonld?: unknown; alternates?: Record<string, string>; header?: boolean; }
+interface PageOpts { description?: string; jsonld?: unknown; alternates?: Record<string, string>; header?: boolean; extraMeta?: string; }
 
 const DEFAULT_DESC = "Heliacon is a studio and consultancy that makes companies origin-first: found, trusted and invoked by the machines that now read the web.";
 
@@ -206,7 +215,7 @@ const NAV_LINKS: [string, string][] = [
 const navLinks = (): string => NAV_LINKS.map(([h, t]) => `<a href="${h}">${t}</a>`).join("");
 
 function page(title: string, body: string, canonicalPath: string, opts: PageOpts = {}): string {
-  const { description = DEFAULT_DESC, jsonld, alternates = {}, header = true } = opts;
+  const { description = DEFAULT_DESC, jsonld, alternates = {}, header = true, extraMeta = "" } = opts;
   const url = `${CANON}${canonicalPath}`;
   const alt = Object.entries(alternates)
     .map(([t, href]) => `<link rel="alternate" type="${t}" href="${href}">`)
@@ -222,22 +231,29 @@ function page(title: string, body: string, canonicalPath: string, opts: PageOpts
 <link rel="icon" href="/assets/logo/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/logo/icon-180.png">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Heliacon">
+<meta property="og:locale" content="en_GB">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${url}">
 <meta property="og:image" content="${CANON}/assets/logo/og.png">
 <meta name="twitter:card" content="summary_large_image">
-    ${alt}
-<link rel="stylesheet" href="/styles.css">${jsonld ? `\n<script type="application/ld+json">${JSON.stringify(jsonld)}</script>` : ""}
+<meta name="twitter:title" content="${esc(title)}">
+<meta name="twitter:description" content="${esc(description)}">
+${extraMeta ? extraMeta + "\n" : ""}    ${alt}
+<link rel="stylesheet" href="/styles.css">${jsonld ? `\n<script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, "\\u003c")}</script>` : ""}
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <div class="wrap">
 ${header ? `<header class="nav"><a href="/" class="nav-wm" aria-label="Heliacon">${logoImg()}</a><nav class="topnav">${navLinks()}</nav></header>` : ""}
-<main>${body}</main>
+<main id="main">${body}</main>
 <footer>
-  <a href="/consulting/">Consulting</a> ·
+  <a href="/consulting/">Services</a> ·
+  <a href="/notes/">Research</a> ·
+  <a href="/corpus/">Corpus</a> ·
+  <a href="/definitions/">Definitions</a> ·
   <a href="/products/">Products</a> ·
-  <a href="/notes/">Notes</a> ·
   <a href="/manifesto/">Manifesto</a> ·
   <a href="/architecture/">Architecture</a> ·
   <a href="/.well-known/mcp.json">MCP</a> ·
@@ -311,7 +327,7 @@ function homeHtml(origin: Dict, defs: Dict[], posts: Dict[]): string {
   <input id="q" name="q" placeholder="What is an origin? How do I become invocable?" autocomplete="off" aria-label="Ask the origin">
   <button type="submit" aria-label="Ask">&rarr;</button>
 </form>
-<div class="answers" id="answers"></div>
+<div class="answers" id="answers" role="status" aria-live="polite"></div>
 <p class="proj">Or call it directly, no browser required:
   <a href="/ask?q=what+is+an+origin">Ask</a>
   <a href="/.well-known/mcp.json">MCP</a>
@@ -355,10 +371,9 @@ function definitionHtml(d: Dict): string {
   const rel = (d.related ?? []).map((r: string) =>
     `<a href="/definitions/${r}/">${esc(r[0].toUpperCase() + r.slice(1))}</a> `).join("");
   const body = `
-<a class="back" href="/">&larr; Heliacon</a>
 <article>
-<h2 style="margin-top:32px">Definition · v${d.version ?? "0.1"} · ${esc(d.status ?? "draft")}</h2>
-<h1>${esc(d.title)}</h1>
+<h1 style="margin-top:8px">${esc(d.title)}</h1>
+<p class="post-meta">Definition · v${d.version ?? "0.1"} · ${esc(d.status ?? "draft")}</p>
 <p class="lede">${esc(collapse(d.summary))}</p>
 <p>${esc(collapse(d.definition))}</p>
 ${sec("Why it matters", d.rationale)}
@@ -401,6 +416,8 @@ function definitionMarkdown(d: Dict): string {
 }
 
 function jsonld(origin: Dict, defs: Dict[]): Dict {
+  const founderSlug = (origin.author?.name ?? "founder").toLowerCase().replace(/\s+/g, "-");
+  const termRefs = defs.map((d) => ({ "@id": `${CANON}/definitions/${d.id}/` }));
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -409,20 +426,26 @@ function jsonld(origin: Dict, defs: Dict[]): Dict {
         "@id": `${CANON}/#organization`,
         name: origin.name,
         url: CANON,
+        logo: `${CANON}/assets/logo/og.png`,
+        image: `${CANON}/assets/logo/og.png`,
         slogan: origin.tagline,
         description: collapse(origin.description),
+        foundingDate: "2026",
+        areaServed: { "@type": "Place", name: "Worldwide" },
+        knowsAbout: [
+          ...termRefs,
+          "Answer engine optimization",
+          "Generative engine optimization",
+          "Search engine optimization",
+          "Agentic web",
+          "Model Context Protocol",
+        ],
         ...(origin.contact ? { email: origin.contact } : {}),
         ...(origin.contact
           ? { contactPoint: { "@type": "ContactPoint", email: origin.contact, contactType: "business" } }
           : {}),
         ...(origin.sameas?.length ? { sameAs: origin.sameas } : {}),
-        founder: {
-          "@type": "Person",
-          "@id": `${CANON}/#${(origin.author?.name ?? "founder").toLowerCase().replace(/\s+/g, "-")}`,
-          name: origin.author?.name,
-          jobTitle: "Founder",
-          ...(origin.author?.linkedin ? { sameAs: [origin.author.linkedin] } : {}),
-        },
+        founder: { "@id": `${CANON}/#${founderSlug}` },
         hasOfferCatalog: {
           "@type": "OfferCatalog",
           name: "Services",
@@ -452,6 +475,24 @@ function jsonld(origin: Dict, defs: Dict[]): Dict {
           target: { "@type": "EntryPoint", urlTemplate: `${CANON}/ask?q={search_term_string}` },
           "query-input": "required name=search_term_string",
         },
+      },
+      {
+        "@type": "Person",
+        "@id": `${CANON}/#${founderSlug}`,
+        name: origin.author?.name,
+        jobTitle: "Founder",
+        worksFor: { "@id": `${CANON}/#organization` },
+        knowsAbout: [
+          "Answer engine optimization", "Generative engine optimization",
+          "Search and relevance", "AI product", "Product leadership",
+        ],
+        ...(origin.author?.linkedin ? { sameAs: [origin.author.linkedin] } : {}),
+      },
+      {
+        "@type": "DefinedTermSet",
+        "@id": `${CANON}/#corpus`,
+        name: "Heliacon Origin Vocabulary",
+        hasDefinedTerm: termRefs,
       },
       ...defs.map((d) => ({
         "@type": "DefinedTerm",
@@ -505,18 +546,22 @@ function mcpManifest(origin: Dict): Dict {
     mcp: { endpoint: `${CANON}/mcp`, transport: "streamable-http" },
     tools: [
       { name: "ask", description: "Retrieve the passages of the Heliacon corpus that answer a question, each with its citation.", endpoint: `${CANON}/ask`, method: "GET", params: { q: "the question" } },
-      { name: "definitions", description: "Return a canonical definition as JSON.", endpoint: `${CANON}/definitions/{id}`, method: "GET", params: { id: "definition id" } },
+      { name: "definitions", description: "Return a canonical definition as JSON.", endpoint: `${CANON}/definitions/{id}.json`, method: "GET", params: { id: "definition id" } },
       { name: "provenance", description: "Return the source and version of any item.", endpoint: `${CANON}/provenance/{id}`, method: "GET", params: { id: "item id" } },
     ],
   };
 }
 
 function sitemapXml(defs: Dict[], corpus: Dict[], posts: Dict[]): string {
-  const urls = ["/", "/consulting/", "/products/", "/manifesto/", "/architecture/", "/notes/",
-    ...posts.map((p) => `/notes/${p.slug}/`),
-    ...defs.map((d) => `/definitions/${d.id}/`),
-    ...corpus.map((c) => `/corpus/${c.slug}/`)];
-  const items = urls.map((u) => `  <url><loc>${CANON}${u}</loc></url>`).join("\n");
+  const entries: { loc: string; lastmod?: string }[] = [
+    { loc: "/" }, { loc: "/consulting/" }, { loc: "/products/" }, { loc: "/manifesto/" },
+    { loc: "/architecture/" }, { loc: "/notes/" }, { loc: "/corpus/" }, { loc: "/definitions/" },
+    ...posts.map((p) => ({ loc: `/notes/${p.slug}/`, lastmod: (p.updated ?? p.published) as string })),
+    ...defs.map((d) => ({ loc: `/definitions/${d.id}/`, lastmod: d.updated as string })),
+    ...corpus.map((c) => ({ loc: `/corpus/${c.slug}/`, lastmod: (c.updated ?? c.published) as string })),
+  ];
+  const items = entries.map((e) =>
+    `  <url><loc>${CANON}${e.loc}</loc>${e.lastmod ? `<lastmod>${e.lastmod}</lastmod>` : ""}</url>`).join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${items}\n</urlset>\n`;
 }
 
@@ -581,6 +626,53 @@ function askIndex(defs: Dict[], corpus: Dict[]): Dict {
   return { count: passages.length, passages };
 }
 
+// Per-page structured data for the content pages, so a model has author, dates and hierarchy
+// on the page itself (not only in the homepage graph).
+const founderRef = (origin: Dict): string =>
+  `${CANON}/#${(origin.author?.name ?? "founder").toLowerCase().replace(/\s+/g, "-")}`;
+
+const breadcrumb = (trail: [string, string][]): Dict => ({
+  "@type": "BreadcrumbList",
+  itemListElement: trail.map(([name, url], i) => ({ "@type": "ListItem", position: i + 1, name, item: `${CANON}${url}` })),
+});
+
+const postJsonld = (p: Dict, origin: Dict): Dict => ({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": `${CANON}/notes/${p.slug}/`,
+      headline: p.title,
+      datePublished: p.published,
+      dateModified: p.updated ?? p.published,
+      author: { "@id": founderRef(origin), name: p.author ?? origin.author?.name },
+      publisher: { "@id": `${CANON}/#organization` },
+      mainEntityOfPage: `${CANON}/notes/${p.slug}/`,
+      image: `${CANON}/assets/logo/og.png`,
+      ...(p.summary ? { description: collapse(p.summary) } : {}),
+      isPartOf: { "@id": `${CANON}/#website` },
+    },
+    breadcrumb([["Heliacon", "/"], ["Research", "/notes/"], [p.title, `/notes/${p.slug}/`]]),
+  ],
+});
+
+const corpusJsonld = (c: Dict): Dict => ({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${CANON}/corpus/${c.slug}/`,
+      headline: c.title,
+      author: c.author ? { "@type": "Person", name: c.author } : { "@id": `${CANON}/#organization` },
+      publisher: { "@id": `${CANON}/#organization` },
+      ...(c.updated ? { dateModified: c.updated } : {}),
+      mainEntityOfPage: `${CANON}/corpus/${c.slug}/`,
+      isPartOf: { "@id": `${CANON}/#corpus` },
+    },
+    breadcrumb([["Heliacon", "/"], ["Corpus", "/corpus/"], [c.title, `/corpus/${c.slug}/`]]),
+  ],
+});
+
 const robotsTxt = () => `User-agent: *\nAllow: /\n\nSitemap: ${CANON}/sitemap.xml\n`;
 
 // Security headers on everything, then content types and CORS for the machine projections
@@ -641,44 +733,59 @@ async function main(): Promise<void> {
 
   // 404 (served by the Worker's not_found_handling)
   write(join(DIST, "404.html"), minifyHtml(page("Not found · Heliacon",
-    `<a class="back" href="/">&larr; Heliacon</a>
-     <h1 style="margin-top:40px">Not found</h1>
+    `<h1 style="margin-top:8px">Not found</h1>
      <p class="lede">That projection does not exist yet.</p>
      <p>Every consumer negotiates a projection of the same origin. This path isn't one of them.</p>`,
     "/404", {})));
 
-  // definitions: html, json and markdown projections
+  // definitions: html, json and markdown projections, plus a browsable index
   for (const d of defs) {
     write(join(DIST, "definitions", d.id, "index.html"), minifyHtml(definitionHtml(d)));
     write(join(DIST, "definitions", `${d.id}.json`), d);
     write(join(DIST, "definitions", `${d.id}.md`), definitionMarkdown(d));
   }
   write(join(DIST, "definitions", "index.json"), defs);
+  const defsCards = defs.map((d) =>
+    `<a class="card" href="/definitions/${d.id}/"><span class="k">Definition</span>` +
+    `<h3>${esc(d.title)}</h3><p>${esc(collapse(d.summary))}</p></a>`).join("");
+  write(join(DIST, "definitions", "index.html"), minifyHtml(page("Definitions · Heliacon",
+    `<h1 style="margin-top:8px">Definitions</h1>
+     <p class="lede">The canonical vocabulary. Each term defined once, versioned, and carrying its provenance.</p>
+     ${defsCards}`,
+    "/definitions/", { description: "The Heliacon origin vocabulary. Canonical, versioned definitions." })));
 
   // corpus: html and markdown projections
   for (const c of corpus) {
     const htmlBody = await marked.parse(c.body_md);
     const pg = page(`${c.title} · Heliacon`,
-      `<a class="back" href="/">&larr; Heliacon</a><article>${htmlBody}</article>`,
+      `<article>${htmlBody}</article>`,
       `/corpus/${c.slug}/`, {
         description: collapse(c.body_md.replace(/^#.*$/m, "").replace(/[#*_`>-]/g, "")).slice(0, 155),
         alternates: { "text/markdown": `${CANON}/corpus/${c.slug}.md` },
+        jsonld: corpusJsonld(c),
       });
     write(join(DIST, "corpus", c.slug, "index.html"), minifyHtml(pg));
     write(join(DIST, "corpus", `${c.slug}.md`), c.body_md);
   }
+  const corpusCards = corpus.map((c) =>
+    `<a class="card" href="/corpus/${c.slug}/"><span class="k">Essay</span><h3>${esc(c.title)}</h3></a>`).join("");
+  write(join(DIST, "corpus", "index.html"), minifyHtml(page("Corpus · Heliacon",
+    `<h1 style="margin-top:8px">Corpus</h1>
+     <p class="lede">The essays behind the work. The research the consulting applies and the ask endpoint retrieves.</p>
+     ${corpusCards}`,
+    "/corpus/", { description: "The Heliacon corpus. Essays on origin, projection, provenance and the rest." })));
 
   // root documents: manifesto (philosophy) and architecture (spec), rendered like the corpus
   for (const doc of [
     { slug: "manifesto", src: "manifesto.md", title: "Manifesto", desc: "The Heliacon manifesto. A studio and a consultancy, built on a canonical origin." },
     { slug: "architecture", src: join("docs", "architecture.md"), title: "Architecture", desc: "How Heliacon is built. One canonical origin, many projections, negotiated for whoever asks." },
-    { slug: "consulting", src: "consulting.md", title: "Consulting", desc: "Origin-first consulting. Be found, trusted and invoked. The shift underneath SEO, AEO and GEO, for a world where the reader is often a machine." },
+    { slug: "consulting", src: "consulting.md", title: "Services", desc: "Origin-first consulting. Be found, trusted and invoked. The shift underneath SEO, AEO and GEO, for a world where the reader is often a machine." },
     { slug: "products", src: "products.md", title: "Products", desc: "Apps, tools and games that prove the research. Each a projection of the same origin." },
   ]) {
     const md = readFileSync(join(ROOT, doc.src), "utf8");
     const htmlBody = await marked.parse(md);
     write(join(DIST, doc.slug, "index.html"), minifyHtml(page(`${doc.title} · Heliacon`,
-      `<a class="back" href="/">&larr; Heliacon</a><article>${htmlBody}</article>`,
+      `<article>${htmlBody}</article>`,
       `/${doc.slug}/`, { description: doc.desc, alternates: { "text/markdown": `${CANON}/${doc.slug}.md` } })));
     write(join(DIST, `${doc.slug}.md`), md);
   }
@@ -687,12 +794,12 @@ async function main(): Promise<void> {
   const notesCards = posts.map((p) =>
     `<a class="card" href="/notes/${p.slug}/"><span class="k">${fmtDate(p.published)}</span>` +
     `<h3>${esc(p.title)}</h3><p>${esc(collapse(p.summary ?? ""))}</p></a>`).join("");
-  write(join(DIST, "notes", "index.html"), minifyHtml(page("Notes · Heliacon",
-    `<a class="back" href="/">&larr; Heliacon</a>
-     <h1 style="margin-top:32px">Notes</h1>
-     <p class="lede">Field notes and essays from the work. Published here first, and canonical here always.</p>
+  write(join(DIST, "notes", "index.html"), minifyHtml(page("Research · Heliacon",
+    `<h1 style="margin-top:8px">Research</h1>
+     <p class="lede">The lab behind the work. Field notes and essays, the vocabulary they build on, and the corpus the ask endpoint retrieves. Published here first, and canonical here always.</p>
+     <p class="proj"><a href="/corpus/">Corpus</a> · <a href="/definitions/">Definitions</a> · <a href="/feed.xml">Feed</a></p>
      ${notesCards}`,
-    "/notes/", { description: "Field notes and essays from Heliacon. Published here first, canonical here always." })));
+    "/notes/", { description: "Research from Heliacon. Field notes, essays, the corpus and the origin vocabulary." })));
 
   for (const p of posts) {
     const htmlBody = await marked.parse(p.body_md.replace(/^#\s+.*\n/, ""));
@@ -706,6 +813,8 @@ async function main(): Promise<void> {
       `/notes/${p.slug}/`, {
         description: collapse(p.summary ?? "").slice(0, 155),
         alternates: { "text/markdown": `${CANON}/notes/${p.slug}.md` },
+        jsonld: postJsonld(p, origin),
+        extraMeta: `<meta property="article:published_time" content="${p.published}">\n<meta property="article:modified_time" content="${p.updated ?? p.published}">\n<meta property="article:author" content="${esc(p.author ?? origin.author?.name ?? "Pete Dainty")}">`,
       })));
     write(join(DIST, "notes", `${p.slug}.md`), p.body_md);
   }

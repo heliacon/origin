@@ -98,7 +98,7 @@ async function definitionData(id: string, env: Env, origin: string): Promise<Dic
 async function ask(request: Request, url: URL, env: Env): Promise<Response> {
   if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
   const body = request.method === "POST" ? await request.json<{ q?: string }>().catch(() => ({})) : {};
-  const q = (url.searchParams.get("q") ?? body.q ?? "").trim();
+  const q = String(url.searchParams.get("q") ?? body.q ?? "").trim();
   if (!q) return jsonResponse({ error: "provide q, e.g. /ask?q=what is an origin" }, 400);
   const data = await askData(q, env, url.origin);
   return jsonResponse(data, data.error ? 503 : 200);
@@ -180,6 +180,7 @@ async function mcp(request: Request, url: URL, env: Env): Promise<Response> {
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
+   try {
     const url = new URL(request.url);
 
     // Always HTTPS, except on local hosts where dev runs over http.
@@ -225,5 +226,11 @@ export default {
     const headers = new Headers(res.headers);
     headers.append("vary", "Accept");
     return new Response(res.body, { status: res.status, statusText: res.statusText, headers });
+   } catch {
+    return new Response(JSON.stringify({ error: "internal error" }), {
+      status: 500,
+      headers: { "content-type": "application/json; charset=utf-8" },
+    });
+   }
   },
 };
