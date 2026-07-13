@@ -34,6 +34,18 @@ Because trust is the scarce thing. When machines synthesise answers from a dozen
 
 Because the discipline is the product. Every change answers one question. Does this make the origin more canonical. Not, does this make the website prettier.
 
+## The method and the strategy
+
+Making origins is a method. It is not the strategy.
+
+The strategy is older and simpler. Software should get better for the people who use it, not worse. The web spent thirty years teaching the opposite. A product is good while it needs you and turns on you once it has you. It courts you, captures you, then spends you. This is not bad luck or bad people. It is what happens when the ones who use a thing cannot leave it, and the ones who fund it need more out of them every year.
+
+So we build the reverse, and we build it into the structure and not the promise. The origin is yours. It runs on what you own, it exports, it is legible, it is open enough to walk away from. When leaving is always possible we have to earn you again every day. That does not make software improve on its own, but it does make the slow turn against you impossible, because the moment it starts you are already gone. Sovereignty is not a courtesy we extend. It is the mechanism.
+
+This is also why it lasts. A business built on holding people cannot follow us out of that without unbuilding itself. What reads as principle is also the position hardest to copy.
+
+Optimising an origin is how we work. Building software that does not turn on you is what the work is for.
+
 ## Be the first light
 
 Heliacal rising is the moment a star returns to the dawn sky after its season out of sight. First light. That is the intent. To be the thing that rises first and is trusted when it does.
