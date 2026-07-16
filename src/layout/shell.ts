@@ -36,8 +36,7 @@ export function navBar(active: Section = "", over = false): string {
     `<li><a class="${s === "contact" ? "is-cta" : ""}" href="${href}"${cur(s)}>${esc(label)}</a></li>`).join("");
   return `<div class="nav${over ? " nav--over" : ""}">` +
     `<a class="nav__brand" href="/" aria-label="Heliacon home">` +
-      `<img class="nav__mark" src="/assets/logo/mark-dawn.svg" alt="" width="28" height="28">` +
-      `<span class="nav__wordmark">Heliacon</span></a>` +
+      `<img class="nav__logo" src="/assets/logo/wordmark-dawn.svg" alt="Heliacon" height="26"></a>` +
     `<ul class="nav__links">${links}</ul>` +
     `<button class="nav__toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-sheet"><span></span></button>` +
     `<div class="nav__sheet" id="nav-sheet"><ul>${sheetLinks}</ul></div>` +
@@ -55,7 +54,7 @@ export function footer(): string {
   ].map(([t, h]) => `<a href="${h}">${esc(t)}</a>`).join('<span aria-hidden="true"> &middot; </span>');
   return `<footer class="footer"><div class="container"><div class="footer__grid">` +
     `<div class="footer__col">` +
-      `<div class="footer__brand-mark"><img src="/assets/logo/mark-dawn.svg" alt="" width="24" height="24"><span class="nav__wordmark">Heliacon</span></div>` +
+      `<div class="footer__brand-mark"><img class="footer__logo" src="/assets/logo/wordmark-dawn.svg" alt="Heliacon" height="22"></div>` +
       `<p class="footer__mission">We help organisations navigate uncertainty and build with confidence at the intersection of search, AI and human intent.</p>` +
     `</div>` +
     col("Work", [["Strategy", "/work/?type=strategy"], ["Research", "/work/?type=research"], ["Products", "/products/"], ["Partnerships", "/studio/#partnerships"], ["Studio", "/studio/"]]) +

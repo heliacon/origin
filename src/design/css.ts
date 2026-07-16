@@ -80,10 +80,11 @@ p{margin:0 0 18px}
 .container--text{max-width:var(--container-text)}
 .section{padding-block:var(--space-20)}
 .section--tight{padding-block:var(--space-12)}
-.section-head{margin-bottom:var(--space-8)}
+.section-head{margin-bottom:var(--space-8);text-align:center}
 .section-head .eyebrow{margin-bottom:var(--space-4)}
-.pagehead{padding-block:var(--space-16) var(--space-10);border-bottom:1px solid var(--border)}
+.pagehead{padding-block:var(--space-16) var(--space-10);border-bottom:1px solid var(--border);text-align:center}
 .pagehead h1{margin-bottom:var(--space-4)}
+.pagehead .lede,.pagehead p{max-width:640px;margin-inline:auto}
 .stack>*+*{margin-top:var(--space-4)}
 
 /* ── nav (§4.2) ─────────────────────────────────────────────────────────── */
@@ -92,7 +93,7 @@ p{margin:0 0 18px}
   height:72px;max-width:var(--container);margin:0 auto;padding-inline:var(--gutter)}
 .nav--over{position:absolute;top:0;left:0;right:0;z-index:4}
 .nav__brand{display:flex;align-items:center;gap:8px;flex:none}
-.nav__mark{height:28px;width:auto}
+.nav__logo{height:26px;width:auto}
 .nav__wordmark{font-family:var(--font-mono);font-weight:500;font-size:16px;letter-spacing:.28em;
   text-transform:uppercase;color:var(--text-strong)}
 .nav__links{display:flex;align-items:center;gap:28px;list-style:none;margin:0;padding:0}
