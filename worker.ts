@@ -32,21 +32,24 @@ function preferred(accept: string): "json" | "jsonld" | "md" | null {
 }
 
 // The JSON projection that matches a negotiable path, or null if the path has none.
+// Greenfield tree (ia §5.2): definitions nest under /research/.
 function jsonProjection(pathname: string, kind: "json" | "jsonld"): string | null {
   if (pathname === "/") return kind === "jsonld" ? "/origin.jsonld" : "/origin.json";
-  const def = pathname.match(/^\/definitions\/([a-z0-9-]+)\/?$/);
-  if (def) return `/definitions/${def[1]}.json`;
+  const def = pathname.match(/^\/research\/definitions\/([a-z0-9-]+)\/?$/);
+  if (def) return kind === "jsonld" ? `/research/definitions/${def[1]}.jsonld` : `/research/definitions/${def[1]}.json`;
   return null;
 }
 
 // The markdown projection for a negotiable path. Every page advertises a .md alternate; this
 // makes Accept: text/markdown resolve it too, so the "negotiate by Accept" claim holds.
+// Paths follow the greenfield tree: /research/{definitions,corpus}/{slug}/, /journal/{slug}/,
+// and the root docs studio/work/about/products/manifesto/architecture.
 function mdProjection(pathname: string): string | null {
   if (pathname === "/") return "/origin.md";
-  const nested = pathname.match(/^\/(definitions|corpus|notes)\/([a-z0-9-]+)\/?$/);
-  if (nested) return `/${nested[1]}/${nested[2]}.md`;
-  const root = pathname.match(/^\/(manifesto|architecture|consulting|products)\/?$/);
-  if (root) return `/${root[1]}.md`;
+  let m: RegExpMatchArray | null;
+  if ((m = pathname.match(/^\/research\/(definitions|corpus)\/([a-z0-9-]+)\/?$/))) return `/research/${m[1]}/${m[2]}.md`;
+  if ((m = pathname.match(/^\/journal\/([a-z0-9-]+)\/?$/))) return `/journal/${m[1]}.md`;
+  if ((m = pathname.match(/^\/(manifesto|architecture|studio|work|about|products)\/?$/))) return `/${m[1]}.md`;
   return null;
 }
 
@@ -103,14 +106,14 @@ async function provenanceData(id: string | null, env: Env, origin: string): Prom
 
 // definitions: one canonical definition as JSON, or null.
 async function definitionData(id: string, env: Env, origin: string): Promise<Dict | null> {
-  const res = await env.ASSETS.fetch(new URL(`/definitions/${encodeURIComponent(id)}.json`, origin));
+  const res = await env.ASSETS.fetch(new URL(`/research/definitions/${encodeURIComponent(id)}.json`, origin));
   return res.ok ? ((await res.json()) as Dict) : null;
 }
 
 // ── REST wrappers ───────────────────────────────────────────────────────────────────────
 async function ask(request: Request, url: URL, env: Env): Promise<Response> {
   if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
-  const body = request.method === "POST" ? await request.json<{ q?: string }>().catch(() => ({})) : {};
+  const body: { q?: string } = request.method === "POST" ? await request.json<{ q?: string }>().catch(() => ({})) : {};
   const q = String(url.searchParams.get("q") ?? body.q ?? "").trim();
   if (!q) return jsonResponse({ error: "provide q, e.g. /ask?q=what is an origin" }, 400);
   const data = await askData(q, env, url.origin);

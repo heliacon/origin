@@ -9,5 +9,5 @@
     "resolveJsonModule": true,
     "types": ["node"]
   },
-  "include": ["build.ts", "functions/**/*.ts"]
+  "include": ["build.ts", "worker.ts", "src/**/*.ts"]
 }
