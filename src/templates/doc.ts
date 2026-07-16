@@ -9,7 +9,7 @@
  */
 import { CANON, esc } from "../util";
 import { page, Section } from "../layout/shell";
-import { withHeadingIds, articleLayout } from "../layout/article";
+import { withHeadingIds, articleLayout, articleHero } from "../layout/article";
 import { tocSidebar, sectionLabel } from "../components";
 
 export interface DocOpts {
@@ -21,12 +21,12 @@ export interface DocOpts {
 export function doc(o: DocOpts): string {
   const { html, toc } = withHeadingIds(o.htmlBody);
 
-  const head =
-    `<section class="pagehead"><div class="container">` +
-      `<a class="backlink" href="/research/">&larr; Back to Research</a>` +
-      `<h1>${esc(o.title)}</h1>` +
-      (o.lede ? `<p class="lede">${esc(o.lede)}</p>` : "") +
-    `</div></section>`;
+  const head = articleHero({
+    section: o.section ?? "research",
+    backLabel: "Back to Research", backHref: "/research/",
+    title: o.title,
+    sub: o.lede,
+  });
 
   const aside =
     tocSidebar(toc) +
@@ -38,6 +38,7 @@ export function doc(o: DocOpts): string {
 
   return page(`${o.title} · Heliacon`, body, `/${o.slug}/`, {
     section: o.section ?? "research",
+    overHero: true,
     jsonld: o.jsonld,
     description: o.description,
     ...(o.mdAlternate ? { alternates: { "text/markdown": `${CANON}/${o.slug}.md` } } : {}),

@@ -4,12 +4,13 @@
 // is a leaf, not a dead end. Deliberately minimal.
 import { CANON } from "../util";
 import { page } from "../layout/shell";
-import { ctaLink, pageHead } from "../components";
+import { pageHero } from "../layout/article";
+import { ctaLink } from "../components";
 
 /** htmlBody is products.md rendered to HTML with its leading <h1> removed. */
 export function products(htmlBody: string, jsonld: unknown): string {
   const body =
-    pageHead("Products", "Apps, tools and games that prove the research. Each a projection of the same origin.", "Products") +
+    pageHero({ title: "Products", lede: "Apps, tools and games that prove the research. Each a projection of the same origin.", eyebrow: "Products", section: "" }) +
     `<section class="section"><div class="container container--text">` +
       `<div class="prose">${htmlBody}</div>` +
       `<div style="display:flex;gap:32px;flex-wrap:wrap;margin-top:40px">` +
@@ -18,7 +19,7 @@ export function products(htmlBody: string, jsonld: unknown): string {
       `</div>` +
     `</div></section>`;
   return page("Products · Heliacon", body, "/products/", {
-    section: "", jsonld,
+    section: "", overHero: true, jsonld,
     description: "Apps, tools and games that prove the research. Each a projection of the same origin.",
     alternates: { "text/markdown": `${CANON}/products.md` },
   });

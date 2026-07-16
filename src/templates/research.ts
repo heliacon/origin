@@ -10,7 +10,8 @@
  */
 import { Dict, esc, collapse } from "../util";
 import { page } from "../layout/shell";
-import { pageHead, sectionLabel } from "../components";
+import { pageHero } from "../layout/article";
+import { sectionLabel } from "../components";
 
 const arw = `<span class="arw" aria-hidden="true">&rarr;</span>`;
 
@@ -35,8 +36,11 @@ export function research(defs: Dict[], jsonld: unknown): string {
       "The belief. Why we build origin-first, and what that commits us to.", "Read the manifesto");
 
   const body =
-    pageHead("Research",
-      "The canonical vocabulary behind the studio. The definitions the consulting applies, and what the ask endpoint retrieves.") +
+    pageHero({
+      title: "Research",
+      lede: "The canonical vocabulary behind the studio. The definitions the consulting applies, and what the ask endpoint retrieves.",
+      eyebrow: "Research", section: "research",
+    }) +
 
     `<section class="section"><div class="container">` +
       `<div class="section-head">${sectionLabel("Definitions")}</div>` +
@@ -60,7 +64,7 @@ export function research(defs: Dict[], jsonld: unknown): string {
     `</div></section>`;
 
   return page("Research · Heliacon", body, "/research/", {
-    section: "research", jsonld,
+    section: "research", overHero: true, jsonld,
     description: "The Heliacon canonical vocabulary: seven versioned definitions, the architecture and the manifesto. What the ask endpoint retrieves.",
   });
 }

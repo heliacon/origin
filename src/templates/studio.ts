@@ -13,7 +13,8 @@
  */
 import { CANON } from "../util";
 import { page } from "../layout/shell";
-import { pageHead, ctaLink, sectionLabel } from "../components";
+import { pageHero } from "../layout/article";
+import { ctaLink, sectionLabel } from "../components";
 import { icon } from "../icons";
 
 /** A facet / capability block: optional icon, an id-anchored heading, one paragraph. */
@@ -116,11 +117,11 @@ export function studio(_htmlBody: string, jsonld: unknown): string {
 </div></section>`;
 
   const body =
-    pageHead("Studio", "What we do and how we work. The offer, the method and the engagement model that make you found, trusted and invoked.", "Studio") +
+    pageHero({ title: "Studio", lede: "What we do and how we work. The offer, the method and the engagement model that make you found, trusted and invoked.", eyebrow: "Studio", section: "studio" }) +
     shift + whatWeDo + alsoHelp + whoFor + howWeWork + engagement + cta;
 
   return page("Studio · Heliacon", body, "/studio/", {
-    section: "studio", jsonld,
+    section: "studio", overHero: true, jsonld,
     description: "Origin-first strategy, research and products. Be found, trusted and invoked in a world where the reader is as often a machine as a person.",
     alternates: { "text/markdown": `${CANON}/studio.md` },
   });

@@ -127,20 +127,27 @@ p{margin:0 0 18px}
 .hero{position:relative;overflow:hidden;background:var(--bg-base);display:flex;flex-direction:column}
 .hero--home{min-height:88vh}
 .hero--article{min-height:min(60vh,520px)}
+.hero--page{min-height:min(52vh,440px)}
+.hero--page .hero__media img{object-position:center 88%}
+.hero--page .hero__inner{justify-content:center;padding-block:var(--space-16)}
+.hero__block--center{max-width:720px;margin-inline:auto;text-align:center}
+.hero__block--center .hero__rule{margin-inline:auto}
+.hero__block--center .hero__sub{margin-inline:auto}
+.hero__overlay--page{background:linear-gradient(0deg,rgba(9,10,12,.58) 0%,rgba(9,10,12,.5) 50%,rgba(9,10,12,.6) 100%)}
 .hero__media,.hero__media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 25%}
 .hero__overlay{position:absolute;inset:0;
-  background:linear-gradient(90deg,rgba(9,10,12,.50) 0%,rgba(9,10,12,.20) 28%,rgba(9,10,12,0) 54%),
-             linear-gradient(0deg,rgba(9,10,12,.40) 0%,rgba(9,10,12,0) 40%)}
+  background:linear-gradient(90deg,rgba(9,10,12,.82) 0%,rgba(9,10,12,.58) 20%,rgba(9,10,12,.24) 42%,rgba(9,10,12,0) 62%),
+             linear-gradient(0deg,rgba(9,10,12,.52) 0%,rgba(9,10,12,0) 42%)}
 .hero__inner{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;
   max-width:var(--container);width:100%;margin:0 auto;padding-inline:var(--gutter)}
 .hero--home .hero__inner{justify-content:center;padding-block:var(--space-24)}
 .hero--article .hero__inner{justify-content:flex-end;padding-block:var(--space-16)}
 .hero__block{max-width:620px}
 .hero__h1{font-size:clamp(40px,6vw,64px);line-height:1.05;letter-spacing:-.01em;color:var(--text-strong);
-  text-shadow:0 1px 24px rgba(0,0,0,.6);margin:0}
+  text-shadow:0 2px 30px rgba(0,0,0,.82);margin:0}
 .hero__rule{width:40px;height:2px;background:var(--accent);border:0;margin:var(--space-6) 0}
 .hero__sub{font-family:var(--font-sans);font-size:clamp(18px,2vw,21px);line-height:1.5;color:var(--text);
-  opacity:.92;text-shadow:0 1px 24px rgba(0,0,0,.6);margin:0 0 var(--space-8);max-width:34em}
+  opacity:.92;text-shadow:0 2px 30px rgba(0,0,0,.82);margin:0 0 var(--space-8);max-width:34em}
 .hero__ctas{display:flex;align-items:center;gap:var(--space-8);flex-wrap:wrap}
 
 /* ── CTAs (§4.4) ────────────────────────────────────────────────────────── */

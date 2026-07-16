@@ -11,6 +11,7 @@
  */
 import { CANON, Dict, esc, collapse, titleCase, fmtDate } from "../util";
 import { page } from "../layout/shell";
+import { articleHero } from "../layout/article";
 import { sectionLabel } from "../components";
 
 export function definitionPage(d: Dict, jsonld: unknown): string {
@@ -32,11 +33,12 @@ export function definitionPage(d: Dict, jsonld: unknown): string {
     .join("");
 
   const body =
-    `<section class="pagehead"><div class="container container--text">` +
-      `<a class="backlink" href="/research/">&larr; Back to Research</a>` +
-      `<h1>${esc(d.title)}</h1>` +
-      `<p class="lede">${esc(collapse(d.summary))}</p>` +
-    `</div></section>` +
+    articleHero({
+      section: "research",
+      backLabel: "Back to Research", backHref: "/research/",
+      title: String(d.title),
+      sub: collapse(d.summary),
+    }) +
 
     `<section class="section"><div class="container container--text">` +
 
@@ -65,7 +67,7 @@ export function definitionPage(d: Dict, jsonld: unknown): string {
     `</div></section>`;
 
   return page(`${d.title} · Heliacon`, body, `/research/definitions/${d.id}/`, {
-    section: "research", jsonld,
+    section: "research", overHero: true, jsonld,
     description: collapse(d.summary),
     alternates: {
       "application/json": `${CANON}/research/definitions/${d.id}.json`,

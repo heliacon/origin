@@ -18,6 +18,7 @@ import { marked } from "marked";
 import { CANON, Dict, esc, collapse } from "./src/util";
 import { css } from "./src/design/css";
 import { page } from "./src/layout/shell";
+import { pageHero } from "./src/layout/article";
 import { pageHead } from "./src/components";
 import { home } from "./src/templates/home";
 import { studio } from "./src/templates/studio";
@@ -165,9 +166,9 @@ async function main(): Promise<void> {
     `<a class="card" href="/research/definitions/${d.id}/"><div class="card__body"><span class="eyebrow card__kicker">Definition</span>` +
     `<h3 class="card__title">${esc(d.title)}</h3><p class="card__cap">${esc(collapse(d.summary))}</p></div></a>`).join("");
   write(join(DIST, "research", "definitions", "index.html"), minifyHtml(page("Definitions · Heliacon",
-    pageHead("Definitions", "The canonical vocabulary. Each term defined once, versioned, and carrying its provenance.", "Research") +
+    pageHero({ title: "Definitions", lede: "The canonical vocabulary. Each term defined once, versioned, and carrying its provenance.", eyebrow: "Research", section: "research" }) +
     `<section class="section"><div class="container"><div class="grid-3">${defCards}</div></div></section>`,
-    "/research/definitions/", { section: "research", description: "The Heliacon origin vocabulary. Canonical, versioned definitions.", jsonld: S.collectionGraph("/research/definitions/", "Definitions", [["Heliacon", "/"], ["Research", "/research/"], ["Definitions", "/research/definitions/"]]) })));
+    "/research/definitions/", { section: "research", overHero: true, description: "The Heliacon origin vocabulary. Canonical, versioned definitions.", jsonld: S.collectionGraph("/research/definitions/", "Definitions", [["Heliacon", "/"], ["Research", "/research/"], ["Definitions", "/research/definitions/"]]) })));
 
   // ── landmark docs: manifesto + architecture (light RESEARCH) ──
   write(join(DIST, "manifesto", "index.html"), minifyHtml(doc({

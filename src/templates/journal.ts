@@ -9,7 +9,8 @@
 // feed (/feed.xml) rather than shipping a dead email input.
 import { Dict, fmtDate, collapse } from "../util";
 import { page } from "../layout/shell";
-import { pageHead, journalRow, ctaLink } from "../components";
+import { pageHero } from "../layout/article";
+import { journalRow, ctaLink } from "../components";
 import { icon } from "../icons";
 
 /** Minutes to read, from the source markdown word count (~200 wpm), floored at 1. */
@@ -49,16 +50,16 @@ export function journal(posts: Dict[], jsonld: unknown): string {
     })).join("");
 
   const body =
-    pageHead(
-      "Journal",
-      "Thoughts, learnings and research at the intersection of search, AI and human intent. A living stream, updated as I go.",
-      "Journal",
-    ) +
+    pageHero({
+      title: "Journal",
+      lede: "Thoughts, learnings and research at the intersection of search, AI and human intent. A living stream, updated as I go.",
+      eyebrow: "Journal", section: "journal",
+    }) +
     `<section class="section"><div class="container"><div class="jlist">${rows}</div></div></section>` +
     subscribeBand();
 
   return page("Journal · Heliacon", body, "/journal/", {
-    section: "journal", jsonld,
+    section: "journal", overHero: true, jsonld,
     description: "Field notes and research from Heliacon on being found, trusted and invoked in an agentic web. Engineering, strategy and the occasional argument.",
   });
 }

@@ -9,7 +9,8 @@
 // note tells the visitor it opens their mail client and sends nothing to a server.
 import { esc } from "../util";
 import { page } from "../layout/shell";
-import { pageHead, sectionLabel, filledButton, contactField } from "../components";
+import { pageHero } from "../layout/article";
+import { sectionLabel, filledButton, contactField } from "../components";
 import { icon } from "../icons";
 
 const EMAIL = "hello@heliacon.com";
@@ -49,7 +50,7 @@ export function contact(jsonld: unknown): string {
       `<a href="${MAILTO}">email directly</a>.</p>`;
 
   const body =
-    pageHead("Get in Touch", "Let's build clarity together.", "Contact") +
+    pageHero({ title: "Get in Touch", lede: "Let's build clarity together.", eyebrow: "Contact", section: "contact" }) +
     `<section class="section"><div class="container"><div class="grid-2">` +
       `<div>` +
         `<p class="lede" style="margin-bottom:32px">Tell us what you are trying to be found for, or ` +
@@ -64,7 +65,7 @@ export function contact(jsonld: unknown): string {
     `</div></div></section>`;
 
   return page("Get in Touch · Heliacon", body, "/contact/", {
-    section: "contact", jsonld,
+    section: "contact", overHero: true, jsonld,
     description: "Get in touch with Heliacon. Copyable email and a direct line to Pete Dainty. We take a few engagements at a time.",
   });
 }

@@ -8,7 +8,8 @@
 // clearly-marked [PETE: ...] stubs authored in about.md. No bio, role or number is invented here.
 import { CANON } from "../util";
 import { page } from "../layout/shell";
-import { pageHead, ctaLink, statBlock, sectionLabel, starList } from "../components";
+import { pageHero } from "../layout/article";
+import { ctaLink, statBlock, sectionLabel, starList } from "../components";
 import { icon } from "../icons";
 
 // Honest, inspectable receipts, not vanity metrics (voice-and-copy §2, design-system §4.18).
@@ -50,7 +51,7 @@ export function about(htmlBody: string, jsonld: unknown): string {
   const valuesPanel = panel("Our values", starList(VALUES), "values");
 
   const body =
-    pageHead("About Heliacon", "We help organisations navigate uncertainty and build with confidence.", "About") +
+    pageHero({ title: "About Heliacon", lede: "We help organisations navigate uncertainty and build with confidence.", eyebrow: "About", section: "about" }) +
 
     `<section class="section"><div class="container container--text">` +
       `<div class="prose">${htmlBody}</div>` +
@@ -72,7 +73,7 @@ export function about(htmlBody: string, jsonld: unknown): string {
     `<div class="cta-band"><div class="container">${ctaLink("Work with me", "/contact/")}</div></div>`;
 
   return page("About Heliacon · Heliacon", body, "/about/", {
-    section: "about", jsonld, ogType: "profile",
+    section: "about", overHero: true, jsonld, ogType: "profile",
     description: "Heliacon is a studio and consultancy led by Pete Dainty. Founder-led, deliberately small, origin-first for the machines that now read the web.",
     alternates: { "text/markdown": `${CANON}/about.md` },
   });

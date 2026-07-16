@@ -11,7 +11,8 @@
  */
 import { CANON } from "../util";
 import { page } from "../layout/shell";
-import { pageHead, projectCard, ctaLink, sectionLabel } from "../components";
+import { pageHero } from "../layout/article";
+import { projectCard, ctaLink, sectionLabel } from "../components";
 import type { ProjectCardOpts } from "../components";
 
 // The four offer areas carry "Capability" and link to the Studio facet that explains them. They
@@ -46,11 +47,11 @@ export function work(_htmlBody: string, jsonld: unknown): string {
 </div></section>`;
 
   const body =
-    pageHead("Our Work", "We help organisations be found, trusted and invoked in a world where the reader is as often a machine as a person.", "Work") +
+    pageHero({ title: "Our Work", lede: "We help organisations be found, trusted and invoked in a world where the reader is as often a machine as a person.", eyebrow: "Work", section: "work" }) +
     grid + clientNote + cta;
 
   return page("Our Work · Heliacon", body, "/work/", {
-    section: "work", jsonld,
+    section: "work", overHero: true, jsonld,
     description: "How Heliacon helps: AI search strategy, content intelligence, agent experience design and data and signal strategy. Client work is shown, not claimed.",
     alternates: { "text/markdown": `${CANON}/work.md` },
   });

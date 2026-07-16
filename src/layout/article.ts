@@ -6,7 +6,7 @@
  */
 import { esc, collapse, slugify } from "../util";
 import { navBar, Section } from "./shell";
-import { heroPicture } from "../components";
+import { heroPicture, sectionLabel } from "../components";
 import type { TocEntry } from "../components";
 
 export interface ArticleHeroOpts {
@@ -29,6 +29,23 @@ export function articleHero(o: ArticleHeroOpts): string {
       `<h1 class="hero__h1" style="font-size:clamp(30px,4vw,44px)">${esc(o.title)}</h1>` +
       `<hr class="hero__rule">` +
       (o.sub ? `<p class="hero__sub">${esc(o.sub)}</p>` : "") +
+    `</div></div></section>`;
+}
+
+/**
+ * The over-image header for interior pages (studio, work, about, etc). The heading is centred over
+ * the image, so it uses the balanced --page overlay (see css.ts) rather than the home/article veil.
+ */
+export function pageHero(o: { title: string; lede?: string; eyebrow?: string; section?: Section }): string {
+  return `<section class="hero hero--page">` +
+    heroPicture("") +
+    `<div class="hero__overlay hero__overlay--page"></div>` +
+    navBar(o.section ?? "", true) +
+    `<div class="hero__inner"><div class="hero__block hero__block--center">` +
+      (o.eyebrow ? sectionLabel(o.eyebrow) + `<div style="height:14px"></div>` : "") +
+      `<h1 class="hero__h1" style="font-size:clamp(32px,4vw,44px)">${esc(o.title)}</h1>` +
+      `<hr class="hero__rule">` +
+      (o.lede ? `<p class="hero__sub" style="max-width:640px">${esc(o.lede)}</p>` : "") +
     `</div></div></section>`;
 }
 
