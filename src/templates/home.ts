@@ -1,16 +1,17 @@
 /**
  * Homepage. Built to ia-and-ux §2.1 and the approved mock, with copy from voice-and-copy §2.
- * Sections: hero -> what we do (5 facets) -> explore our work (tabs + 3 real cards) -> ask strip
- * (server-rendered canonical Q&A + bridge CTA, machine spine preserved) -> latest journal -> footer.
+ * Sections: hero -> what we do (5 facets) -> ask strip (server-rendered canonical Q&A + bridge
+ * CTA, machine spine preserved) -> latest journal -> footer. The hero already carries the one
+ * link to the work index; the capability facets appear in "What we do", so home does not repeat
+ * them as project cards.
  *
- * British English, no em dash, no fabricated proof. The three work cards are all real: Case Study
- * Zero (this site), ARMX (our framework) and Kenovar (our platform).
+ * British English, no em dash, no fabricated proof.
  */
 import { CANON, Dict, esc, collapse, fmtDate } from "../util";
 import { page } from "../layout/shell";
 import { navBar } from "../layout/shell";
 import {
-  heroPicture, sectionLabel, ctaLink, whatWeDoRow, projectCard, journalRow, filterTabs,
+  heroPicture, sectionLabel, ctaLink, whatWeDoRow, journalRow,
 } from "../components";
 
 const FACETS = [
@@ -19,32 +20,6 @@ const FACETS = [
   { icon: "products", title: "Products", caption: "Tools that turn what we learn into something you can use.", href: "/products/" },
   { icon: "partnerships", title: "Partnerships", caption: "A few engagements at a time, given senior attention.", href: "/studio/#partnerships" },
   { icon: "studio", title: "Studio", caption: "The craft of building it. Legible, owned, provenance-first.", href: "/studio/" },
-];
-
-const WORK_TABS = [
-  { label: "All", value: "all", href: "/work/" },
-  { label: "Strategy", value: "strategy", href: "/work/?type=strategy" },
-  { label: "Research", value: "research", href: "/work/?type=research" },
-  { label: "Products", value: "products", href: "/work/?type=products" },
-  { label: "Studio", value: "studio", href: "/work/?type=studio" },
-];
-
-const WORK_CARDS = [
-  {
-    kicker: "Studio", title: "Case Study Zero", iconName: "focus", dataType: "studio",
-    href: "/work/case-study-zero/", ctaLabel: "Inspect it",
-    caption: "The clearest proof of how we build is the site you are on. One canonical source, served to browsers, agents and crawlers alike, every claim inspectable.",
-  },
-  {
-    kicker: "Research", title: "ARMX Framework", iconName: "connections", dataType: "research",
-    href: "/work/armx/", ctaLabel: "View project",
-    caption: "Agent Readiness and Machine eXperience. The five-pillar model behind how we measure being found, trusted, selected and invoked.",
-  },
-  {
-    kicker: "Products", title: "Kenovar", iconName: "products", dataType: "products",
-    href: "/work/kenovar/", ctaLabel: "View project",
-    caption: "Our SEO, AEO and GEO platform. A verified-owner digital twin of your site, inspectable from every machine viewpoint on one graph.",
-  },
 ];
 
 /** Server-render a few real, cited Q&A pairs from the definitions so crawlers see them without JS
@@ -61,7 +36,6 @@ function canonicalQA(defs: Dict[]): string {
 
 export function home(origin: Dict, defs: Dict[], posts: Dict[], graph: unknown): string {
   const facets = whatWeDoRow(FACETS);
-  const cards = WORK_CARDS.map((c) => projectCard(c)).join("");
   const latest = posts.slice(0, 3).map((p) =>
     journalRow({
       href: `/journal/${p.slug}/`,
@@ -92,15 +66,6 @@ export function home(origin: Dict, defs: Dict[], posts: Dict[], graph: unknown):
 <section class="section"><div class="container">
   <div class="section-head">${sectionLabel("What we do")}</div>
   ${facets}
-</div></section>
-
-<section class="section"><div class="container">
-  <div class="section-head" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
-    <div>${sectionLabel("Explore our work")}<h2 style="margin-top:16px">Proof, not adjectives</h2></div>
-    ${ctaLink("View all work", "/work/")}
-  </div>
-  ${filterTabs(WORK_TABS, "all")}
-  <div class="grid-3" data-filter-grid style="margin-top:40px">${cards}</div>
 </div></section>
 
 <section class="section"><div class="container">

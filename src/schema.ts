@@ -2,9 +2,10 @@
  * Machine projections and structured data: JSON-LD graphs, the MCP manifest, sitemap, feed,
  * provenance and ask indexes, robots and _headers. Pure data in, string/object out.
  *
- * Every path here is the greenfield tree (ia §5.2): definitions and corpus nest under /research/,
+ * Every path here is the greenfield tree (ia §5.2): definitions nest under /research/,
  * the posts stream is /journal/. The load-bearing fragment @ids are unchanged (#organization,
- * #website, #pete-dainty, #corpus) so the graph stays coherent (seo-continuity I-1). Per-page
+ * #website, #pete-dainty, #corpus, the vocabulary DefinedTermSet) so the graph stays coherent
+ * (seo-continuity I-1). Per-page
  * @ids are URLs and move with their page, updated consistently across every reference.
  */
 import { CANON, Dict, collapse } from "./util";
@@ -13,8 +14,6 @@ import { CANON, Dict, collapse } from "./util";
 export const defPath = (id: string) => `/research/definitions/${id}/`;
 export const defJson = (id: string) => `/research/definitions/${id}.json`;
 export const defMd = (id: string) => `/research/definitions/${id}.md`;
-export const corpusPath = (slug: string) => `/research/corpus/${slug}/`;
-export const corpusMd = (slug: string) => `/research/corpus/${slug}.md`;
 export const journalPath = (slug: string) => `/journal/${slug}/`;
 export const journalMd = (slug: string) => `/journal/${slug}.md`;
 
@@ -134,23 +133,6 @@ export const definitionGraph = (d: Dict): Dict => ({
   ],
 });
 
-export const corpusGraph = (c: Dict): Dict => ({
-  "@context": ctx,
-  "@graph": [
-    {
-      "@type": "Article",
-      "@id": `${CANON}${corpusPath(c.slug)}`,
-      headline: c.title,
-      author: c.author ? { "@type": "Person", name: c.author } : { "@id": `${CANON}/#organization` },
-      publisher: { "@id": `${CANON}/#organization` },
-      ...(c.updated ? { dateModified: c.updated } : {}),
-      mainEntityOfPage: `${CANON}${corpusPath(c.slug)}`,
-      isPartOf: { "@id": `${CANON}/#corpus` },
-    },
-    breadcrumb([["Heliacon", "/"], ["Research", "/research/"], ["Corpus", "/research/corpus/"], [c.title, corpusPath(c.slug)]]),
-  ],
-});
-
 const wordCount = (md: string): number => (collapse(md).match(/\s+/g)?.length ?? 0) + 1;
 
 export const postGraph = (p: Dict, origin: Dict): Dict => {
@@ -181,7 +163,7 @@ export const postGraph = (p: Dict, origin: Dict): Dict => {
   };
 };
 
-export const workIndexGraph = (items: { slug: string }[]): Dict => ({
+export const workIndexGraph = (): Dict => ({
   "@context": ctx,
   "@graph": [
     {
@@ -190,31 +172,8 @@ export const workIndexGraph = (items: { slug: string }[]): Dict => ({
       name: "Work",
       isPartOf: { "@id": `${CANON}/#website` },
       about: { "@id": `${CANON}/#organization` },
-      mainEntity: {
-        "@type": "ItemList",
-        itemListElement: items.map((it, i) => ({ "@type": "ListItem", position: i + 1, url: `${CANON}/work/${it.slug}/` })),
-      },
     },
     breadcrumb([["Heliacon", "/"], ["Work", "/work/"]]),
-  ],
-});
-
-export const workDetailGraph = (slug: string, title: string, serviceName: string, dateMod: string, origin: Dict): Dict => ({
-  "@context": ctx,
-  "@graph": [
-    {
-      "@type": "Article",
-      "@id": `${CANON}/work/${slug}/`,
-      headline: title,
-      author: { "@id": `${CANON}/#organization` },
-      publisher: { "@id": `${CANON}/#organization` },
-      datePublished: dateMod,
-      dateModified: dateMod,
-      mainEntityOfPage: `${CANON}/work/${slug}/`,
-      about: { "@type": "Service", name: serviceName },
-      isPartOf: { "@id": `${CANON}/#website` },
-    },
-    breadcrumb([["Heliacon", "/"], ["Work", "/work/"], [title, `/work/${slug}/`]]),
   ],
 });
 
@@ -227,7 +186,7 @@ export const researchGraph = (): Dict => ({
       name: "Research",
       isPartOf: { "@id": `${CANON}/#website` },
       hasPart: [{ "@id": `${CANON}/#corpus` }],
-      significantLink: [`${CANON}/research/corpus/`, `${CANON}/research/definitions/`],
+      significantLink: [`${CANON}/research/definitions/`],
     },
     breadcrumb([["Heliacon", "/"], ["Research", "/research/"]]),
   ],
@@ -352,17 +311,14 @@ export function mcpManifest(origin: Dict): Dict {
 }
 
 // ── sitemap (canonical 200s only, new tree) ──────────────────────────────────
-export function sitemapXml(defs: Dict[], corpus: Dict[], posts: Dict[]): string {
-  const work = ["case-study-zero", "armx", "kenovar"];
+export function sitemapXml(defs: Dict[], posts: Dict[]): string {
   const entries: { loc: string; lastmod?: string }[] = [
     { loc: "/" }, { loc: "/studio/" }, { loc: "/work/" },
-    ...work.map((s) => ({ loc: `/work/${s}/` })),
-    { loc: "/research/" }, { loc: "/research/corpus/" }, { loc: "/research/definitions/" },
+    { loc: "/research/" }, { loc: "/research/definitions/" },
     { loc: "/manifesto/" }, { loc: "/architecture/" },
     { loc: "/journal/" }, { loc: "/about/" }, { loc: "/contact/" }, { loc: "/products/" },
     ...posts.map((p) => ({ loc: journalPath(p.slug), lastmod: (p.updated ?? p.published) as string })),
     ...defs.map((d) => ({ loc: defPath(d.id), lastmod: d.updated as string })),
-    ...corpus.map((c) => ({ loc: corpusPath(c.slug), lastmod: (c.updated ?? c.published) as string })),
   ];
   const items = entries.map((e) =>
     `  <url><loc>${CANON}${e.loc}</loc>${e.lastmod ? `<lastmod>${e.lastmod}</lastmod>` : ""}</url>`).join("\n");
@@ -370,37 +326,22 @@ export function sitemapXml(defs: Dict[], corpus: Dict[], posts: Dict[]): string 
 }
 
 // ── provenance (new canonical + source paths) ────────────────────────────────
-export function provenanceIndex(defs: Dict[], corpus: Dict[]): Dict {
-  const items = [
-    ...defs.map((d) => ({
-      id: d.id, kind: "definition", title: d.title,
-      version: String(d.version ?? "0.1"), status: d.status ?? "draft",
-      author: d.author ?? "Heliacon", updated: d.updated ?? null,
-      canonical: `${CANON}${defPath(d.id)}`, source: `${CANON}${defMd(d.id)}`,
-    })),
-    ...corpus.map((c) => ({
-      id: c.slug, kind: "essay", title: c.title,
-      version: String(c.version ?? "0.1"), status: c.status ?? "draft",
-      author: c.author ?? "Heliacon", updated: c.updated ?? null,
-      canonical: `${CANON}${corpusPath(c.slug)}`, source: `${CANON}${corpusMd(c.slug)}`,
-    })),
-  ];
+export function provenanceIndex(defs: Dict[]): Dict {
+  const items = defs.map((d) => ({
+    id: d.id, kind: "definition", title: d.title,
+    version: String(d.version ?? "0.1"), status: d.status ?? "draft",
+    author: d.author ?? "Heliacon", updated: d.updated ?? null,
+    canonical: `${CANON}${defPath(d.id)}`, source: `${CANON}${defMd(d.id)}`,
+  }));
   return { origin: "heliacon", count: items.length, items };
 }
 
 // ── ask index (new citation urls) ────────────────────────────────────────────
-export function askIndex(defs: Dict[], corpus: Dict[]): Dict {
+export function askIndex(defs: Dict[]): Dict {
   const passages: Dict[] = [];
   for (const d of defs) {
     const text = [collapse(d.summary), collapse(d.definition), ...(d.rationale ?? [])].filter(Boolean).join(" ");
     passages.push({ id: d.id, kind: "definition", title: d.title, url: `${CANON}${defPath(d.id)}`, source: `${CANON}${defMd(d.id)}`, text });
-  }
-  for (const c of corpus) {
-    const paras = (c.body_md ?? "").split(/\n\n+/)
-      .map((p: string) => collapse(p.replace(/^#.*$/m, "").replace(/[#*_`>-]/g, " ")))
-      .filter((p: string) => p.length > 40);
-    paras.forEach((text: string, part: number) =>
-      passages.push({ id: c.slug, kind: "essay", title: c.title, url: `${CANON}${corpusPath(c.slug)}`, source: `${CANON}${corpusMd(c.slug)}`, text, part }));
   }
   return { count: passages.length, passages };
 }

@@ -3,16 +3,15 @@
  *
  * Order is load-bearing for accessibility and for the wireframe: back link, then the H1 term FIRST
  * (heading order, HEL-029), then the canonical one-sentence contract, the expanded detail, the
- * PROVENANCE block (the point of the page), RELATED (the matching corpus essay plus sibling terms),
+ * PROVENANCE block (the point of the page), RELATED (sibling terms, when the definition names any),
  * and the machine ALTERNATES (.json, .jsonld, .md).
  *
  * The DefinedTerm/DefinedTermSet schema and stable @ids are emitted by src/schema.ts and passed in
- * as `jsonld`; this template keeps H1-first and advertises the alternates. Every definition has a
- * matching corpus essay at the same id (1:1 across the seven terms), so Related links to it.
+ * as `jsonld`; this template keeps H1-first and advertises the alternates.
  */
 import { CANON, Dict, esc, collapse, titleCase, fmtDate } from "../util";
 import { page } from "../layout/shell";
-import { sectionLabel, ctaLink } from "../components";
+import { sectionLabel } from "../components";
 
 export function definitionPage(d: Dict, jsonld: unknown): string {
   const listSec = (label: string, items?: unknown[]): string =>
@@ -50,10 +49,11 @@ export function definitionPage(d: Dict, jsonld: unknown): string {
         `<div class="tablewrap"><table><tbody>${provRows}${provSource}</tbody></table></div>` +
       `</div>` +
 
-      `<div style="margin-top:48px">${sectionLabel("Related")}` +
-        `<p style="margin-top:16px">${ctaLink(`${d.title} in the corpus`, `/research/corpus/${esc(d.id)}/`)}</p>` +
-        (relDefs ? `<div class="chips" style="margin-top:8px">${relDefs}</div>` : "") +
-      `</div>` +
+      (relDefs
+        ? `<div style="margin-top:48px">${sectionLabel("Related")}` +
+            `<div class="chips" style="margin-top:16px">${relDefs}</div>` +
+          `</div>`
+        : "") +
 
       `<div style="margin-top:40px">${sectionLabel("This page as")}` +
         `<p class="machine-row" style="margin-top:12px">` +

@@ -129,8 +129,8 @@ p{margin:0 0 18px}
 .hero--article{min-height:min(60vh,520px)}
 .hero__media,.hero__media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 25%}
 .hero__overlay{position:absolute;inset:0;
-  background:linear-gradient(90deg,rgba(9,10,12,.94) 0%,rgba(9,10,12,.78) 32%,rgba(9,10,12,.30) 66%,rgba(9,10,12,0) 100%),
-             linear-gradient(0deg,rgba(9,10,12,.85) 0%,rgba(9,10,12,.15) 40%,rgba(9,10,12,0) 70%)}
+  background:linear-gradient(90deg,rgba(9,10,12,.60) 0%,rgba(9,10,12,.28) 30%,rgba(9,10,12,.06) 58%,rgba(9,10,12,0) 80%),
+             linear-gradient(0deg,rgba(9,10,12,.72) 0%,rgba(9,10,12,.12) 45%,rgba(9,10,12,0) 72%)}
 .hero__inner{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;
   max-width:var(--container);width:100%;margin:0 auto;padding-inline:var(--gutter)}
 .hero--home .hero__inner{justify-content:center;padding-block:var(--space-24)}
