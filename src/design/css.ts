@@ -125,6 +125,8 @@ p{margin:0 0 18px}
 
 /* ── hero (§4.3) ────────────────────────────────────────────────────────── */
 .hero{position:relative;overflow:hidden;background:var(--bg-base);display:flex;flex-direction:column}
+.hero::after{content:"";position:absolute;inset-inline:0;bottom:0;height:120px;z-index:1;pointer-events:none;
+  background:linear-gradient(0deg,var(--bg-base) 0%,rgba(15,15,18,0) 100%)}
 .hero--home{min-height:88vh}
 .hero--article{min-height:min(60vh,520px)}
 .hero--page{min-height:min(52vh,440px)}
