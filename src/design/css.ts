@@ -79,6 +79,7 @@ p{margin:0 0 18px}
 .container{max-width:var(--container);margin:0 auto;padding-inline:var(--gutter);width:100%}
 .container--text{max-width:var(--container-text)}
 .section{padding-block:var(--space-20)}
+.hero--home + .section,.hero--page + .section{margin-top:calc(var(--space-24) * -1);position:relative;z-index:3}
 .section--tight{padding-block:var(--space-12)}
 .section-head{margin-bottom:var(--space-8);text-align:center}
 .section-head .eyebrow{margin-bottom:var(--space-4)}
