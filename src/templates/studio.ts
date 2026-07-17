@@ -117,8 +117,10 @@ export function studio(_htmlBody: string, jsonld: unknown): string {
 </div></section>`;
 
   const body =
-    pageHero({ title: "Studio", lede: "What we do and how we work. The offer, the method and the engagement model that get you found, trusted and invoked.", eyebrow: "Studio", section: "studio" }) +
-    shift + whatWeDo + alsoHelp + whoFor + howWeWork + engagement + cta;
+    pageHero(
+      { title: "Studio", lede: "What we do and how we work. The offer, the method and the engagement model that get you found, trusted and invoked.", eyebrow: "Studio", section: "studio" },
+      shift + whatWeDo + alsoHelp + whoFor + howWeWork + engagement + cta,
+    );
 
   return page("Studio · Heliacon", body, "/studio/", {
     section: "studio", overHero: true, jsonld,

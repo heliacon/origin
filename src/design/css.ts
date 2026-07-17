@@ -77,15 +77,12 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .eyebrow{font-family:var(--font-mono);font-weight:500;font-size:12px;line-height:1;
   letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted);display:block}
 .eyebrow--accent{color:var(--accent)}
-/* the eyebrow over a hero sits on the bright sky: muted grey fails AA there, so lift it to the
-   strong text colour with a dark halo (the darker hero scrim does the rest) */
-.hero .eyebrow{color:var(--text-strong);text-shadow:0 1px 14px rgba(0,0,0,.9),0 0 3px rgba(0,0,0,.75)}
 
 /* ── layout (§3) ────────────────────────────────────────────────────────── */
 .container{max-width:var(--container);margin:0 auto;padding-inline:var(--gutter);width:100%}
 .container--text{max-width:var(--container-text)}
 .section{padding-block:var(--space-16)}
-.hero--home + .section,.hero--page + .section{margin-top:calc(var(--space-20) * -1);position:relative;z-index:3}
+.hero--home + .section{margin-top:calc(var(--space-20) * -1);position:relative;z-index:3}
 .section--tight{padding-block:var(--space-10)}
 .section-head{margin-bottom:var(--space-8);text-align:center}
 .section-head .eyebrow{margin-bottom:var(--space-4)}
@@ -139,20 +136,14 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .hero::after{content:"";position:absolute;inset-inline:0;bottom:0;height:120px;z-index:1;pointer-events:none;
   background:linear-gradient(0deg,var(--bg-base) 0%,rgba(15,15,18,0) 100%)}
 .hero--home{min-height:88vh}
-.hero--article{min-height:min(60vh,520px)}
-.hero--page{min-height:min(52vh,440px)}
+/* interior banners: short, no text on the image (the heading lives in the sheet below) */
+.hero--page,.hero--article{min-height:min(46vh,430px)}
 .hero--page .hero__media img{object-position:center 88%}
-.hero--page .hero__inner{justify-content:center;padding-block:var(--space-16)}
-.hero__block--center{max-width:720px;margin-inline:auto;text-align:center}
-.hero__block--center .hero__rule{margin-inline:auto}
-.hero__block--center .hero__sub{margin-inline:auto}
-/* page heroes carry centred text over the bright sunset: a top band keeps the over-hero nav +
-   eyebrow legible, a centre-weighted radial scrim clears the H1/sub to AA while leaving the image
-   edges bright. Higher specificity than base .hero__overlay so it wins regardless of source order. */
-.hero--page .hero__overlay{background:
-  linear-gradient(180deg,rgba(6,7,9,.86) 0,rgba(6,7,9,.44) 74px,rgba(6,7,9,.12) 134px,rgba(6,7,9,0) 190px),
-  radial-gradient(130% 88% at 50% 46%,rgba(9,10,12,.70) 0%,rgba(9,10,12,.55) 40%,rgba(9,10,12,.34) 68%,rgba(9,10,12,.2) 100%),
-  linear-gradient(0deg,rgba(9,10,12,.5) 0%,rgba(9,10,12,0) 26%)}
+/* interior banners carry no text, so the image stays bright (comparable to home): only the home
+   top band survives for over-hero nav legibility (a11y-validated), plus the .hero::after blend.
+   Higher specificity than base .hero__overlay so it wins regardless of source order. */
+.hero--page .hero__overlay,.hero--article .hero__overlay{background:
+  linear-gradient(180deg,rgba(6,7,9,.82) 0,rgba(6,7,9,.40) 72px,rgba(6,7,9,.10) 132px,rgba(6,7,9,0) 186px)}
 .hero__media,.hero__media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 25%}
 .hero__overlay{position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(6,7,9,.82) 0,rgba(6,7,9,.40) 72px,rgba(6,7,9,.10) 132px,rgba(6,7,9,0) 186px),
@@ -161,10 +152,6 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .hero__inner{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;
   max-width:var(--container);width:100%;margin:0 auto;padding-inline:var(--gutter)}
 .hero--home .hero__inner{justify-content:center;padding-block:var(--space-24)}
-.hero--article .hero__inner{justify-content:flex-end;padding-block:var(--space-16)}
-/* definition pages read in a centred text column (.container--text), so their hero inner narrows
-   to the same box: the H1 sits on the body's left edge, not the full-container gutter */
-.hero--article-narrow .hero__inner{max-width:var(--container-text)}
 .hero__block{max-width:620px}
 .hero__h1{font-size:clamp(40px,6vw,64px);line-height:1.05;letter-spacing:-.01em;color:var(--text-strong);
   text-shadow:0 1px 3px rgba(0,0,0,.65),0 2px 30px rgba(0,0,0,.82);margin:0}
@@ -172,6 +159,32 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .hero__sub{font-family:var(--font-sans);font-size:clamp(18px,2vw,21px);line-height:1.5;color:var(--text-strong);
   opacity:1;text-shadow:0 1px 3px rgba(0,0,0,.7),0 2px 24px rgba(0,0,0,.7);margin:0 0 var(--space-8);max-width:34em}
 .hero__ctas{display:flex;align-items:center;gap:var(--space-8);flex-wrap:wrap}
+
+/* ── content sheet (interior pages: the solid container pulled up over the banner) ── */
+.sheet-wrap{max-width:var(--container);margin:0 auto;padding-inline:var(--gutter);position:relative;z-index:3}
+.sheet-wrap--text{max-width:var(--container-text)}
+.sheet{background:var(--bg-base);border:1px solid var(--border);border-radius:var(--r-1);
+  margin-top:-120px;padding:var(--space-12) clamp(24px,4vw,var(--space-16)) var(--space-12)}
+/* sections flowing inside the sheet already sit in its padding: neutralise their own gutter */
+.sheet .container{padding-inline:0}
+.sheet .section:last-child,.sheet .cta-band:last-child{padding-bottom:0}
+.sheet__head{margin-bottom:var(--space-8)}
+.sheet__head--center{text-align:center}
+.sheet__head--center .sheet__rule{margin-inline:auto}
+.sheet__head--center .lede{max-width:640px;margin-inline:auto}
+.sheet__head .eyebrow{margin-bottom:var(--space-4)}
+.sheet__head h1{margin:0}
+.sheet__head .lede{margin:0}
+.sheet__rule{width:40px;height:2px;background:var(--accent);border:0;margin:var(--space-6) 0}
+/* article heading block: first row of the article grid, so it aligns with the reading column */
+.article__head{grid-column:1/-1}
+/* outside the article grid (narrow definition sheet) the head provides its own gap */
+.sheet>.article__head{margin-bottom:var(--space-8)}
+.article__head .backlink{margin-bottom:var(--space-8)}
+.article__meta{font-family:var(--font-mono);font-weight:400;font-size:12px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--text-muted);margin:0 0 var(--space-4)}
+.article__h1{font-size:clamp(32px,4vw,44px);max-width:22em;margin:0}
+.article__dek{max-width:38em;margin:0}
 
 /* ── CTAs (§4.4) ────────────────────────────────────────────────────────── */
 .ctalink{font-family:var(--font-mono);font-weight:500;font-size:13px;letter-spacing:.12em;
@@ -231,6 +244,10 @@ a.wwd__cell:hover .wwd__title{color:var(--accent)}
 .card:hover .card__title{color:var(--accent)}
 .card__cap{color:var(--text-muted);font-size:15px;line-height:1.5;margin:0;flex:1}
 .card__cta{margin-top:var(--space-2)}
+/* non-link card: identical chrome, hover-neutral (no border light-up, title shift or image scale) */
+.card--static:hover{border-color:var(--border)}
+.card--static:hover .card__title{color:var(--text)}
+.card--static:hover .card__media img{transform:none}
 
 /* ── journal row (§4.7) ─────────────────────────────────────────────────── */
 .jlist{border-top:1px solid var(--border)}
@@ -363,10 +380,9 @@ a.chip:hover,.chip.is-active{border-color:var(--accent);color:var(--text)}
 .prose td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:top}
 .prose pre{background:var(--code-bg);border:1px solid var(--border);border-radius:var(--r-1);padding:var(--space-5);overflow-x:auto;margin:var(--space-6) 0}
 
-/* ── article two-column layout (§3.3) ───────────────────────────────────── */
-.article{max-width:var(--container);margin:0 auto;padding-inline:var(--gutter);
-  display:grid;grid-template-columns:minmax(0,var(--measure)) var(--sidebar);
-  column-gap:var(--space-16);justify-content:center;padding-block:var(--space-16)}
+/* ── article two-column layout (§3.3): lives inside the sheet, which owns width and padding ── */
+.article{display:grid;grid-template-columns:minmax(0,var(--measure)) var(--sidebar);
+  column-gap:var(--space-16);row-gap:var(--space-10);justify-content:center}
 .article__body{min-width:0}
 .article__aside{position:sticky;top:96px;align-self:start;display:flex;flex-direction:column;gap:var(--space-8)}
 .backlink{font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);display:inline-block;margin-bottom:var(--space-6);text-decoration:underline;text-underline-offset:3px}
@@ -427,6 +443,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 }
 @media(max-width:640px){
   .section{padding-block:var(--space-12)}
+  /* the sheet spans nearly full width and the pull-up shrinks gracefully */
+  .hero--page,.hero--article{min-height:min(38vh,340px)}
+  .sheet-wrap{padding-inline:10px}
+  .sheet{margin-top:-64px;padding:var(--space-8) var(--space-5) var(--space-8)}
   .wwd{grid-template-columns:repeat(2,1fr)}
   .grid-3,.grid-2{grid-template-columns:1fr}
   .stats{grid-template-columns:1fr;gap:var(--space-6)}

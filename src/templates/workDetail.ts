@@ -10,7 +10,7 @@
  */
 import { CANON, esc, collapse } from "../util";
 import { page } from "../layout/shell";
-import { articleHero, withHeadingIds, articleLayout } from "../layout/article";
+import { withHeadingIds, articleLayout } from "../layout/article";
 import { tocSidebar, relatedList, ctaLink } from "../components";
 
 export interface WorkDetailOpts {
@@ -22,10 +22,6 @@ export interface WorkDetailOpts {
 
 export function workDetail(o: WorkDetailOpts): string {
   const { html, toc } = withHeadingIds(o.htmlBody);
-  const hero = articleHero({
-    section: "work", backLabel: "Back to Work", backHref: "/work/",
-    meta: o.kicker, title: o.title, sub: o.sub,
-  });
   const aside =
     tocSidebar(toc) +
     relatedList(o.related.map((r) => ({ href: r.href, title: r.title, iconName: "connections" })), "/work/", "All work") +
@@ -35,7 +31,13 @@ export function workDetail(o: WorkDetailOpts): string {
   <h2 style="margin-bottom:24px">Want this for your origin?</h2>
   ${ctaLink("Start a conversation", "/contact/?ref=work")}
 </div></section>`;
-  const content = articleLayout({ hero, body: html, aside }) + cta;
+  const content = articleLayout({
+    hero: {
+      section: "work", backLabel: "Back to Work", backHref: "/work/",
+      meta: o.kicker, title: o.title, sub: o.sub,
+    },
+    body: html, aside,
+  }) + cta;
   return page(`${o.title} · Heliacon`, content, `/work/${o.slug}/`, {
     section: "work", overHero: true, jsonld: o.jsonld, ogType: "article",
     description: collapse(o.description),

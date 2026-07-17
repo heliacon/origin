@@ -10,7 +10,7 @@
  */
 import { CANON, Dict, esc, collapse } from "../util";
 import { page } from "../layout/shell";
-import { articleHero, withHeadingIds, articleLayout } from "../layout/article";
+import { withHeadingIds, articleLayout } from "../layout/article";
 import { tocSidebar, relatedList, ctaLink, sectionLabel } from "../components";
 
 export interface CorpusRelated { href: string; title: string; }
@@ -29,11 +29,6 @@ export function corpusEssay(c: Dict, htmlBody: string, jsonld: unknown, hasDefin
   const { html, toc } = withHeadingIds(htmlBody);
   const dek = collapse(c.summary ?? "") || leadFromHtml(htmlBody);
 
-  const hero = articleHero({
-    section: "research", backLabel: "Back to Research", backHref: "/research/",
-    meta: `Essay · v${c.version ?? "0.1"}`, title: c.title, sub: dek,
-  });
-
   const aside =
     tocSidebar(toc) +
     (hasDefinition
@@ -42,7 +37,13 @@ export function corpusEssay(c: Dict, htmlBody: string, jsonld: unknown, hasDefin
     relatedList(related.map((r) => ({ href: r.href, title: r.title, iconName: "connections" })), "/research/", "All research") +
     `<div>${sectionLabel("This page as")}<p class="machine-row" style="margin-top:12px"><a href="/research/corpus/${esc(c.slug)}.md">Markdown</a></p></div>`;
 
-  const content = articleLayout({ hero, body: html, aside });
+  const content = articleLayout({
+    hero: {
+      section: "research", backLabel: "Back to Research", backHref: "/research/",
+      meta: `Essay · v${c.version ?? "0.1"}`, title: String(c.title), sub: dek,
+    },
+    body: html, aside,
+  });
   return page(`${c.title} · Heliacon`, content, `/research/corpus/${c.slug}/`, {
     section: "research", overHero: true, jsonld, ogType: "article",
     description: dek.slice(0, 155),

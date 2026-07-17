@@ -9,15 +9,16 @@ import { ctaLink } from "../components";
 
 /** htmlBody is products.md rendered to HTML with its leading <h1> removed. */
 export function products(htmlBody: string, jsonld: unknown): string {
-  const body =
-    pageHero({ title: "Products", lede: "Apps, tools and games that prove the research. Each a projection of the same origin.", eyebrow: "Products", section: "" }) +
+  const body = pageHero(
+    { title: "Products", lede: "Apps, tools and games that prove the research. Each a projection of the same origin.", eyebrow: "Products", section: "" },
     `<section class="section"><div class="container container--text">` +
       `<div class="prose">${htmlBody}</div>` +
       `<div style="display:flex;gap:32px;flex-wrap:wrap;margin-top:40px">` +
         ctaLink("See our work", "/work/") +
         ctaLink("Read the research", "/research/") +
       `</div>` +
-    `</div></section>`;
+    `</div></section>`,
+  );
   return page("Products · Heliacon", body, "/products/", {
     section: "", overHero: true, jsonld,
     description: "Apps, tools and games that prove the research. Each a projection of the same origin.",

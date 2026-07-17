@@ -75,21 +75,26 @@ export function starList(items: string[]): string {
 
 // ── project / work card (§4.6) ───────────────────────────────────────────────
 export interface ProjectCardOpts {
-  title: string; caption: string; href: string; ctaLabel?: string;
+  title: string; caption: string; href?: string; ctaLabel?: string;
   kicker?: string; image?: string; imageAlt?: string; iconName?: string; dataType?: string;
 }
+/** With `href` the whole card is the link target; without it the card renders as a static
+ *  `.card--static` <div> (same chrome, no link affordance, no CTA row). */
 export function projectCard(o: ProjectCardOpts): string {
   const media = o.image
     ? `<div class="card__media"><img src="${esc(o.image)}" alt="${esc(o.imageAlt ?? o.title)}" loading="lazy"></div>`
     : `<div class="card__media"><div class="card__ph">${icon(o.iconName ?? "products")}</div></div>`;
-  return `<a class="card" href="${esc(o.href)}"${o.dataType ? ` data-type="${esc(o.dataType)}"` : ""}>` +
-    media +
+  const body =
     `<div class="card__body">` +
       (o.kicker ? `<span class="eyebrow card__kicker">${esc(o.kicker)}</span>` : "") +
       `<h3 class="card__title">${esc(o.title)}</h3>` +
       `<p class="card__cap">${esc(o.caption)}</p>` +
-      `<span class="ctalink card__cta">${esc(o.ctaLabel ?? "View project")} ${arw}</span>` +
-    `</div></a>`;
+      (o.href ? `<span class="ctalink card__cta">${esc(o.ctaLabel ?? "View project")} ${arw}</span>` : "") +
+    `</div>`;
+  const data = o.dataType ? ` data-type="${esc(o.dataType)}"` : "";
+  return o.href
+    ? `<a class="card" href="${esc(o.href)}"${data}>${media}${body}</a>`
+    : `<div class="card card--static"${data}>${media}${body}</div>`;
 }
 
 // ── journal row (§4.7) ───────────────────────────────────────────────────────

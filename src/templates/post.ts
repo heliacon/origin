@@ -12,7 +12,7 @@
 //     (/feed.xml) instead of shipping a dead email input.
 import { CANON, Dict, esc, fmtDate, collapse } from "../util";
 import { page } from "../layout/shell";
-import { articleHero, withHeadingIds, articleLayout } from "../layout/article";
+import { withHeadingIds, articleLayout } from "../layout/article";
 import { tocSidebar, relatedList, chipCluster, ctaLink } from "../components";
 import { icon } from "../icons";
 
@@ -80,11 +80,6 @@ export function post(p: Dict, htmlBody: string, jsonld: unknown, related: PostRe
   parts.push(`${readMinutes(html)} min read`);
   const meta = parts.join(" · ");
 
-  const hero = articleHero({
-    section: "journal", backLabel: "Back to Journal", backHref: "/journal/",
-    meta, title: p.title, sub: collapse(p.summary ?? ""),
-  });
-
   const tags = postTags(p);
   const aside =
     tocSidebar(toc) +
@@ -96,7 +91,14 @@ export function post(p: Dict, htmlBody: string, jsonld: unknown, related: PostRe
     subscribeBox() +
     `<div><span class="eyebrow">This page as</span><p class="machine-row" style="margin-top:12px"><a href="/journal/${esc(p.slug)}.md">Markdown</a></p></div>`;
 
-  const content = articleLayout({ hero, body: html + shareRow(url, String(p.title)), aside });
+  const content = articleLayout({
+    hero: {
+      section: "journal", backLabel: "Back to Journal", backHref: "/journal/",
+      meta, title: String(p.title), sub: collapse(p.summary ?? ""),
+    },
+    body: html + shareRow(url, String(p.title)),
+    aside,
+  });
 
   return page(`${p.title} · Heliacon`, content, `/journal/${p.slug}/`, {
     section: "journal", overHero: true, jsonld, ogType: "article",

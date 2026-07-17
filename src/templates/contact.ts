@@ -50,8 +50,8 @@ export function contact(jsonld: unknown): string {
     `<p class="caption" style="margin-top:16px">You can also copy the address on the left or ` +
       `<a href="${MAILTO}">email directly</a>.</p>`;
 
-  const body =
-    pageHero({ title: "Get in touch", lede: "Let's build clarity together.", eyebrow: "Contact", section: "contact" }) +
+  const body = pageHero(
+    { title: "Get in touch", lede: "Let's build clarity together.", eyebrow: "Contact", section: "contact" },
     `<section class="section"><div class="container"><div class="grid-2">` +
       `<div>` +
         `<p class="lede" style="margin-bottom:32px">Tell us what you are trying to be found for, or ` +
@@ -63,7 +63,8 @@ export function contact(jsonld: unknown): string {
         sectionLabel("Send a message") + `<div style="height:16px"></div>` +
         form +
       `</div>` +
-    `</div></div></section>`;
+    `</div></div></section>`,
+  );
 
   return page("Get in touch · Heliacon", body, "/contact/", {
     section: "contact", overHero: true, jsonld,

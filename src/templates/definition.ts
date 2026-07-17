@@ -11,7 +11,7 @@
  */
 import { CANON, Dict, esc, collapse, titleCase, fmtDate } from "../util";
 import { page } from "../layout/shell";
-import { articleHero } from "../layout/article";
+import { heroBanner, articleHead } from "../layout/article";
 import { sectionLabel } from "../components";
 
 export function definitionPage(d: Dict, jsonld: unknown): string {
@@ -33,15 +33,16 @@ export function definitionPage(d: Dict, jsonld: unknown): string {
     .join("");
 
   const body =
-    articleHero({
-      section: "research",
-      backLabel: "Back to Research", backHref: "/research/",
-      title: String(d.title),
-      sub: collapse(d.summary),
-      narrow: true, // body is a centred .container--text column: align the H1 to its left edge
-    }) +
+    heroBanner("research", "hero--article") +
 
-    `<section class="section"><div class="container container--text">` +
+    // narrow sheet: the heading block and the definition read as one centred text column
+    `<div class="sheet-wrap sheet-wrap--text"><div class="sheet">` +
+      articleHead({
+        section: "research",
+        backLabel: "Back to Research", backHref: "/research/",
+        title: String(d.title),
+        sub: collapse(d.summary),
+      }) +
 
       `<div class="prose">` +
         `<p><strong>${esc(collapse(d.definition ?? d.summary))}</strong></p>` +
@@ -65,7 +66,7 @@ export function definitionPage(d: Dict, jsonld: unknown): string {
           `<a href="/research/definitions/${esc(d.id)}.md">Markdown</a></p>` +
       `</div>` +
 
-    `</div></section>`;
+    `</div></div>`;
 
   return page(`${d.title} · Heliacon`, body, `/research/definitions/${d.id}/`, {
     section: "research", overHero: true, jsonld,

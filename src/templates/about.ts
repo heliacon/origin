@@ -50,9 +50,7 @@ export function about(htmlBody: string, jsonld: unknown): string {
 
   const valuesPanel = panel("Our values", starList(VALUES), "values");
 
-  const body =
-    pageHero({ title: "About Heliacon", lede: "We help organisations navigate uncertainty and build with confidence.", eyebrow: "About", section: "about" }) +
-
+  const content =
     `<section class="section"><div class="container container--text">` +
       `<div class="prose">${htmlBody}</div>` +
     `</div></section>` +
@@ -71,6 +69,11 @@ export function about(htmlBody: string, jsonld: unknown): string {
     `</div></section>` +
 
     `<div class="cta-band"><div class="container">${ctaLink("Work with me", "/contact/")}</div></div>`;
+
+  const body = pageHero(
+    { title: "About Heliacon", lede: "We help organisations navigate uncertainty and build with confidence.", eyebrow: "About", section: "about" },
+    content,
+  );
 
   return page("About · Heliacon", body, "/about/", {
     section: "about", overHero: true, jsonld, ogType: "profile",

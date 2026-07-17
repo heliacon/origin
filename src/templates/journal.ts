@@ -50,13 +50,15 @@ export function journal(posts: Dict[], jsonld: unknown): string {
     })).join("");
 
   const body =
-    pageHero({
-      title: "Journal",
-      lede: "Field notes and research on being found, trusted and invoked in an agentic web. Engineering, strategy and the occasional argument. Every post carries its receipts.",
-      eyebrow: "Journal", section: "journal",
-    }) +
-    `<section class="section"><div class="container"><div class="jlist">${rows}</div></div></section>` +
-    subscribeBand();
+    pageHero(
+      {
+        title: "Journal",
+        lede: "Field notes and research on being found, trusted and invoked in an agentic web. Engineering, strategy and the occasional argument. Every post carries its receipts.",
+        eyebrow: "Journal", section: "journal",
+      },
+      `<section class="section"><div class="container"><div class="jlist">${rows}</div></div></section>` +
+      subscribeBand(),
+    );
 
   return page("Journal · Heliacon", body, "/journal/", {
     section: "journal", overHero: true, jsonld,

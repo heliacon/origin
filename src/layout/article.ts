@@ -1,13 +1,26 @@
 /**
- * The shared article layout: a full-bleed hero over the dawn art, then a two-column body of
- * reading measure + a sticky "On this page" sidebar (design-system §3.3, §4.9). Used by journal
- * posts, corpus essays and work case-study detail. Below 960px the grid collapses and the sidebar
- * drops beneath the body (handled in CSS).
+ * The shared interior layout: a short image banner (nav only, no text on the image), then a solid
+ * content sheet pulled up over the hero so the heading and the content read as one held-together
+ * unit (design-system §3.3, §4.9; the sheet-over-hero pattern). Used by journal posts, corpus
+ * essays, work case-study detail, landmark docs, definitions and every index/marketing page.
+ * Below 960px the article grid collapses and the sidebar drops beneath the body (handled in CSS).
  */
 import { esc, collapse, slugify } from "../util";
 import { navBar, Section } from "./shell";
 import { heroPicture, sectionLabel } from "../components";
 import type { TocEntry } from "../components";
+
+/**
+ * The interior hero banner: image, a light overlay (top band for the over-hero nav, bottom blend)
+ * and the transparent nav. No title, lede or eyebrow sits on the image; those live in the sheet.
+ */
+export function heroBanner(section: Section, variant: "hero--page" | "hero--article" = "hero--page"): string {
+  return `<section class="hero ${variant}">` +
+    heroPicture("") +
+    `<div class="hero__overlay"></div>` +
+    navBar(section, true) +
+    `</section>`;
+}
 
 export interface ArticleHeroOpts {
   section: Section;
@@ -15,41 +28,35 @@ export interface ArticleHeroOpts {
   meta?: string;      // e.g. "4 July 2026 · Engineering · 8 min read"
   title: string;
   sub?: string;
-  /** Align the hero block with a centred `.container--text` body (definition pages). The default
-   *  wide hero stays for the two-column article/doc layout. */
-  narrow?: boolean;
 }
 
-/** The over-image article header with the nav rendered transparent inside it. */
-export function articleHero(o: ArticleHeroOpts): string {
-  return `<section class="hero hero--article${o.narrow ? " hero--article-narrow" : ""}">` +
-    heroPicture("") +
-    `<div class="hero__overlay"></div>` +
-    navBar(o.section, true) +
-    `<div class="hero__inner"><div class="hero__block">` +
-      `<a class="backlink" href="${esc(o.backHref)}">&larr; ${esc(o.backLabel)}</a>` +
-      (o.meta ? `<p class="jrow__meta" style="color:var(--text-strong);opacity:.85">${esc(o.meta)}</p>` : "") +
-      `<h1 class="hero__h1" style="font-size:clamp(30px,4vw,44px)">${esc(o.title)}</h1>` +
-      `<hr class="hero__rule">` +
-      (o.sub ? `<p class="hero__sub">${esc(o.sub)}</p>` : "") +
-    `</div></div></section>`;
+/** The article heading block, rendered inside the top of the sheet (never over the image). */
+export function articleHead(o: ArticleHeroOpts): string {
+  return `<header class="article__head">` +
+    `<a class="backlink" href="${esc(o.backHref)}">&larr; ${esc(o.backLabel)}</a>` +
+    (o.meta ? `<p class="article__meta">${esc(o.meta)}</p>` : "") +
+    `<h1 class="article__h1">${esc(o.title)}</h1>` +
+    `<hr class="sheet__rule">` +
+    (o.sub ? `<p class="lede article__dek">${esc(o.sub)}</p>` : "") +
+    `</header>`;
 }
 
 /**
- * The over-image header for interior pages (studio, work, about, etc). The heading is centred over
- * the image, so it uses the balanced --page overlay (see css.ts) rather than the home/article veil.
+ * The interior-page header for index/marketing pages (studio, work, about, etc). Banner first,
+ * then the sheet: the centred heading block at its top and the page's sections flowing inside it,
+ * so nothing floats on the image and there is no disjoint gap.
  */
-export function pageHero(o: { title: string; lede?: string; eyebrow?: string; section?: Section }): string {
-  return `<section class="hero hero--page">` +
-    heroPicture("") +
-    `<div class="hero__overlay hero__overlay--page"></div>` +
-    navBar(o.section ?? "", true) +
-    `<div class="hero__inner"><div class="hero__block hero__block--center">` +
-      (o.eyebrow ? sectionLabel(o.eyebrow) + `<div style="height:14px"></div>` : "") +
-      `<h1 class="hero__h1" style="font-size:clamp(32px,4vw,44px)">${esc(o.title)}</h1>` +
-      `<hr class="hero__rule">` +
-      (o.lede ? `<p class="hero__sub" style="max-width:640px">${esc(o.lede)}</p>` : "") +
-    `</div></div></section>`;
+export function pageHero(o: { title: string; lede?: string; eyebrow?: string; section?: Section }, content = ""): string {
+  return heroBanner(o.section ?? "", "hero--page") +
+    `<div class="sheet-wrap"><div class="sheet">` +
+      `<header class="sheet__head sheet__head--center">` +
+        (o.eyebrow ? sectionLabel(o.eyebrow) : "") +
+        `<h1>${esc(o.title)}</h1>` +
+        `<hr class="sheet__rule">` +
+        (o.lede ? `<p class="lede">${esc(o.lede)}</p>` : "") +
+      `</header>` +
+      content +
+    `</div></div>`;
 }
 
 /**
@@ -77,13 +84,19 @@ export function withHeadingIds(html: string): { html: string; toc: TocEntry[] } 
   return { html: out, toc };
 }
 
-export interface ArticleLayoutOpts { hero?: string; body: string; aside?: string; }
+export interface ArticleLayoutOpts { hero?: ArticleHeroOpts; body: string; aside?: string; }
 
-/** Compose the article: optional hero, then the two-column reading grid. */
+/**
+ * Compose the article: banner, then one sheet holding the heading block and the two-column
+ * reading grid (prose + sticky TOC sidebar), so the entire article is a single contained unit.
+ */
 export function articleLayout(o: ArticleLayoutOpts): string {
-  return (o.hero ?? "") +
-    `<div class="article">` +
-      `<div class="article__body prose">${o.body}</div>` +
-      (o.aside ? `<aside class="article__aside">${o.aside}</aside>` : "") +
-    `</div>`;
+  return (o.hero ? heroBanner(o.hero.section, "hero--article") : "") +
+    `<div class="sheet-wrap"><div class="sheet">` +
+      `<div class="article">` +
+        (o.hero ? articleHead(o.hero) : "") +
+        `<div class="article__body prose">${o.body}</div>` +
+        (o.aside ? `<aside class="article__aside">${o.aside}</aside>` : "") +
+      `</div>` +
+    `</div></div>`;
 }

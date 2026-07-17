@@ -47,13 +47,7 @@ export function research(defs: Dict[], jsonld: unknown): string {
     linkCard("Foundation", "Manifesto", "/manifesto/",
       "The belief. Why we build origin-first, and what that commits us to.", "Read the manifesto");
 
-  const body =
-    pageHero({
-      title: "Research",
-      lede: "The canonical vocabulary behind the studio. The definitions the consulting applies, and what the ask endpoint retrieves.",
-      eyebrow: "Research", section: "research",
-    }) +
-
+  const content =
     `<section class="section"><div class="container">` +
       `<div class="section-head">${sectionLabel("Definitions", false, "h2")}</div>` +
       originCard +
@@ -75,6 +69,15 @@ export function research(defs: Dict[], jsonld: unknown): string {
         `<a href="/.well-known/mcp.json">MCP</a>` +
         `<a href="/provenance">Provenance</a></p>` +
     `</div></section>`;
+
+  const body = pageHero(
+    {
+      title: "Research",
+      lede: "The canonical vocabulary behind the studio. The definitions the consulting applies, and what the ask endpoint retrieves.",
+      eyebrow: "Research", section: "research",
+    },
+    content,
+  );
 
   return page("Research · Heliacon", body, "/research/", {
     section: "research", overHero: true, jsonld,
