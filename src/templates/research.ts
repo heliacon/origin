@@ -26,9 +26,21 @@ function linkCard(kicker: string, title: string, href: string, cap: string, cta 
 }
 
 export function research(defs: Dict[], jsonld: unknown): string {
-  const terms = defs
+  // Feature Origin, the keystone term the other six derive from, as a full-width lead card so the
+  // remaining six sit as two clean rows of three (no orphan card, stronger scent hierarchy).
+  const origin = defs.find((d) => d.id === "origin");
+  const rest = defs.filter((d) => d.id !== "origin");
+  const restCards = rest
     .map((d) => linkCard("Definition", d.title, `/research/definitions/${d.id}/`, collapse(d.summary), "Read the definition"))
     .join("");
+  const originCard = origin
+    ? `<a class="card card--wide" href="/research/definitions/origin/"><div class="card__body">` +
+        `<span class="eyebrow card__kicker">The keystone definition</span>` +
+        `<h3 class="card__title">${esc(origin.title)}</h3>` +
+        `<p class="card__cap">${esc(collapse(origin.summary))}</p>` +
+        `<span class="ctalink card__cta">Read the definition ${arw}</span>` +
+      `</div></a>`
+    : "";
   const foundations =
     linkCard("Foundation", "Architecture", "/architecture/",
       "How Heliacon is built. One canonical origin, many projections, negotiated for whoever asks.", "Read the architecture") +
@@ -44,7 +56,8 @@ export function research(defs: Dict[], jsonld: unknown): string {
 
     `<section class="section"><div class="container">` +
       `<div class="section-head">${sectionLabel("Definitions")}</div>` +
-      `<div class="grid-3">${terms}</div>` +
+      originCard +
+      `<div class="grid-3" style="margin-top:var(--space-6)">${restCards}</div>` +
     `</div></section>` +
 
     `<section class="section--tight"><div class="container">` +

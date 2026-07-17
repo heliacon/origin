@@ -204,6 +204,7 @@ a.wwd__cell:hover .wwd__title{color:var(--accent)}
 .card__ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--signal);background:linear-gradient(135deg,var(--signal-deep),var(--bg-sunk))}
 .card__ph .ico{width:44px;height:44px;transform:none}
 .card__body{padding:var(--space-5);display:flex;flex-direction:column;gap:var(--space-2);flex:1}
+.card--wide .card__body{max-width:760px;padding:var(--space-6)}
 .card__kicker{margin-bottom:var(--space-1)}
 .card__title{font-family:var(--font-serif);font-weight:500;font-size:18px;color:var(--text);margin:0}
 .card:hover .card__title{color:var(--accent)}

@@ -34,13 +34,13 @@ export function navBar(active: Section = "", over = false): string {
     `<li><a class="nav__link" href="${href}"${cur(s)}>${esc(label)}</a></li>`).join("");
   const sheetLinks = NAV_ITEMS.map(([label, href, s]) =>
     `<li><a class="${s === "contact" ? "is-cta" : ""}" href="${href}"${cur(s)}>${esc(label)}</a></li>`).join("");
-  return `<div class="nav${over ? " nav--over" : ""}">` +
+  return `<nav class="nav${over ? " nav--over" : ""}" aria-label="Primary">` +
     `<a class="nav__brand" href="/" aria-label="Heliacon home">` +
       `<img class="nav__logo" src="/assets/logo/wordmark-dawn.svg" alt="Heliacon" height="26"></a>` +
     `<ul class="nav__links">${links}</ul>` +
     `<button class="nav__toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-sheet"><span></span></button>` +
     `<div class="nav__sheet" id="nav-sheet"><ul>${sheetLinks}</ul></div>` +
-    `</div>`;
+    `</nav>`;
 }
 
 /** The grouped footer (§4.16, ia §1.3): brand blurb, WORK / RESOURCES / COMPANY, machine row. */
@@ -57,9 +57,9 @@ export function footer(): string {
       `<div class="footer__brand-mark"><img class="footer__logo" src="/assets/logo/wordmark-dawn.svg" alt="Heliacon" height="22"></div>` +
       `<p class="footer__mission">We help organisations navigate uncertainty and build with confidence at the intersection of search, AI and human intent.</p>` +
     `</div>` +
-    col("Work", [["Strategy", "/work/?type=strategy"], ["Research", "/work/?type=research"], ["Products", "/products/"], ["Partnerships", "/studio/#partnerships"], ["Studio", "/studio/"]]) +
-    col("Resources", [["Journal", "/journal/"], ["Research", "/research/"], ["Case studies", "/work/"], ["Tools", "/products/"]]) +
-    col("Company", [["About", "/about/"], ["Values", "/about/#values"], ["Approach", "/studio/#how-we-work"], ["Contact", "/contact/"]]) +
+    col("Studio", [["What we do", "/studio/"], ["How we work", "/studio/#how-we-work"], ["Partnerships", "/studio/#partnerships"]]) +
+    col("Explore", [["Our Work", "/work/"], ["Research", "/research/"], ["Journal", "/journal/"], ["Products", "/products/"]]) +
+    col("Company", [["About", "/about/"], ["Values", "/about/#values"], ["Manifesto", "/manifesto/"], ["Architecture", "/architecture/"], ["Contact", "/contact/"]]) +
     `</div>` +
     `<div class="footer__machines"><span class="eyebrow">For machines</span>${machines}</div>` +
     `<div class="footer__base"><span>&copy; ${YEAR} Heliacon LLC &middot; All rights reserved.</span>` +
