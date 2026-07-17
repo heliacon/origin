@@ -77,6 +77,9 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .eyebrow{font-family:var(--font-mono);font-weight:500;font-size:12px;line-height:1;
   letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted);display:block}
 .eyebrow--accent{color:var(--accent)}
+/* the eyebrow over a hero sits on the bright sky: muted grey fails AA there, so lift it to the
+   strong text colour with a dark halo (the darker hero scrim does the rest) */
+.hero .eyebrow{color:var(--text-strong);text-shadow:0 1px 14px rgba(0,0,0,.9),0 0 3px rgba(0,0,0,.75)}
 
 /* ── layout (§3) ────────────────────────────────────────────────────────── */
 .container{max-width:var(--container);margin:0 auto;padding-inline:var(--gutter);width:100%}
@@ -106,9 +109,13 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .nav__link:hover{color:var(--accent);opacity:1}
 .nav__link[aria-current=page]{color:var(--accent);opacity:1}
 .nav__link[aria-current=page]::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:2px;background:var(--accent)}
-.nav--over .nav__link{color:var(--text-strong);text-shadow:0 1px 20px rgba(0,0,0,.6)}
-.nav--over .nav__link:hover,.nav--over .nav__link[aria-current=page]{color:var(--accent)}
-.nav--over .nav__wordmark{text-shadow:0 1px 20px rgba(0,0,0,.6)}
+.nav--over .nav__link{color:var(--text-strong);opacity:1;text-shadow:0 1px 3px rgba(0,0,0,.85),0 1px 16px rgba(0,0,0,.55)}
+/* over the bright sky the active/hover link must stay light — gold text washes out against orange.
+   the gold underline is the affordance, given a dark halo so it reads against the sunset. */
+.nav--over .nav__link:hover,.nav--over .nav__link[aria-current=page]{color:var(--text-strong)}
+.nav--over .nav__link[aria-current=page]::after{height:2px;background:var(--accent);box-shadow:0 0 0 1px rgba(0,0,0,.45),0 1px 5px rgba(0,0,0,.7)}
+.nav--over .nav__link:hover::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:2px;background:var(--text-strong);opacity:.85}
+.nav--over .nav__wordmark{text-shadow:0 1px 3px rgba(0,0,0,.85),0 1px 16px rgba(0,0,0,.55)}
 .nav__toggle{display:none;width:44px;height:44px;align-items:center;justify-content:center;
   background:none;border:0;cursor:pointer;flex:none}
 .nav__toggle span{display:block;width:22px;height:1.5px;background:var(--text);position:relative}
@@ -139,10 +146,17 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .hero__block--center{max-width:720px;margin-inline:auto;text-align:center}
 .hero__block--center .hero__rule{margin-inline:auto}
 .hero__block--center .hero__sub{margin-inline:auto}
-.hero__overlay--page{background:linear-gradient(0deg,rgba(9,10,12,.58) 0%,rgba(9,10,12,.5) 50%,rgba(9,10,12,.6) 100%)}
+/* page heroes carry centred text over the bright sunset: a top band keeps the over-hero nav +
+   eyebrow legible, a centre-weighted radial scrim clears the H1/sub to AA while leaving the image
+   edges bright. Higher specificity than base .hero__overlay so it wins regardless of source order. */
+.hero--page .hero__overlay{background:
+  linear-gradient(180deg,rgba(6,7,9,.86) 0,rgba(6,7,9,.44) 74px,rgba(6,7,9,.12) 134px,rgba(6,7,9,0) 190px),
+  radial-gradient(130% 88% at 50% 46%,rgba(9,10,12,.70) 0%,rgba(9,10,12,.55) 40%,rgba(9,10,12,.34) 68%,rgba(9,10,12,.2) 100%),
+  linear-gradient(0deg,rgba(9,10,12,.5) 0%,rgba(9,10,12,0) 26%)}
 .hero__media,.hero__media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 25%}
 .hero__overlay{position:absolute;inset:0;
-  background:linear-gradient(90deg,rgba(9,10,12,.82) 0%,rgba(9,10,12,.58) 20%,rgba(9,10,12,.24) 42%,rgba(9,10,12,0) 62%),
+  background:linear-gradient(180deg,rgba(6,7,9,.82) 0,rgba(6,7,9,.40) 72px,rgba(6,7,9,.10) 132px,rgba(6,7,9,0) 186px),
+             linear-gradient(90deg,rgba(9,10,12,.82) 0%,rgba(9,10,12,.62) 22%,rgba(9,10,12,.34) 48%,rgba(9,10,12,.12) 68%,rgba(9,10,12,0) 82%),
              linear-gradient(0deg,rgba(9,10,12,.52) 0%,rgba(9,10,12,0) 42%)}
 .hero__inner{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;
   max-width:var(--container);width:100%;margin:0 auto;padding-inline:var(--gutter)}
@@ -150,10 +164,10 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .hero--article .hero__inner{justify-content:flex-end;padding-block:var(--space-16)}
 .hero__block{max-width:620px}
 .hero__h1{font-size:clamp(40px,6vw,64px);line-height:1.05;letter-spacing:-.01em;color:var(--text-strong);
-  text-shadow:0 2px 30px rgba(0,0,0,.82);margin:0}
+  text-shadow:0 1px 3px rgba(0,0,0,.65),0 2px 30px rgba(0,0,0,.82);margin:0}
 .hero__rule{width:40px;height:2px;background:var(--accent);border:0;margin:var(--space-6) 0}
-.hero__sub{font-family:var(--font-sans);font-size:clamp(18px,2vw,21px);line-height:1.5;color:var(--text);
-  opacity:.92;text-shadow:0 2px 30px rgba(0,0,0,.82);margin:0 0 var(--space-8);max-width:34em}
+.hero__sub{font-family:var(--font-sans);font-size:clamp(18px,2vw,21px);line-height:1.5;color:var(--text-strong);
+  opacity:1;text-shadow:0 1px 3px rgba(0,0,0,.7),0 2px 24px rgba(0,0,0,.7);margin:0 0 var(--space-8);max-width:34em}
 .hero__ctas{display:flex;align-items:center;gap:var(--space-8);flex-wrap:wrap}
 
 /* ── CTAs (§4.4) ────────────────────────────────────────────────────────── */
@@ -165,6 +179,10 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 /* In dense reading contexts (article aside, prose) give CTAs a non-colour indicator for WCAG
    1.4.1; marketing sections keep the clean arrow-only treatment from the mock (§4.4). */
 .article__aside .ctalink,.prose .ctalink{display:inline;text-decoration:underline;text-underline-offset:3px}
+/* WCAG 1.4.1: links sitting inside running text need a non-colour cue. Marketing feature rows keep
+   the arrow-only treatment (§4.4); the closing cta-band CTA and any bare inline link get an underline. */
+.cta-band .ctalink{text-decoration:underline;text-underline-offset:3px}
+p:not(.machine-row) a:not([class]){text-decoration:underline;text-underline-offset:2px}
 .ctalink--quiet{color:var(--text);opacity:.82}
 .ctalink--quiet:hover{color:var(--accent);opacity:1}
 .ctalink[aria-disabled=true]{color:var(--text-faint);pointer-events:none}
@@ -348,7 +366,7 @@ a.chip:hover,.chip.is-active{border-color:var(--accent);color:var(--text)}
   column-gap:var(--space-16);justify-content:center;padding-block:var(--space-16)}
 .article__body{min-width:0}
 .article__aside{position:sticky;top:96px;align-self:start;display:flex;flex-direction:column;gap:var(--space-8)}
-.backlink{font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);display:inline-block;margin-bottom:var(--space-6)}
+.backlink{font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);display:inline-block;margin-bottom:var(--space-6);text-decoration:underline;text-underline-offset:3px}
 
 /* ── grids ──────────────────────────────────────────────────────────────── */
 .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-6)}
@@ -398,6 +416,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 @media(max-width:720px){
   .nav__links{display:none}
   .nav__toggle{display:flex}
+  /* narrow home hero: the left-heavy desktop gradient leaves the wrapped H1/sub crossing bright sky,
+     so switch to a full-width vertical scrim (top band keeps the over-hero brand + toggle legible) */
+  .hero--home .hero__overlay{background:
+    linear-gradient(180deg,rgba(6,7,9,.82) 0,rgba(6,7,9,.40) 70px,rgba(6,7,9,0) 152px),
+    linear-gradient(0deg,rgba(9,10,12,.74) 0%,rgba(9,10,12,.62) 40%,rgba(9,10,12,.5) 60%,rgba(9,10,12,.5) 100%)}
 }
 @media(max-width:640px){
   .section{padding-block:var(--space-12)}
