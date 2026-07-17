@@ -138,13 +138,17 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .hero--home{min-height:88vh}
 /* interior banners: no text on the image (the heading lives in the sheet pulled up over it) */
 .hero--page,.hero--article{min-height:min(56vh,520px)}
-.hero--page .hero__media img{object-position:center 88%}
+.hero--page .hero__media img{object-position:center 91%}
 /* interior banners carry no text, so the image stays bright (comparable to home): only the home
    top band survives for over-hero nav legibility (a11y-validated), plus the .hero::after blend.
    Higher specificity than base .hero__overlay so it wins regardless of source order. */
 .hero--page .hero__overlay,.hero--article .hero__overlay{background:
   linear-gradient(180deg,rgba(6,7,9,.82) 0,rgba(6,7,9,.40) 72px,rgba(6,7,9,.10) 132px,rgba(6,7,9,0) 186px)}
-.hero__media,.hero__media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 25%}
+/* the media box overscans 35% above the hero so the parallax translate (app.js, scrollY*0.35,
+   clamped to hero height) never reveals a gap. object-position is retuned for the taller box so
+   the at-rest framing matches the pre-parallax crop. Static (no-JS/reduced-motion) stays correct. */
+.hero__media{position:absolute;inset:-35% 0 0 0;will-change:transform}
+.hero__media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 44%}
 .hero__overlay{position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(6,7,9,.82) 0,rgba(6,7,9,.40) 72px,rgba(6,7,9,.10) 132px,rgba(6,7,9,0) 186px),
              linear-gradient(90deg,rgba(9,10,12,.82) 0%,rgba(9,10,12,.62) 22%,rgba(9,10,12,.34) 48%,rgba(9,10,12,.12) 68%,rgba(9,10,12,0) 82%),

@@ -21,6 +21,31 @@
     sheet.addEventListener("click", (e) => { if (e.target.closest("a")) close(); });
   }
 
+  // ── hero parallax (single-layer; the image scrolls slower than the page) ──
+  // Layer-ready: any element inside .hero carrying data-parallax="<factor>" is
+  // translated by scrollY * factor, so multi-layer art (Firewatch-style) only
+  // needs layers in the markup with their own factors. The flattened hero image
+  // gets a default 0.35. Transform-only, rAF-throttled, off under reduced motion.
+  const motionOK = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const heroMedia = document.querySelector(".hero .hero__media");
+  if (motionOK && heroMedia) {
+    if (!heroMedia.hasAttribute("data-parallax")) heroMedia.setAttribute("data-parallax", "0.35");
+    const layers = [...document.querySelectorAll(".hero [data-parallax]")]
+      .map((el) => ({ el, f: parseFloat(el.getAttribute("data-parallax")) || 0 }));
+    const heroEl = heroMedia.closest(".hero");
+    let ticking = false;
+    const apply = () => {
+      ticking = false;
+      if (window.scrollY > heroEl.offsetHeight + 200) return; // hero gone; skip work
+      const y = Math.min(window.scrollY, heroEl.offsetHeight); // clamp to the overscan budget
+      layers.forEach(({ el, f }) => { el.style.transform = `translate3d(0,${(y * f).toFixed(1)}px,0)`; });
+    };
+    window.addEventListener("scroll", () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(apply); }
+    }, { passive: true });
+    apply();
+  }
+
   // ── click-to-copy (contact email) ────────────────────────────────────────
   document.querySelectorAll("[data-copy]").forEach((btn) => {
     btn.addEventListener("click", async () => {
