@@ -8,7 +8,7 @@ Search is no longer the only front door. People ask an assistant. Agents assembl
 
 Call it SEO, AEO or GEO. They are the same move under new names: be the source a machine trusts enough to quote. We take it a level deeper, to the thing underneath all three.
 
-We make you **origin-first**. Your knowledge and capabilities live as one canonical source of truth, projected for whoever asks, each projection carrying its own provenance. You stop optimising to rank on a page, and become the origin a machine cites and invokes.
+We make you **origin-first**. Your knowledge and capabilities live as one canonical source of truth, projected for whoever asks, each projection carrying its own provenance. You stop optimising to rank on a page and become the origin a machine cites and invokes.
 
 That is two disciplines:
 
@@ -30,7 +30,7 @@ Companies whose content, products or data need to be discovered and cited by AI,
 
 ## How we work
 
-We measure by invocation, not vanity traffic. You get the research, the reference implementation and the tools behind it, applied to your problem, and a bias for what can be proven on the wire over what sounds good in a slide.
+We measure by invocation, not vanity traffic. You get the research, the reference implementation and the tools behind it, applied to your problem. The bias throughout is for what can be proven on the wire over what sounds good in a slide.
 
 ## Talk to us
 

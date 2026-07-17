@@ -18,10 +18,10 @@ import type { ProjectCardOpts } from "../components";
 // The four offer areas carry "Capability" and link to the Studio facet that explains them. They
 // are offer areas, not client case studies.
 const CAPABILITIES: ProjectCardOpts[] = [
-  { kicker: "Capability", title: "AI Search Strategy", iconName: "focus", dataType: "strategy", href: "/studio/#strategy", ctaLabel: "How we help", caption: "Decide what to be found for, then build the plan to be cited and invoked across search, assistants and agents." },
-  { kicker: "Capability", title: "Content Intelligence", iconName: "research", dataType: "research", href: "/studio/#research", ctaLabel: "How we help", caption: "Make your knowledge legible and verifiable, so the models that now read the web can quote it with confidence." },
-  { kicker: "Capability", title: "Agent Experience Design", iconName: "connections", dataType: "products", href: "/studio/#agentic", ctaLabel: "How we help", caption: "Design experiences an agent can invoke, grounded and provenance-first, not a demo that falls over on the wire." },
-  { kicker: "Capability", title: "Data & Signal Strategy", iconName: "signals", dataType: "research", href: "/studio/#discovery", ctaLabel: "How we help", caption: "Turn measurement, experimentation and signal into decisions you can act on and defend." },
+  { kicker: "Capability", title: "AI search strategy", iconName: "focus", dataType: "strategy", href: "/studio/#strategy", ctaLabel: "How we help", caption: "Decide what to be found for, then build the plan to be cited and invoked across search, assistants and agents." },
+  { kicker: "Capability", title: "Content intelligence", iconName: "research", dataType: "research", href: "/studio/#research", ctaLabel: "How we help", caption: "Make your knowledge legible and verifiable, so the models that now read the web can quote it with confidence." },
+  { kicker: "Capability", title: "Agent experience design", iconName: "connections", dataType: "products", href: "/studio/#agentic", ctaLabel: "How we help", caption: "Design experiences an agent can invoke, grounded and provenance-first, not a demo that falls over on the wire." },
+  { kicker: "Capability", title: "Data and signal strategy", iconName: "signals", dataType: "research", href: "/studio/#discovery", ctaLabel: "How we help", caption: "Turn measurement, experimentation and signal into decisions you can act on and defend." },
 ];
 
 /** `_htmlBody` is work.md rendered to HTML by build.ts. Unused: see file header. */
@@ -47,10 +47,10 @@ export function work(_htmlBody: string, jsonld: unknown): string {
 </div></section>`;
 
   const body =
-    pageHero({ title: "Our Work", lede: "We help organisations be found, trusted and invoked in a world where the reader is as often a machine as a person.", eyebrow: "Work", section: "work" }) +
+    pageHero({ title: "Our work", lede: "We help organisations be found, trusted and invoked in a world where the reader is as often a machine as a person.", eyebrow: "Work", section: "work" }) +
     grid + clientNote + cta;
 
-  return page("Our Work · Heliacon", body, "/work/", {
+  return page("Our work · Heliacon", body, "/work/", {
     section: "work", overHero: true, jsonld,
     description: "How Heliacon helps: AI search strategy, content intelligence, agent experience design and data and signal strategy. Client work is shown, not claimed.",
     alternates: { "text/markdown": `${CANON}/work.md` },

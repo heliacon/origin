@@ -9,7 +9,7 @@ tagline: Be the first light.
 description: >
   Heliacon is a studio and consultancy that makes companies origin-first: found, trusted and
   invoked by the machines that now read the web. One canonical source of truth, projected for
-  humans and machines alike, backed by an open research corpus.
+  humans and machines alike, backed by an open canonical vocabulary.
 
 status: draft
 
@@ -50,8 +50,8 @@ capabilities:
   - definitions
   - provenance
 
-corpus:
+vocabulary:
 
-  root: /corpus
+  root: /research/definitions
 
 license: copyright

@@ -94,7 +94,7 @@ export function home(origin: Dict, defs: Dict[], posts: Dict[], graph: unknown):
   <p style="margin-top:32px">${ctaLink("About Heliacon", "/about/")}</p>
 </div></section>`;
 
-  return page("Heliacon · Origin-first for AI search visibility", body, "/", {
+  return page("Heliacon · Be found, trusted and invoked in AI search", body, "/", {
     overHero: true,
     description: origin.description,
     jsonld: graph,

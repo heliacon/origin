@@ -72,7 +72,7 @@ export function about(htmlBody: string, jsonld: unknown): string {
 
     `<div class="cta-band"><div class="container">${ctaLink("Work with me", "/contact/")}</div></div>`;
 
-  return page("About Heliacon · Heliacon", body, "/about/", {
+  return page("About · Heliacon", body, "/about/", {
     section: "about", overHero: true, jsonld, ogType: "profile",
     description: "Heliacon is a studio and consultancy led by Pete Dainty. Founder-led, deliberately small, origin-first for the machines that now read the web.",
     alternates: { "text/markdown": `${CANON}/about.md` },

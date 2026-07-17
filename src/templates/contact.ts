@@ -41,16 +41,17 @@ export function contact(jsonld: unknown): string {
       `data-mailto-to="${EMAIL}" data-mailto-subject="${esc(SUBJECT)}">` +
       contactField({ name: "name", label: "Your name", placeholder: "Your name", required: true }) +
       contactField({ name: "email", label: "Email address", type: "email", placeholder: "you@example.com", required: true }) +
-      contactField({ name: "company", label: "Company", placeholder: "Company (optional)" }) +
+      contactField({ name: "company", label: "Company", placeholder: "Optional" }) +
       contactField({ name: "message", label: "Message", placeholder: "What are you trying to be found for, or build?", required: true, textarea: true }) +
-      `<div style="margin-top:8px">${filledButton("Send message", { type: "submit" })}</div>` +
+      `<p class="caption" style="margin-top:16px">The button opens your email app with your message ` +
+        `filled in. Nothing is sent to a server.</p>` +
+      `<div style="margin-top:8px">${filledButton("Compose email", { type: "submit" })}</div>` +
     `</form>` +
-    `<p class="caption" style="margin-top:16px">This opens your email client with the details filled in. ` +
-      `Nothing is sent to a server. You can also copy the address on the left, or ` +
+    `<p class="caption" style="margin-top:16px">You can also copy the address on the left or ` +
       `<a href="${MAILTO}">email directly</a>.</p>`;
 
   const body =
-    pageHero({ title: "Get in Touch", lede: "Let's build clarity together.", eyebrow: "Contact", section: "contact" }) +
+    pageHero({ title: "Get in touch", lede: "Let's build clarity together.", eyebrow: "Contact", section: "contact" }) +
     `<section class="section"><div class="container"><div class="grid-2">` +
       `<div>` +
         `<p class="lede" style="margin-bottom:32px">Tell us what you are trying to be found for, or ` +
@@ -64,7 +65,7 @@ export function contact(jsonld: unknown): string {
       `</div>` +
     `</div></div></section>`;
 
-  return page("Get in Touch · Heliacon", body, "/contact/", {
+  return page("Get in touch · Heliacon", body, "/contact/", {
     section: "contact", overHero: true, jsonld,
     description: "Get in touch with Heliacon. Copyable email and a direct line to Pete Dainty. We take a few engagements at a time.",
   });

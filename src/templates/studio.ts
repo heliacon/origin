@@ -60,7 +60,7 @@ export function studio(_htmlBody: string, jsonld: unknown): string {
     ${block("strategy", "Strategy", "Clarity of direction where search, AI and intent collide. We help you decide what to be found for, and build the plan to get there.", "strategy")}
     ${block("research", "Research", "Working at the edge of search and AI, in the open. We publish what we learn, and apply the same research to your problem.", "research")}
     ${block("products", "Products", "Tools that turn what we learn into something you can use. Built to be run and inspected, not just demoed.", "products")}
-    ${block("partnerships", "Partnerships", "A few engagements at a time, given senior attention. Senior attention does not scale, so we take on a handful of clients and do them properly.", "partnerships")}
+    ${block("partnerships", "Partnerships", "A few engagements at a time. Senior attention does not scale, so we take on a handful of clients and do them properly.", "partnerships")}
     ${block("studio", "Studio", "The craft of building it. Legible, owned and provenance-first, so what we make outlasts the next model.", "studio")}
   </div>
 </div></section>`;
@@ -88,7 +88,7 @@ export function studio(_htmlBody: string, jsonld: unknown): string {
 
   const howWeWork = `
 <section class="section" id="how-we-work" style="scroll-margin-top:96px"><div class="container">
-  <div class="section-head">${sectionLabel("How we work")}<h2 style="margin-top:16px">How we work</h2></div>
+  <div class="section-head">${sectionLabel("How we work")}<h2 style="margin-top:16px">What you can hold us to</h2></div>
   <div ${GRID3}>
     ${block("", "Measured by invocation", "Not vanity traffic. We move the metric a machine acts on, and we prove it on the wire.", "measurement")}
     ${block("", "Substance over spin", "What can be proven beats what sounds good in a slide. One inspectable fact beats ten adjectives.", "evidence")}
@@ -102,7 +102,7 @@ export function studio(_htmlBody: string, jsonld: unknown): string {
   <div class="section-head">${sectionLabel("Engagement model")}<h2 style="margin-top:16px">What you get, in what order</h2></div>
   <div class="container--text" style="padding:0"><p style="margin:0 0 40px">Every engagement is scoped to the work, but the shape is consistent.</p></div>
   <div ${GRID3} style="gap:40px">
-    ${stage("01", "Orientation", "A short, focused discovery. We map your machine surface, agree the metric that matters, and confirm we are the right fit.")}
+    ${stage("01", "Orientation", "A short, focused discovery. We map your machine surface, agree the metric that matters and confirm we are the right fit.")}
     ${stage("02", "Build", "We implement the origin and its projections against that metric, working in the open with you.")}
     ${stage("03", "Handover", "You keep the source, the reference implementation and the tools. What we build is yours to run and inspect.")}
   </div>
@@ -117,12 +117,12 @@ export function studio(_htmlBody: string, jsonld: unknown): string {
 </div></section>`;
 
   const body =
-    pageHero({ title: "Studio", lede: "What we do and how we work. The offer, the method and the engagement model that make you found, trusted and invoked.", eyebrow: "Studio", section: "studio" }) +
+    pageHero({ title: "Studio", lede: "What we do and how we work. The offer, the method and the engagement model that get you found, trusted and invoked.", eyebrow: "Studio", section: "studio" }) +
     shift + whatWeDo + alsoHelp + whoFor + howWeWork + engagement + cta;
 
   return page("Studio · Heliacon", body, "/studio/", {
     section: "studio", overHero: true, jsonld,
-    description: "Origin-first strategy, research and products. Be found, trusted and invoked in a world where the reader is as often a machine as a person.",
+    description: "Be found, trusted and invoked in a world where the reader is as often a machine as a person. Origin-first strategy, research and products.",
     alternates: { "text/markdown": `${CANON}/studio.md` },
   });
 }

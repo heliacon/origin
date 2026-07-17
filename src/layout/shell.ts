@@ -58,7 +58,7 @@ export function footer(): string {
       `<p class="footer__mission">We help organisations navigate uncertainty and build with confidence at the intersection of search, AI and human intent.</p>` +
     `</div>` +
     col("Studio", [["What we do", "/studio/"], ["How we work", "/studio/#how-we-work"], ["Partnerships", "/studio/#partnerships"]]) +
-    col("Explore", [["Our Work", "/work/"], ["Research", "/research/"], ["Journal", "/journal/"], ["Products", "/products/"]]) +
+    col("Explore", [["Our work", "/work/"], ["Research", "/research/"], ["Journal", "/journal/"], ["Products", "/products/"]]) +
     col("Company", [["About", "/about/"], ["Values", "/about/#values"], ["Manifesto", "/manifesto/"], ["Architecture", "/architecture/"], ["Contact", "/contact/"]]) +
     `</div>` +
     `<div class="footer__machines"><span class="eyebrow">For machines</span>${machines}</div>` +
