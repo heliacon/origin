@@ -70,17 +70,19 @@ export function home(origin: Dict, defs: Dict[], posts: Dict[], graph: unknown):
 
 <section class="section"><div class="container">
   <div class="section-head">${sectionLabel("Ask our origin")}<h2 style="margin-top:16px">We practise what we sell</h2></div>
-  <p class="lede" style="max-width:640px;margin-bottom:32px">Do not take our word for it. Ask our own origin a question. It answers from our corpus and every answer cites its source. This is exactly what we build for clients: knowledge a machine can find, trust and invoke.</p>
-  <form class="ask__box" id="ask" action="/ask" method="get" role="search">
-    <label class="sr-only" for="q">Ask the origin a question</label>
-    <input id="q" name="q" placeholder="What is an origin? How do I become invocable?" autocomplete="off">
-    <button class="btn btn--icon" type="submit" aria-label="Ask">&rarr;</button>
-  </form>
-  <div class="ask__answers" id="answers" role="status" aria-live="polite">${canonicalQA(defs)}</div>
-  <div class="ask__bridge" id="ask-bridge">${ctaLink("Want this for your origin? Start a conversation", "/contact/?ref=ask")}</div>
-  <p class="machine-row">Or call it directly, no browser required:
-    <a href="/ask?q=what+is+an+origin">Ask</a><a href="/.well-known/mcp.json">MCP</a><a href="/provenance">Provenance</a><a href="/origin.md">Markdown</a><a href="/origin.json">JSON</a><a href="/origin.jsonld">JSON-LD</a><a href="/feed.xml">Feed</a>
-  </p>
+  <div class="feature-col">
+    <p class="lede" style="margin-bottom:32px">Do not take our word for it. Ask our own origin a question. It answers from our corpus and every answer cites its source. This is exactly what we build for clients: knowledge a machine can find, trust and invoke.</p>
+    <form class="ask__box" id="ask" action="/ask" method="get" role="search">
+      <label class="sr-only" for="q">Ask the origin a question</label>
+      <input id="q" name="q" placeholder="What is an origin? How do I become invocable?" autocomplete="off">
+      <button class="btn btn--icon" type="submit" aria-label="Ask">&rarr;</button>
+    </form>
+    <div class="ask__answers" id="answers" role="status" aria-live="polite">${canonicalQA(defs)}</div>
+    <div class="ask__bridge" id="ask-bridge">${ctaLink("Want this for your origin? Start a conversation", "/contact/?ref=ask")}</div>
+    <p class="machine-row">Or call it directly, no browser required:
+      <a href="/ask?q=what+is+an+origin">Ask</a><a href="/.well-known/mcp.json">MCP</a><a href="/provenance">Provenance</a><a href="/origin.md">Markdown</a><a href="/origin.json">JSON</a><a href="/origin.jsonld">JSON-LD</a><a href="/feed.xml">Feed</a>
+    </p>
+  </div>
 </div></section>
 
 <section class="section"><div class="container">

@@ -63,7 +63,7 @@ main{display:block}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 /* ── type (§2.3) ────────────────────────────────────────────────────────── */
-h1,h2,h3,h4{font-family:var(--font-serif);font-weight:500;color:var(--text);margin:0}
+h1,h2,h3,h4{font-family:var(--font-serif);font-weight:500;color:var(--text);margin:0;text-wrap:balance}
 h1{font-size:clamp(32px,4vw,40px);line-height:1.12;letter-spacing:-.005em}
 h2{font-size:27px;line-height:1.25;letter-spacing:-.005em}
 h3{font-size:21px;line-height:1.3}
@@ -71,6 +71,9 @@ p{margin:0 0 18px}
 .lede{font-family:var(--font-sans);font-size:clamp(18px,2vw,21px);line-height:1.5;color:var(--text-muted)}
 .small{font-size:15px;line-height:1.6}
 .caption{font-size:13px;line-height:1.5;color:var(--text-muted)}
+/* widow / orphan control (§2): balance short display, pretty for body and ledes */
+p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-wrap:pretty}
+.hero__h1,.jrow__title,.card__title,.stat__n,.newsletter h3,.pullquote p,.ask__ans-x{text-wrap:balance}
 .eyebrow{font-family:var(--font-mono);font-weight:500;font-size:12px;line-height:1;
   letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted);display:block}
 .eyebrow--accent{color:var(--accent)}
@@ -78,9 +81,9 @@ p{margin:0 0 18px}
 /* ── layout (§3) ────────────────────────────────────────────────────────── */
 .container{max-width:var(--container);margin:0 auto;padding-inline:var(--gutter);width:100%}
 .container--text{max-width:var(--container-text)}
-.section{padding-block:var(--space-20)}
-.hero--home + .section,.hero--page + .section{margin-top:calc(var(--space-24) * -1);position:relative;z-index:3}
-.section--tight{padding-block:var(--space-12)}
+.section{padding-block:var(--space-16)}
+.hero--home + .section,.hero--page + .section{margin-top:calc(var(--space-20) * -1);position:relative;z-index:3}
+.section--tight{padding-block:var(--space-10)}
 .section-head{margin-bottom:var(--space-8);text-align:center}
 .section-head .eyebrow{margin-bottom:var(--space-4)}
 .pagehead{padding-block:var(--space-16) var(--space-10);border-bottom:1px solid var(--border);text-align:center}
@@ -297,6 +300,9 @@ a.chip:hover,.chip.is-active{border-color:var(--accent);color:var(--text)}
 .copybtn:hover{color:var(--accent-strong)}
 
 /* ── ask strip (machine spine, §5) ──────────────────────────────────────── */
+/* a centred reading-width feature column, so a narrow block reads as intentional,
+   not stranded left in a wide container (§3.2) */
+.feature-col{max-width:640px;margin-inline:auto}
 .ask__box{display:flex;align-items:center;gap:var(--space-2);width:100%;max-width:640px;
   background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--r-2);padding:6px 6px 6px 18px}
 .ask__box:focus-within{border-color:var(--accent)}
@@ -349,7 +355,7 @@ a.chip:hover,.chip.is-active{border-color:var(--accent);color:var(--text)}
 .cta-band{text-align:center;padding-block:var(--space-16);border-top:1px solid var(--border)}
 
 /* ── footer (§4.16) ─────────────────────────────────────────────────────── */
-.footer{background:var(--bg-sunk);border-top:1px solid var(--border);padding-block:var(--space-16) var(--space-10);margin-top:var(--space-24)}
+.footer{background:var(--bg-sunk);border-top:1px solid var(--border);padding-block:var(--space-16) var(--space-10);margin-top:var(--space-16)}
 .footer__grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:var(--space-10)}
 .footer__brand-mark{display:flex;align-items:center;gap:8px;margin-bottom:var(--space-4)}
 .footer__brand-mark img{height:24px}

@@ -31,7 +31,7 @@ export function work(_htmlBody: string, jsonld: unknown): string {
   const grid = `
 <section class="section"><div class="container">
   <div class="section-head">${sectionLabel("What we can do")}</div>
-  <div class="grid-3" style="margin-top:40px">${cards}</div>
+  <div class="grid-2" style="max-width:960px;margin:40px auto 0">${cards}</div>
 </div></section>`;
 
   const clientNote = `
