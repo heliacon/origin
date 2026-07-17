@@ -136,8 +136,8 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .hero::after{content:"";position:absolute;inset-inline:0;bottom:0;height:120px;z-index:1;pointer-events:none;
   background:linear-gradient(0deg,var(--bg-base) 0%,rgba(15,15,18,0) 100%)}
 .hero--home{min-height:88vh}
-/* interior banners: short, no text on the image (the heading lives in the sheet below) */
-.hero--page,.hero--article{min-height:min(46vh,430px)}
+/* interior banners: no text on the image (the heading lives in the sheet pulled up over it) */
+.hero--page,.hero--article{min-height:min(56vh,520px)}
 .hero--page .hero__media img{object-position:center 88%}
 /* interior banners carry no text, so the image stays bright (comparable to home): only the home
    top band survives for over-hero nav legibility (a11y-validated), plus the .hero::after blend.
@@ -163,8 +163,14 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 /* ── content sheet (interior pages: the solid container pulled up over the banner) ── */
 .sheet-wrap{max-width:var(--container);margin:0 auto;padding-inline:var(--gutter);position:relative;z-index:3}
 .sheet-wrap--text{max-width:var(--container-text)}
-.sheet{background:var(--bg-base);border:1px solid var(--border);border-radius:var(--r-1);
-  margin-top:-120px;padding:var(--space-12) clamp(24px,4vw,var(--space-16)) var(--space-12)}
+/* the article/page card: glassy, rounded, floated high over the hero like a normal article
+   position. The image glows through the translucent top; below the banner it sits on base. */
+.sheet{background:rgba(15,15,18,.84);
+  -webkit-backdrop-filter:blur(18px) saturate(1.15);backdrop-filter:blur(18px) saturate(1.15);
+  border:1px solid rgba(236,230,216,.09);border-radius:16px;
+  box-shadow:0 24px 64px rgba(0,0,0,.38);
+  margin-top:-300px;padding:var(--space-12) clamp(24px,4vw,var(--space-16)) var(--space-12)}
+@supports not (backdrop-filter:blur(1px)){.sheet{background:rgba(15,15,18,.97)}}
 /* sections flowing inside the sheet already sit in its padding: neutralise their own gutter */
 .sheet .container{padding-inline:0}
 .sheet .section:last-child,.sheet .cta-band:last-child{padding-bottom:0}
@@ -444,9 +450,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 @media(max-width:640px){
   .section{padding-block:var(--space-12)}
   /* the sheet spans nearly full width and the pull-up shrinks gracefully */
-  .hero--page,.hero--article{min-height:min(38vh,340px)}
+  .hero--page,.hero--article{min-height:min(44vh,400px)}
   .sheet-wrap{padding-inline:10px}
-  .sheet{margin-top:-64px;padding:var(--space-8) var(--space-5) var(--space-8)}
+  .sheet{margin-top:-160px;border-radius:12px;padding:var(--space-8) var(--space-5) var(--space-8)}
   .wwd{grid-template-columns:repeat(2,1fr)}
   .grid-3,.grid-2{grid-template-columns:1fr}
   .stats{grid-template-columns:1fr;gap:var(--space-6)}

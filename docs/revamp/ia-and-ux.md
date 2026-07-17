@@ -52,7 +52,7 @@ The wordmark (top-left) always links home. Home is not a nav label, so STUDIO is
 ├── /work/                       WORK index — Case Study Zero + project cards, filterable
 │   ├── /work/case-study-zero/   the live origin, this site, as a case study
 │   ├── /work/armx/              ARMX Framework (real, Heliacon's own)
-│   └── /work/topkay/            Topkay/Kenovar platform (real, Heliacon's own)
+│   └── /work/kenovar/            Kenovar platform (real, Heliacon's own)
 ├── /research/                   RESEARCH hub — collections nest, landmark docs stay top-level
 │   ├── /research/corpus/        seven essays
 │   │   └── /research/corpus/{slug}/
@@ -123,7 +123,7 @@ Notation: each block is a full-bleed or contained section, top to bottom. CTA = 
    Strategy · Research · Products · Partnerships · Studio
    each links to /studio/#{facet} or /work/?type={facet}
 [ EXPLORE OUR WORK ] label + filter tabs (All Strategy Research Products Studio)
-   3 project cards (Case Study Zero, ARMX, Topkay) with "View project →"
+   3 project cards (Case Study Zero, ARMX, Kenovar) with "View project →"
    link: View all work → (/work/)
 [ ASK STRIP ] the /ask box, server-rendered canonical Q&A beneath (crawlable)
    after an answer renders → BRIDGE CTA "Want this for your origin? Start a conversation →"
@@ -163,7 +163,7 @@ Note: engagement model and pricing tiers are NEEDS-PETE (HEL-003, HEL-004). Spec
    CTA Inspect it → (/work/case-study-zero/)
 [ FILTER TABS ] All · Strategy · Research · Products · Studio
 [ PROJECT GRID ] cards. REAL projects labelled "View project". Offer areas labelled "Capability".
-   Real:   ARMX Framework, Topkay Platform
+   Real:   ARMX Framework, Kenovar Platform
    Offer:  AI Search Strategy, Content Intelligence, Agent Experience Design, Data & Signal Strategy
 [ CLIENT WORK ] honest note: engagements underway, outcomes shown not claimed as they complete
 [ CTA BAND ] Work with us → (/contact/)
@@ -315,7 +315,7 @@ The site holds no URL equity, so this maps existing content to its cleanest new 
 | Contact | `/contact/` | new; replaces mailto | build (form handler is a dependency) |
 | Case Study Zero detail | `/work/case-study-zero/` | promote the `work.md` case-study section to its own page | build |
 | ARMX project | `/work/armx/` | real, from ARMX doctrine | needs a short write-up |
-| Topkay project | `/work/topkay/` | real, Topkay/Kenovar | needs a short write-up or outbound link |
+| Kenovar project | `/work/kenovar/` | real, Kenovar | needs a short write-up or outbound link |
 
 ### 3.3 Real vs placeholder (honesty ledger — do not ship placeholders as fact)
 
@@ -323,7 +323,7 @@ The site holds no URL equity, so this maps existing content to its cleanest new 
 |---|---|---|
 | Case Study Zero (this site) | REAL, live, inspectable | Hero of Work. The one true proof. |
 | ARMX Framework | REAL (Heliacon's own framework) | "View project", links to a real explainer. No client metric. |
-| Topkay Platform | REAL (Heliacon's own product, now Kenovar) | "View project", real product page or outbound link. |
+| Kenovar Platform | REAL (Heliacon's own product, now Kenovar) | "View project", real product page or outbound link. |
 | AI Search Strategy | Offer area, not a client case study | Show as a capability card, not a case study. |
 | Content Intelligence | Offer area | Capability card, or omit until real. |
 | Agent Experience Design | Offer area | Capability card, or omit until real. |
@@ -341,7 +341,7 @@ The site holds no URL equity, so this maps existing content to its cleanest new 
 5. Contact form Worker handler (and success/error responses). Until built, degrade to copyable email + mailto.
 6. Newsletter handler (article + journal signup blocks). Until built, hide the block rather than ship a dead input.
 7. Booking link (Cal.com/Calendly) — Pete decides yes/no.
-8. ARMX and Topkay project write-ups.
+8. ARMX and Kenovar project write-ups.
 
 ---
 
@@ -410,7 +410,7 @@ The site holds no meaningful URL equity, so there is nothing to redirect and no 
 | `/work/` | Work index |
 | `/work/case-study-zero/` | Case Study Zero detail |
 | `/work/armx/` | ARMX project |
-| `/work/topkay/` | Topkay project |
+| `/work/kenovar/` | Kenovar project |
 | `/research/` | Research hub |
 | `/research/corpus/` and `/research/corpus/{slug}/` | Corpus index and 7 essays |
 | `/research/definitions/` and `/research/definitions/{slug}/` | Definitions index and 7 definitions |

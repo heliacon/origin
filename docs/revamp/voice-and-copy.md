@@ -236,10 +236,10 @@ tighten them:
 - F6. Sweep all article/pull-quote copy for the long dash before build. The mock uses it freely.
 
 **Unsubstantiated claims → fix or mark [NEEDS PETE]**
-- F7. Work grid presents products (ARMX, Topkay) and services as **case studies** with "View
+- F7. Work grid presents products (ARMX, Kenovar) and services as **case studies** with "View
   Case Study" links, when no case study exists and client work is "underway, not claimed".
   This is the biggest honesty risk in the mock. Reframe per Work section option A or B. Also:
-  **Topkay is renamed KENOVAR** (per project memory), do not ship "Topkay Platform".
+  **Kenovar is renamed KENOVAR** (per project memory), do not ship "Kenovar Platform".
 - F8. About stats **"10+ years"** and **"50+ partners and collaborators"** are fabricated.
   Replace with the inspectable receipts trio (About section) or mark [NEEDS PETE] with real
   numbers. "50+ partners" must not ship under any circumstance.
@@ -267,5 +267,5 @@ tighten them:
   item. Footer columns need Careers cut and Case Studies pointed at Work.
 - **To SEO:** article titles carry the spelling fixes (F2, F3); the Work grid reframing (F7)
   changes what schema can honestly assert as CreativeWork/case study.
-- **To Pete:** F7 (Topkay→Kenovar, no fake case studies), F8 (real track-record numbers or
+- **To Pete:** F7 (Kenovar→Kenovar, no fake case studies), F8 (real track-record numbers or
   none), and the About headline line remain [NEEDS PETE].

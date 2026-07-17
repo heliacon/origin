@@ -31,7 +31,7 @@ entity schema) is preserved as the product thesis, not restyled away.
    altitude model per voice-and-copy.md.
 6. Honesty guardrails (hard): no fabricated stats or client outcomes. "50+ partners" etc are
    stubbed with inspectable receipts or removed. The four non-real project cards ship as
-   capability areas, not case studies. Topkay is renamed Kenovar.
+   capability areas, not case studies. Kenovar is renamed Kenovar.
 7. Hero copy: keep the mock's emotional H1 ("Navigate uncertainty. Build with confidence.") as the
    visible headline, AND keep a keyword-bearing meta description + the on-page /ask box so the
    search-category signal and SearchAction claim (SEO's concern) still stand. Both/and, not either.

@@ -16,7 +16,7 @@ Satya Nadella named our category from the top of the industry in *The Reverse In
 
 ## The map — his four C's are our architecture
 
-| Nadella's C | Heliacon / Topkay |
+| Nadella's C | Heliacon / Kenovar |
 |---|---|
 | **Control** (own your memory, traces, evals) | Own your **origin** — the canonical record of what you know and can do |
 | **Choice** (decouple from any single model) | Model-agnostic, portable; the twin inspectable from every consumer viewpoint; no lock-in |
@@ -36,7 +36,7 @@ Satya Nadella named our category from the top of the industry in *The Reverse In
 - **Note (public):** `posts/tenant-control-is-not-sovereignty.md` — steelman Nadella, then push past the tenant to owned-and-exitable. Timely, borrows his credibility.
 - **Manifesto:** already carries "The method and the strategy" (optimising origins is method; software that does not turn on you is the strategy). This brief is the market-facing edge of that.
 - **Consulting / Services:** the wedge for the AI-visibility offer's trust story — you are not just found and cited, you are found and cited *without being extracted*.
-- **Topkay:** reinforces the verified-owner, portable, model-agnostic twin as the uncontested moat (see [[project_topkay_moat]]).
+- **Kenovar:** reinforces the verified-owner, portable, model-agnostic twin as the uncontested moat (see [[project_topkay_moat]]).
 
 ## Watch-outs
 
