@@ -1,20 +1,10 @@
 # About
 
-Heliacon is me, Pete Dainty. [PETE: one headline line — who you are in a sentence, e.g. "a product and engineering leader who has spent N years building search, data and AI products".]
+Heliacon is me, Pete Dainty.
 
 ## Why I started Heliacon
 
 The web is being read by machines as much as by people now. Most companies still write only for the browser and quietly go invisible to the models and agents that increasingly decide what gets found, trusted and used. I started Heliacon to fix that from the origin up.
-
-This is not a view I picked up second-hand. [PETE: one or two sentences on how you arrived at it, the hands-on work that taught it to you.]
-
-## What I have built
-
-[PETE: your track record goes here. This is the single most important thing on the page, and the proof a buyer needs before hiring a solo firm. Roles, companies, the scale you worked at, and the outcomes you actually moved. Be specific and use numbers. Shape:]
-
-- [Role, Company, years] — [what you owned and the result, with a metric].
-- [Role, Company, years] — [what you owned and the result].
-- [Something you shipped or led that bears directly on AI visibility, search, relevance or agentic product.]
 
 ## How I work
 
