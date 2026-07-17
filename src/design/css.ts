@@ -73,7 +73,7 @@ p{margin:0 0 18px}
 .caption{font-size:13px;line-height:1.5;color:var(--text-muted)}
 /* widow / orphan control (§2): balance short display, pretty for body and ledes */
 p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-wrap:pretty}
-.hero__h1,.jrow__title,.card__title,.stat__n,.newsletter h3,.pullquote p,.ask__ans-x{text-wrap:balance}
+.hero__h1,.jrow__title,.card__title,.stat__n,.newsletter h2,.newsletter h3,.pullquote p,.ask__ans-x{text-wrap:balance}
 .eyebrow{font-family:var(--font-mono);font-weight:500;font-size:12px;line-height:1;
   letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted);display:block}
 .eyebrow--accent{color:var(--accent)}
@@ -162,6 +162,9 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
   max-width:var(--container);width:100%;margin:0 auto;padding-inline:var(--gutter)}
 .hero--home .hero__inner{justify-content:center;padding-block:var(--space-24)}
 .hero--article .hero__inner{justify-content:flex-end;padding-block:var(--space-16)}
+/* definition pages read in a centred text column (.container--text), so their hero inner narrows
+   to the same box: the H1 sits on the body's left edge, not the full-container gutter */
+.hero--article-narrow .hero__inner{max-width:var(--container-text)}
 .hero__block{max-width:620px}
 .hero__h1{font-size:clamp(40px,6vw,64px);line-height:1.05;letter-spacing:-.01em;color:var(--text-strong);
   text-shadow:0 1px 3px rgba(0,0,0,.65),0 2px 30px rgba(0,0,0,.82);margin:0}
@@ -294,7 +297,7 @@ a.chip:hover,.chip.is-active{border-color:var(--accent);color:var(--text)}
 .newsletter{border:1px solid var(--border);border-radius:var(--r-2);padding:var(--space-5);background:var(--bg-elevated)}
 .newsletter__icon{color:var(--accent);margin-bottom:var(--space-3)}
 .newsletter__icon .ico{width:22px;height:22px}
-.newsletter h3{font-size:16px;color:var(--accent);margin:0 0 var(--space-2)}
+.newsletter h2,.newsletter h3{font-size:16px;line-height:1.3;letter-spacing:0;color:var(--accent);margin:0 0 var(--space-2)}
 .newsletter__row{display:flex;gap:var(--space-2);margin-top:var(--space-4)}
 
 /* ── stat block (§4.18) ─────────────────────────────────────────────────── */

@@ -32,7 +32,7 @@ function subscribeBand(): string {
   return `<section class="section section--tight"><div class="container">` +
     `<div class="newsletter" style="max-width:520px;margin:0 auto">` +
       `<span class="newsletter__icon">${icon("evidence")}</span>` +
-      `<h3>Keep up with the journal</h3>` +
+      `<h2>Keep up with the journal</h2>` + // h2: it follows the page h1 directly (WCAG 1.3.1)
       `<p class="caption">New field notes and research as they publish. Follow the feed, no inbox required.</p>` +
       `<p style="margin-top:var(--space-4)">${ctaLink("Subscribe by feed", "/feed.xml")}</p>` +
     `</div>` +

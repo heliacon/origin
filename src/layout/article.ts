@@ -15,11 +15,14 @@ export interface ArticleHeroOpts {
   meta?: string;      // e.g. "4 July 2026 · Engineering · 8 min read"
   title: string;
   sub?: string;
+  /** Align the hero block with a centred `.container--text` body (definition pages). The default
+   *  wide hero stays for the two-column article/doc layout. */
+  narrow?: boolean;
 }
 
 /** The over-image article header with the nav rendered transparent inside it. */
 export function articleHero(o: ArticleHeroOpts): string {
-  return `<section class="hero hero--article">` +
+  return `<section class="hero hero--article${o.narrow ? " hero--article-narrow" : ""}">` +
     heroPicture("") +
     `<div class="hero__overlay"></div>` +
     navBar(o.section, true) +
@@ -53,11 +56,18 @@ export function pageHero(o: { title: string; lede?: string; eyebrow?: string; se
  * Give every <h2>/<h3> in rendered markdown a stable id (deep-linkable passages, seo §2e) and
  * return the table of contents built from them. H2 are top-level TOC items, H3 are sub-items.
  */
+/** Decode the entities the markdown renderer emits in heading text (&#39; &amp; &quot; ...), so
+ *  TOC labels don't re-escape into visible "&#39;" and slugs don't carry stray digits. */
+const decodeEntities = (s: string): string =>
+  s.replace(/&#(\d+);/g, (_m, n: string) => String.fromCodePoint(Number(n)))
+   .replace(/&#x([0-9a-f]+);/gi, (_m, n: string) => String.fromCodePoint(parseInt(n, 16)))
+   .replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+
 export function withHeadingIds(html: string): { html: string; toc: TocEntry[] } {
   const toc: TocEntry[] = [];
   const seen = new Set<string>();
   const out = html.replace(/<h([23])>([\s\S]*?)<\/h\1>/g, (_m, lvl: string, inner: string) => {
-    const text = collapse(inner.replace(/<[^>]+>/g, ""));
+    const text = decodeEntities(collapse(inner.replace(/<[^>]+>/g, "")));
     let id = slugify(text) || "section";
     while (seen.has(id)) id += "-x";
     seen.add(id);

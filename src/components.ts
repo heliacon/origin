@@ -12,9 +12,12 @@ import { icon } from "./icons";
 const arw = `<span class="arw" aria-hidden="true">&rarr;</span>`;
 
 // ── labels ──────────────────────────────────────────────────────────────────
-/** Mono uppercase section label / eyebrow (§2.3). `accent` tints it Dawn amber. */
-export const sectionLabel = (text: string, accent = false): string =>
-  `<span class="eyebrow${accent ? " eyebrow--accent" : ""}">${esc(text)}</span>`;
+/** Mono uppercase section label / eyebrow (§2.3). `accent` tints it Dawn amber.
+ *  `tag` renders it as a real heading where the label is the section's only heading (WCAG 1.3.1:
+ *  card grids whose card titles are h3 need an h2 between them and the page h1). The `.eyebrow`
+ *  class overrides every element-level h2 style, so the two renderings are visually identical. */
+export const sectionLabel = (text: string, accent = false, tag: "span" | "h2" = "span"): string =>
+  `<${tag} class="eyebrow${accent ? " eyebrow--accent" : ""}">${esc(text)}</${tag}>`;
 export const eyebrow = sectionLabel;
 
 /** Standard interior page header: optional eyebrow, H1, lede, inside a text container. */

@@ -38,6 +38,7 @@ export function definitionPage(d: Dict, jsonld: unknown): string {
       backLabel: "Back to Research", backHref: "/research/",
       title: String(d.title),
       sub: collapse(d.summary),
+      narrow: true, // body is a centred .container--text column: align the H1 to its left edge
     }) +
 
     `<section class="section"><div class="container container--text">` +

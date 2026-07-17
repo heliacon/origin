@@ -55,18 +55,18 @@ export function research(defs: Dict[], jsonld: unknown): string {
     }) +
 
     `<section class="section"><div class="container">` +
-      `<div class="section-head">${sectionLabel("Definitions")}</div>` +
+      `<div class="section-head">${sectionLabel("Definitions", false, "h2")}</div>` +
       originCard +
       `<div class="grid-3" style="margin-top:var(--space-6)">${restCards}</div>` +
     `</div></section>` +
 
     `<section class="section--tight"><div class="container">` +
-      `<div class="section-head">${sectionLabel("Foundations")}</div>` +
+      `<div class="section-head">${sectionLabel("Foundations", false, "h2")}</div>` +
       `<div class="grid-2">${foundations}</div>` +
     `</div></section>` +
 
     `<section class="section--tight"><div class="container container--text">` +
-      `<span class="eyebrow">For machines</span>` +
+      `<h2 class="eyebrow">For machines</h2>` +
       `<p class="small" style="color:var(--text-muted);margin-top:16px">` +
         `This vocabulary is exactly what <a href="/ask?q=what+is+an+origin">/ask</a> retrieves, and every answer it returns cites its source. ` +
         `The same definitions are available to agents over the Model Context Protocol.</p>` +

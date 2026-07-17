@@ -30,13 +30,13 @@ export function work(_htmlBody: string, jsonld: unknown): string {
 
   const grid = `
 <section class="section"><div class="container">
-  <div class="section-head">${sectionLabel("What we can do")}</div>
+  <div class="section-head">${sectionLabel("What we can do", false, "h2")}</div>
   <div class="grid-2" style="max-width:960px;margin:40px auto 0">${cards}</div>
 </div></section>`;
 
   const clientNote = `
 <section class="section--tight"><div class="container container--text">
-  ${sectionLabel("Client work")}
+  ${sectionLabel("Client work", false, "h2")}
   <p style="margin-top:16px;color:var(--text-muted)">Client engagements are underway. As each one lands it will appear here with the metric we moved and its provenance, on the same terms as everything else on this site. Shown, not claimed.</p>
 </div></section>`;
 

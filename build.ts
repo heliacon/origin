@@ -164,7 +164,8 @@ async function main(): Promise<void> {
   write(join(DIST, "research", "definitions", "index.json"), defs);
   const defCards = defs.map((d) =>
     `<a class="card" href="/research/definitions/${d.id}/"><div class="card__body"><span class="eyebrow card__kicker">Definition</span>` +
-    `<h3 class="card__title">${esc(d.title)}</h3><p class="card__cap">${esc(collapse(d.summary))}</p></div></a>`).join("");
+    // h2 not h3: on this collection page the card titles sit directly under the page h1 (WCAG 1.3.1)
+    `<h2 class="card__title">${esc(d.title)}</h2><p class="card__cap">${esc(collapse(d.summary))}</p></div></a>`).join("");
   write(join(DIST, "research", "definitions", "index.html"), minifyHtml(page("Definitions · Heliacon",
     pageHero({ title: "Definitions", lede: "The canonical vocabulary. Each term defined once, versioned, and carrying its provenance.", eyebrow: "Research", section: "research" }) +
     `<section class="section"><div class="container"><div class="grid-3">${defCards}</div></div></section>`,
