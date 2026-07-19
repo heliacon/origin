@@ -10,6 +10,23 @@
  */
 import { CANON, esc, collapse } from "../util";
 import { fontPreload } from "../design/fonts";
+import { wordmarkSprite, wordmark } from "../design/wordmark";
+
+/** Reads the saved theme (or the OS preference) and stamps it on <html> before first paint, so
+ *  a dark-preferring reader never sees a flash of the light default. Inlined in <head>, tiny. */
+const themeScript =
+  `<script>(function(){try{var t=localStorage.getItem("theme");` +
+  `if(t!=="dark"&&t!=="light")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";` +
+  `document.documentElement.setAttribute("data-theme",t)}catch(e){}})()</script>`;
+
+/** The light/dark control that lives in the nav. Toggles [data-theme] and persists it (app.js). */
+function themeToggle(): string {
+  return `<button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch between light and dark">` +
+    `<svg class="theme-toggle__sun" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/>` +
+    `<path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5 5l2.1 2.1M16.9 16.9 19 19M19 5l-2.1 2.1M7.1 16.9 5 19"/></svg>` +
+    `<svg class="theme-toggle__moon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>` +
+    `</button>`;
+}
 
 const YEAR = 2026;
 const DEFAULT_DESC =
@@ -35,10 +52,12 @@ export function navBar(active: Section = "", over = false): string {
   const sheetLinks = NAV_ITEMS.map(([label, href, s]) =>
     `<li><a class="${s === "contact" ? "is-cta" : ""}" href="${href}"${cur(s)}>${esc(label)}</a></li>`).join("");
   return `<nav class="nav${over ? " nav--over" : ""}" aria-label="Primary">` +
-    `<a class="nav__brand" href="/" aria-label="Heliacon home">` +
-      `<img class="nav__logo" src="/assets/logo/wordmark-dawn.svg" alt="Heliacon" height="26"></a>` +
-    `<ul class="nav__links">${links}</ul>` +
-    `<button class="nav__toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-sheet"><span></span></button>` +
+    `<a class="nav__brand" href="/" aria-label="Heliacon home">${wordmark("nav__logo")}</a>` +
+    `<div class="nav__end">` +
+      `<ul class="nav__links">${links}</ul>` +
+      themeToggle() +
+      `<button class="nav__toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-sheet"><span></span></button>` +
+    `</div>` +
     `<div class="nav__sheet" id="nav-sheet"><ul>${sheetLinks}</ul></div>` +
     `</nav>`;
 }
@@ -54,7 +73,7 @@ export function footer(): string {
   ].map(([t, h]) => `<a href="${h}">${esc(t)}</a>`).join('<span aria-hidden="true"> &middot; </span>');
   return `<footer class="footer"><div class="container"><div class="footer__grid">` +
     `<div class="footer__col">` +
-      `<div class="footer__brand-mark"><img class="footer__logo" src="/assets/logo/wordmark-dawn.svg" alt="Heliacon" height="22"></div>` +
+      `<div class="footer__brand-mark">${wordmark("footer__logo")}</div>` +
       `<p class="footer__mission">We help organisations navigate uncertainty and build with confidence at the intersection of search, AI and human intent.</p>` +
     `</div>` +
     col("Studio", [["What we do", "/studio/"], ["How we work", "/studio/#how-we-work"], ["Partnerships", "/studio/#partnerships"]]) +
@@ -93,6 +112,7 @@ export function page(title: string, body: string, canonicalPath: string, opts: P
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+${themeScript}
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(collapse(description))}">
 <link rel="canonical" href="${url}">
@@ -112,6 +132,7 @@ ${fontPreload}
 ${extraMeta ? extraMeta + "\n" : ""}${alt ? "    " + alt + "\n" : ""}<link rel="stylesheet" href="/styles.css">${ld}
 </head>
 <body>
+${wordmarkSprite}
 <a class="skip" href="#main">Skip to content</a>
 ${overHero ? "" : `<header class="siteheader">${navBar(section, false)}</header>`}
 <main id="main">${body}</main>

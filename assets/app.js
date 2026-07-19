@@ -4,6 +4,19 @@
   "use strict";
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
+  // ── theme toggle (light/dark) ────────────────────────────────────────────
+  // The no-flash script in <head> has already stamped [data-theme]. Here we just flip and persist.
+  document.querySelectorAll("[data-theme-toggle]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const root = document.documentElement;
+      const cur = root.getAttribute("data-theme") ||
+        (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      const next = cur === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch (_) {}
+    });
+  });
+
   // ── mobile nav disclosure (design-system §4.2, ia §4.2) ──────────────────
   const toggle = document.querySelector(".nav__toggle");
   const sheet = document.getElementById("nav-sheet");

@@ -134,9 +134,8 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
   height:72px;max-width:var(--container);margin:0 auto;padding-inline:var(--gutter)}
 .nav--over{position:absolute;top:0;left:0;right:0;z-index:4}
 .nav__brand{display:flex;align-items:center;gap:8px;flex:none}
-.nav__logo{height:26px;width:auto}
-.nav__wordmark{font-family:var(--font-mono);font-weight:500;font-size:16px;letter-spacing:.28em;
-  text-transform:uppercase;color:var(--text-strong)}
+.nav__logo{height:24px;width:auto;color:var(--text-strong)}
+.nav__end{display:flex;align-items:center;gap:var(--space-6)}
 .nav__links{display:flex;align-items:center;gap:28px;list-style:none;margin:0;padding:0}
 .nav__link{font-family:var(--font-mono);font-weight:500;font-size:13px;letter-spacing:.14em;
   text-transform:uppercase;color:var(--text);opacity:.82;position:relative;padding:6px 0;display:inline-block}
@@ -149,13 +148,26 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .nav--over .nav__link:hover,.nav--over .nav__link[aria-current=page]{color:var(--on-image)}
 .nav--over .nav__link[aria-current=page]::after{height:2px;background:var(--on-image);box-shadow:0 0 0 1px rgba(0,0,0,.45),0 1px 5px rgba(0,0,0,.7)}
 .nav--over .nav__link:hover::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:2px;background:var(--on-image);opacity:.85}
-.nav--over .nav__wordmark{color:var(--on-image);text-shadow:0 1px 3px rgba(0,0,0,.85),0 1px 16px rgba(0,0,0,.55)}
 .nav__toggle{display:none;width:44px;height:44px;align-items:center;justify-content:center;
   background:none;border:0;cursor:pointer;flex:none}
 .nav__toggle span{display:block;width:22px;height:1.5px;background:var(--text);position:relative}
 .nav--over .nav__toggle span{background:var(--on-image)}
 .nav__toggle span::before,.nav__toggle span::after{content:"";position:absolute;left:0;width:22px;height:1.5px;background:inherit}
 .nav__toggle span::before{top:-7px}.nav__toggle span::after{top:7px}
+/* over the hero the wordmark goes to a single light tone — letters and O together (§07) */
+.nav--over .nav__logo{color:var(--on-image)}
+.nav--over .nav__logo .wm-o{fill:var(--on-image)}
+/* theme toggle (light/dark). Shows the icon for the theme you would switch to. */
+.theme-toggle{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;
+  background:none;border:0;cursor:pointer;color:var(--text-muted);border-radius:var(--r-2);flex:none}
+.theme-toggle:hover{color:var(--accent)}
+.theme-toggle svg{width:19px;height:19px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.nav--over .theme-toggle{color:var(--on-image)}
+.theme-toggle__sun{display:none}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .theme-toggle__sun{display:block}
+  :root:not([data-theme=light]) .theme-toggle__moon{display:none}}
+:root[data-theme=dark] .theme-toggle__sun{display:block}
+:root[data-theme=dark] .theme-toggle__moon{display:none}
 .nav__sheet{display:none;position:absolute;left:0;right:0;top:100%;z-index:20;
   background:var(--bg-overlay);backdrop-filter:blur(8px);border-top:1px solid var(--border);
   box-shadow:0 8px 32px rgba(0,0,0,.5)}
@@ -449,8 +461,7 @@ a.chip:hover,.chip.is-active{border-color:var(--accent);color:var(--text)}
 .footer{background:var(--bg-sunk);border-top:1px solid var(--border);padding-block:var(--space-16) var(--space-10);margin-top:var(--space-16)}
 .footer__grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:var(--space-10)}
 .footer__brand-mark{display:flex;align-items:center;gap:8px;margin-bottom:var(--space-4)}
-.footer__brand-mark img{height:24px}
-.footer__brand-mark .nav__wordmark{font-size:14px;color:var(--text)}
+.footer__logo{height:22px;width:auto;color:var(--text-strong)}
 .footer__mission{color:var(--text-muted);font-size:14px;line-height:1.6;max-width:280px}
 .footer__col-h{font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:.16em;
   text-transform:uppercase;color:var(--text-muted);margin:0 0 var(--space-4)}
