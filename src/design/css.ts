@@ -12,32 +12,40 @@ import { fontFace } from "./fonts";
 
 export const css = `${fontFace}
 
-/* ── tokens (design-system §1.3) ─────────────────────────────────────────── */
+/* ── tokens (design-language: Prussian, dual theme) ──────────────────────── */
+/* Colour only ever means something: warm neutral chrome, Prussian = the human act,
+   brass = the machine, green/amber/red = status. Names are stable across both themes;
+   only the values flip. Light is the reading default; dark is the equal second world. */
 :root{
-  /* surfaces — Stone, warm neutral near-black */
-  --bg-base:#0F0F12; --bg-sunk:#0A0A0C; --bg-elevated:#17161A;
-  --bg-elevated-2:#201E22; --bg-overlay:#121115;
-  /* text — Stone */
-  --text:#D7D2C7; --text-strong:#ECE6D8; --text-muted:#A9A59B; --text-faint:#726F66;
-  /* accent — Dawn Warm */
-  --accent:#E3A868; --accent-strong:#D46D37; --accent-deep:#9C4A20; --accent-ink:#221606;
-  /* secondary accent — Glacial Cool */
-  --signal:#8FB7D1; --signal-mid:#5E7F9C; --signal-deep:#2E4960;
-  /* tertiary — Forest Deep */
-  --ok:#6FA678; --forest-tint:#1B2A1C;
+  color-scheme:light dark;
+  /* surfaces — warm ink-on-paper */
+  --bg-base:#F3F3EF; --bg-sunk:#EAEAE4; --bg-elevated:#FBFBF8;
+  --bg-elevated-2:#FFFFFF; --bg-overlay:rgba(251,251,248,.92);
+  /* text — warm ink */
+  --text:#2C2D31; --text-strong:#17181B; --text-muted:#6E6F73; --text-faint:#9A9B9F;
+  /* accent — Prussian: the human signature, the thing to act on */
+  --accent:#1E3D63; --accent-strong:#16314F; --accent-deep:#0F2138; --accent-ink:#F7F8FA;
+  /* secondary — Brass: the machine voice, data and signal */
+  --signal:#8A6E3C; --signal-mid:#A98B52; --signal-deep:#6E5A30;
+  /* status */
+  --ok:#3F7A55; --forest-tint:#E7F0E9;
   /* lines and states */
-  --border:#2A2822; --border-strong:#3A382F; --focus:#E3A868;
-  --selection:rgba(227,168,104,.24);
+  --border:#E1E1DA; --border-strong:#CDCDC5; --focus:#1E3D63;
+  --selection:rgba(30,61,99,.16);
   --link:var(--accent); --link-hover:var(--accent-strong);
+  /* always light: text and chrome that sit over the hero image, in either theme */
+  --on-image:#F6F6F1;
+  /* the over-hero content sheet (interior pages): glass that flips with the theme */
+  --sheet-bg:rgba(251,251,248,.86); --sheet-solid:rgba(251,251,248,.98); --sheet-border:rgba(23,24,27,.10);
   /* code syntax (§4.12) */
-  --code-bg:#0B0B0D; --code-text:#D7D2C7; --code-key:#E3A868; --code-str:#8FB7D1;
-  --code-num:#D46D37; --code-func:#A9C7B0; --code-comment:#726F66; --code-punct:#A9A59B;
+  --code-bg:#EAEAE4; --code-text:#2C2D31; --code-key:#1E3D63; --code-str:#3F7A55;
+  --code-num:#8A6E3C; --code-func:#33557E; --code-comment:#9A9B9F; --code-punct:#6E6F73;
 
   /* type */
-  --font-serif:"Spectral","Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
+  --font-serif:"EB Garamond","Iowan Old Style",Palatino,Georgia,"Times New Roman",serif;
   --font-mono:"IBM Plex Mono",ui-monospace,"SF Mono","Cascadia Code",Menlo,monospace;
-  --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  --font-body:var(--font-sans); /* swap to var(--font-serif) to make body serif (§2.2) */
+  --font-sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-body:var(--font-sans); /* interface body is Plex Sans; long-form prose is serif (§2.2) */
 
   /* spacing (§3.1) */
   --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:20px;
@@ -48,6 +56,35 @@ export const css = `${fontFace}
   /* layout (§3.2) */
   --container:1200px; --container-text:760px; --measure:640px; --sidebar:300px;
   --gutter:clamp(20px,4vw,40px);
+}
+
+/* dark: the equal second world. Same names, flipped values. prefers-color-scheme is the
+   OS signal; [data-theme] (set by the toggle) overrides it in both directions. */
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg-base:#0F1218; --bg-sunk:#0A0C10; --bg-elevated:#171B22;
+  --bg-elevated-2:#1E232B; --bg-overlay:rgba(15,18,24,.92);
+  --text:#CDCFD6; --text-strong:#E7E8EC; --text-muted:#8C8F98; --text-faint:#6C6F78;
+  --accent:#6E9BD1; --accent-strong:#86ADDD; --accent-deep:#5A82AF; --accent-ink:#0C1017;
+  --signal:#C9A464; --signal-mid:#A98B52; --signal-deep:#8A6E3C;
+  --ok:#6FBE86; --forest-tint:#16261A;
+  --border:#242832; --border-strong:#333846; --focus:#6E9BD1;
+  --selection:rgba(110,155,209,.26);
+  --sheet-bg:rgba(15,18,24,.84); --sheet-solid:rgba(15,18,24,.97); --sheet-border:rgba(231,232,236,.10);
+  --code-bg:#0A0C10; --code-text:#CDCFD6; --code-key:#6E9BD1; --code-str:#6FBE86;
+  --code-num:#C9A464; --code-func:#86ADDD; --code-comment:#6C6F78; --code-punct:#8C8F98;
+}}
+:root[data-theme=dark]{
+  --bg-base:#0F1218; --bg-sunk:#0A0C10; --bg-elevated:#171B22;
+  --bg-elevated-2:#1E232B; --bg-overlay:rgba(15,18,24,.92);
+  --text:#CDCFD6; --text-strong:#E7E8EC; --text-muted:#8C8F98; --text-faint:#6C6F78;
+  --accent:#6E9BD1; --accent-strong:#86ADDD; --accent-deep:#5A82AF; --accent-ink:#0C1017;
+  --signal:#C9A464; --signal-mid:#A98B52; --signal-deep:#8A6E3C;
+  --ok:#6FBE86; --forest-tint:#16261A;
+  --border:#242832; --border-strong:#333846; --focus:#6E9BD1;
+  --selection:rgba(110,155,209,.26);
+  --sheet-bg:rgba(15,18,24,.84); --sheet-solid:rgba(15,18,24,.97); --sheet-border:rgba(231,232,236,.10);
+  --code-bg:#0A0C10; --code-text:#CDCFD6; --code-key:#6E9BD1; --code-str:#6FBE86;
+  --code-num:#C9A464; --code-func:#86ADDD; --code-comment:#6C6F78; --code-punct:#8C8F98;
 }
 
 /* ── reset + base ───────────────────────────────────────────────────────── */
@@ -106,17 +143,17 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .nav__link:hover{color:var(--accent);opacity:1}
 .nav__link[aria-current=page]{color:var(--accent);opacity:1}
 .nav__link[aria-current=page]::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:2px;background:var(--accent)}
-.nav--over .nav__link{color:var(--text-strong);opacity:1;text-shadow:0 1px 3px rgba(0,0,0,.85),0 1px 16px rgba(0,0,0,.55)}
-/* over the bright sky the active/hover link must stay light — gold text washes out against orange.
-   the gold underline is the affordance, given a dark halo so it reads against the sunset. */
-.nav--over .nav__link:hover,.nav--over .nav__link[aria-current=page]{color:var(--text-strong)}
-.nav--over .nav__link[aria-current=page]::after{height:2px;background:var(--accent);box-shadow:0 0 0 1px rgba(0,0,0,.45),0 1px 5px rgba(0,0,0,.7)}
-.nav--over .nav__link:hover::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:2px;background:var(--text-strong);opacity:.85}
-.nav--over .nav__wordmark{text-shadow:0 1px 3px rgba(0,0,0,.85),0 1px 16px rgba(0,0,0,.55)}
+.nav--over .nav__link{color:var(--on-image);opacity:1;text-shadow:0 1px 3px rgba(0,0,0,.85),0 1px 16px rgba(0,0,0,.55)}
+/* over the bright image the active/hover link must stay light in either theme; the underline is
+   the affordance, given a dark halo so it reads against the sky. */
+.nav--over .nav__link:hover,.nav--over .nav__link[aria-current=page]{color:var(--on-image)}
+.nav--over .nav__link[aria-current=page]::after{height:2px;background:var(--on-image);box-shadow:0 0 0 1px rgba(0,0,0,.45),0 1px 5px rgba(0,0,0,.7)}
+.nav--over .nav__link:hover::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:2px;background:var(--on-image);opacity:.85}
+.nav--over .nav__wordmark{color:var(--on-image);text-shadow:0 1px 3px rgba(0,0,0,.85),0 1px 16px rgba(0,0,0,.55)}
 .nav__toggle{display:none;width:44px;height:44px;align-items:center;justify-content:center;
   background:none;border:0;cursor:pointer;flex:none}
 .nav__toggle span{display:block;width:22px;height:1.5px;background:var(--text);position:relative}
-.nav--over .nav__toggle span{background:var(--text-strong)}
+.nav--over .nav__toggle span{background:var(--on-image)}
 .nav__toggle span::before,.nav__toggle span::after{content:"";position:absolute;left:0;width:22px;height:1.5px;background:inherit}
 .nav__toggle span::before{top:-7px}.nav__toggle span::after{top:7px}
 .nav__sheet{display:none;position:absolute;left:0;right:0;top:100%;z-index:20;
@@ -157,24 +194,28 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
   max-width:var(--container);width:100%;margin:0 auto;padding-inline:var(--gutter)}
 .hero--home .hero__inner{justify-content:center;padding-block:var(--space-24)}
 .hero__block{max-width:620px}
-.hero__h1{font-size:clamp(40px,6vw,64px);line-height:1.05;letter-spacing:-.01em;color:var(--text-strong);
+.hero__h1{font-size:clamp(40px,6vw,64px);line-height:1.05;letter-spacing:-.01em;color:var(--on-image);
   text-shadow:0 1px 3px rgba(0,0,0,.65),0 2px 30px rgba(0,0,0,.82);margin:0}
 .hero__rule{width:40px;height:2px;background:var(--accent);border:0;margin:var(--space-6) 0}
-.hero__sub{font-family:var(--font-sans);font-size:clamp(18px,2vw,21px);line-height:1.5;color:var(--text-strong);
+.hero__sub{font-family:var(--font-sans);font-size:clamp(18px,2vw,21px);line-height:1.5;color:var(--on-image);
   opacity:1;text-shadow:0 1px 3px rgba(0,0,0,.7),0 2px 24px rgba(0,0,0,.7);margin:0 0 var(--space-8);max-width:34em}
 .hero__ctas{display:flex;align-items:center;gap:var(--space-8);flex-wrap:wrap}
+/* hero CTAs sit over the image, so they stay light in either theme (the Prussian accent is too
+   dark over the sky in the light theme). The arrow and hover-underline carry the affordance. */
+.hero__ctas .ctalink{color:var(--on-image);text-shadow:0 1px 4px rgba(0,0,0,.55)}
+.hero__ctas .ctalink:hover{color:var(--on-image);text-decoration:underline;text-underline-offset:3px}
 
 /* ── content sheet (interior pages: the solid container pulled up over the banner) ── */
 .sheet-wrap{max-width:var(--container);margin:0 auto;padding-inline:var(--gutter);position:relative;z-index:3}
 .sheet-wrap--text{max-width:var(--container-text)}
 /* the article/page card: glassy, rounded, floated high over the hero like a normal article
    position. The image glows through the translucent top; below the banner it sits on base. */
-.sheet{background:rgba(15,15,18,.84);
+.sheet{background:var(--sheet-bg);
   -webkit-backdrop-filter:blur(18px) saturate(1.15);backdrop-filter:blur(18px) saturate(1.15);
-  border:1px solid rgba(236,230,216,.09);border-radius:16px;
-  box-shadow:0 24px 64px rgba(0,0,0,.38);
+  border:1px solid var(--sheet-border);border-radius:16px;
+  box-shadow:0 24px 64px rgba(0,0,0,.28);
   margin-top:-300px;padding:var(--space-12) clamp(24px,4vw,var(--space-16)) var(--space-12)}
-@supports not (backdrop-filter:blur(1px)){.sheet{background:rgba(15,15,18,.97)}}
+@supports not (backdrop-filter:blur(1px)){.sheet{background:var(--sheet-solid)}}
 /* sections flowing inside the sheet already sit in its padding: neutralise their own gutter */
 .sheet .container{padding-inline:0}
 .sheet .section:last-child,.sheet .cta-band:last-child{padding-bottom:0}
@@ -245,7 +286,9 @@ a.wwd__cell:hover .wwd__title{color:var(--accent)}
 .card__media{aspect-ratio:16/9;overflow:hidden;background:var(--bg-sunk)}
 .card__media img,.card__media .ico{width:100%;height:100%;object-fit:cover;transition:transform .16s ease}
 .card:hover .card__media img{transform:scale(1.03)}
-.card__ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--signal);background:linear-gradient(135deg,var(--signal-deep),var(--bg-sunk))}
+/* image placeholder: the cartographic Prussian wash (design-language §10), a light survey icon
+   floated over it — theme-independent atmosphere, never muddy brass */
+.card__ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--on-image);background:linear-gradient(140deg,#16314F,#1E3D63 55%,#33557E)}
 .card__ph .ico{width:44px;height:44px;transform:none}
 .card__body{padding:var(--space-5);display:flex;flex-direction:column;gap:var(--space-2);flex:1}
 .card--wide .card__body{max-width:760px;padding:var(--space-6)}
@@ -369,8 +412,8 @@ a.chip:hover,.chip.is-active{border-color:var(--accent);color:var(--text)}
 .machine-row a{color:var(--text-muted);border:1px solid var(--border);border-radius:var(--r-1);padding:4px 10px;margin:0 6px 8px 0;display:inline-block}
 .machine-row a:hover{color:var(--accent);border-color:var(--accent)}
 
-/* ── prose (markdown bodies) ────────────────────────────────────────────── */
-.prose{font-size:17px;line-height:1.7;color:var(--text)}
+/* ── prose (markdown bodies) — long-form reads in the serif at a size up (§2.2) ──────── */
+.prose{font-family:var(--font-serif);font-size:19px;line-height:1.72;color:var(--text)}
 .prose h2{margin:var(--space-10) 0 var(--space-4)}
 .prose h3{margin:var(--space-6) 0 var(--space-3)}
 .prose p{margin:0 0 18px}
