@@ -319,6 +319,81 @@ const SECTION_MOTIF: Record<string, string> = {
   contact: "signal",
 };
 
+/**
+ * The section subject, drawn at hero scale from the SAME motif kit as cardArt (design-language §10).
+ * Parametric SVG rather than a raster layer: resolution-independent and hairline-sharp, which the
+ * locked style demands ("softness reads as AI photo"), palette-locked because the colours are
+ * tokens, and literally the same vocabulary as the cards inside the section rather than a matched
+ * imitation of it.
+ *
+ * COMPOSITION CONSTRAINT, and it drives every motif below: on an interior page the content sheet
+ * covers everything from y=220 down and is 1120px wide, so the only reliably visible art is the
+ * strip between the nav (~72px) and the sheet. Every subject is therefore a WIDE, LOW-PROFILE band
+ * living in y 70..210, never a centred object. Each also leaves the region around x=47% quieter,
+ * where the heliacal star sits.
+ *
+ * Deterministic: seeded from the motif name, so a given section draws the same subject every build.
+ */
+export function heroMotif(kind: string): string {
+  const r = seedRand(`heliacon-${kind}`);
+  const W = 1600, H = 520;
+  const n = (v: number) => v.toFixed(1);
+  let art = "";
+
+  if (kind === "monolith") {
+    // the landmark: one vertical rising out of the terrain, ringed like the home hero
+    // top sits below the nav band: the outer ring at cy-ry must clear ~72px of over-hero chrome
+    const x = 1080, top = 104, base = 250, w = 46;
+    art =
+      `<ellipse class="hmo-line" cx="${x + w / 2}" cy="${top + 6}" rx="240" ry="40"/>` +
+      `<ellipse class="hmo-acc-s" cx="${x + w / 2}" cy="${top + 16}" rx="150" ry="26"/>` +
+      `<path class="hmo-line" d="M${x},${base} L${x},${top + 26} L${x + w / 2},${top + 12} L${x + w},${top + 26} L${x + w},${base} Z"/>` +
+      `<line class="hmo-acc" x1="${x + w / 2}" y1="${top + 12}" x2="${x + w / 2}" y2="${base}"/>`;
+  } else if (kind === "nodes") {
+    // the graph: a wide open network strung across the band, one lit path through it
+    const pts: number[][] = [];
+    for (let i = 0; i < 11; i++) {
+      const x = 90 + i * 142 + (r() - 0.5) * 70;
+      const y = 96 + r() * 104;
+      pts.push([x, y]);
+    }
+    art = pts.slice(1).map((p, i) =>
+      `<line class="hmo-line" x1="${n(pts[i][0])}" y1="${n(pts[i][1])}" x2="${n(p[0])}" y2="${n(p[1])}"/>`).join("");
+    // one continuous brass path through three consecutive nodes: the single lit route
+    const a = 6;
+    art += `<polyline class="hmo-acc" points="${pts.slice(a, a + 3).map((p) => `${n(p[0])},${n(p[1])}`).join(" ")}"/>`;
+    art += pts.map(([x, y], i) =>
+      `<circle class="${i >= a && i < a + 3 ? "hmo-dot-acc" : "hmo-dot"}" cx="${n(x)}" cy="${n(y)}" r="${i >= a && i < a + 3 ? 5 : 3.6}"/>`).join("");
+  } else if (kind === "contour") {
+    // the vocabulary mapped: wide flat isolines, one term at the centre of the reading
+    const cx = 1120, cy = 150;
+    art = Array.from({ length: 6 }, (_, i) =>
+      `<ellipse class="hmo-line" cx="${cx}" cy="${cy}" rx="${70 + i * 78}" ry="${16 + i * 17}"/>`).join("");
+    art += `<circle class="hmo-dot-acc" cx="${cx}" cy="${cy}" r="5"/>`;
+  } else if (kind === "horizon") {
+    // first light on the ridge: the heliacal rising, the name itself
+    const pts: string[] = [];
+    let y = 186;
+    for (let x = 0; x <= W; x += 100) { y += (r() - 0.5) * 26; pts.push(`${x},${n(y)}`); }
+    art = `<polyline class="hmo-line" points="${pts.join(" ")}"/>`;
+    // the lit segment of the crest, and the point of first light rising off it
+    art += `<polyline class="hmo-acc" points="${pts.slice(9, 13).join(" ")}"/>`;
+    art += `<circle class="hmo-dot-acc" cx="1090" cy="118" r="5.5"/>`;
+  } else if (kind === "signal") {
+    // the single lit path: a measurement read across the band, one reading that matters
+    const count = 26, gap = W / (count + 1), accI = 17;
+    art = Array.from({ length: count }, (_, i) => {
+      const x = gap * (i + 1), h = 22 + r() * 96;
+      return `<line class="${i === accI ? "hmo-acc" : "hmo-line"}" x1="${n(x)}" y1="${n(206 - h)}" x2="${n(x)}" y2="206"/>`;
+    }).join("");
+    art += `<circle class="hmo-dot-acc" cx="${n(gap * (accI + 1))}" cy="106" r="5"/>`;
+  } else {
+    return "";
+  }
+
+  return `<svg class="hmo" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMin slice" aria-hidden="true">${art}</svg>`;
+}
+
 /** The interior masthead: the same world as the home hero but read as the SKY above it — the
  *  theme-aware atmosphere (dusk / night), the solid horizon rising to meet the content sheet, and
  *  the heliacal star. The sheet pulls up over the lower part, so this reads as a calm band of sky
@@ -334,7 +409,7 @@ export function heroBannerMesh(section = ""): string {
     img("hm-base", "atmos", 0.16) +
     img("hm-al", "far-s", 0.11) +
     // the subject sits between the far and mid terrain, so the near ridge still occludes its base
-    (motif ? img("hm-al hm-subject", `subject-${motif}`, 0.095) : "") +
+    (motif ? `<span class="hm hm-subject" data-parallax="0.095">${heroMotif(motif)}</span>` : "") +
     img("hm-al", "mid-s", 0.075) +
     `<span class="hero__star hero__star--band" data-parallax="0.15" aria-hidden="true">` +
     `<svg viewBox="0 0 100 100"><path d="M50 6 L57 43 L94 50 L57 57 L50 94 L43 57 L6 50 L43 43 Z"/></svg></span>` +

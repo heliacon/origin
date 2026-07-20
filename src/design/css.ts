@@ -232,6 +232,21 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
   object-position:center calc(50% + (var(--px-overscan) / 2))}
 .hm-scr{mix-blend-mode:screen}
 .hm-al{mix-blend-mode:normal}
+/* ── the section subject: parametric motif drawn at hero scale (components.ts heroMotif) ──
+   The subject is line art over the sky, and the sky flips with the theme, so its ink must flip
+   too: dark Prussian on the pale light sky, pale steel on the navy dark sky. Brass stays the
+   machine colour in both, darkened in light so it holds contrast on paper. */
+:root{--motif-line:#3B5E88; --motif-dot:#4E75A0; --motif-acc:#8A6522}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --motif-line:#6E93BC; --motif-dot:#8FA9C8; --motif-acc:#CDA765}}
+:root[data-theme=dark]{--motif-line:#6E93BC; --motif-dot:#8FA9C8; --motif-acc:#CDA765}
+.hm-subject{display:block}
+.hmo{width:100%;height:100%;display:block}
+.hmo-line{fill:none;stroke:var(--motif-line);stroke-width:1.25;opacity:.62}
+.hmo-acc{fill:none;stroke:var(--motif-acc);stroke-width:1.6;opacity:.95}
+.hmo-acc-s{fill:none;stroke:var(--motif-acc);stroke-width:1.25;opacity:.5}
+.hmo-dot{fill:var(--motif-dot);opacity:.8}
+.hmo-dot-acc{fill:var(--motif-acc);opacity:1}
 /* Light theme swaps only the sky (L0): a paper sky with the dark terrain and monolith silhouetted
    against it. Dark theme keeps the navy atmosphere. Terrain planes are unchanged in both. */
 .hero__mesh{background:linear-gradient(180deg,#F4F4F0 0%,#E9ECEF 58%,#DEE3E9 100%)}
