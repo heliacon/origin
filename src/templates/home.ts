@@ -62,7 +62,7 @@ export function home(origin: Dict, defs: Dict[], posts: Dict[], graph: unknown):
 </section>
 
 <section class="section"><div class="container">
-  ${sectionHead("What we do", "Five ways we work", "One studio, one team. Each is a way in; most engagements braid a few together.")}
+  ${sectionHead("What we do", "Five ways we work")}
   ${facets}
 </div></section>
 

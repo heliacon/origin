@@ -55,7 +55,7 @@ export function about(htmlBody: string, jsonld: unknown): string {
 </div></section>`;
 
   const body = marketingPage(
-    { title: "About Heliacon", lede: "We help organisations navigate uncertainty and build with confidence.", eyebrow: "About", section: "about" },
+    { title: "About Heliacon", lede: "We help organisations navigate uncertainty and build with confidence.", section: "about" },
     narrative + mvv + receipts + cta,
   );
 

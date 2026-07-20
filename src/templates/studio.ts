@@ -93,7 +93,7 @@ export function studio(_htmlBody: string, jsonld: unknown): string {
 </div></section>`;
 
   const body = marketingPage(
-    { title: "Studio", lede: "What we do and how we work. The offer, the method and the engagement model that get you found, trusted and invoked.", eyebrow: "Studio", section: "studio" },
+    { title: "Studio", lede: "What we do and how we work. The offer, the method and the engagement model that get you found, trusted and invoked.", section: "studio" },
     shift + whatWeDo + alsoHelp + whoFor + howWeWork + engagement + cta,
   );
 

@@ -36,7 +36,10 @@ export const css = `${fontFace}
   /* always light: text and chrome that sit over the hero image, in either theme */
   --on-image:#F6F6F1;
   /* the over-hero content sheet (interior pages): glass that flips with the theme */
-  --sheet-bg:rgba(251,251,248,.86); --sheet-solid:rgba(251,251,248,.98); --sheet-border:rgba(23,24,27,.10);
+  /* light is the reading default, so the sheet must read as one flat plane: at .86 the blur let the
+     hero mesh through the top and not the bottom, swinging 27 luminance points and shifting hue
+     between the H1 and the lede. .97 keeps a hint of the art without the gradient. */
+  --sheet-bg:rgba(251,251,248,.97); --sheet-solid:rgba(251,251,248,.98); --sheet-border:rgba(23,24,27,.10);
   /* code syntax (§4.12) */
   --code-bg:#EAEAE4; --code-text:#2C2D31; --code-key:#1E3D63; --code-str:#3F7A55;
   --code-num:#8A6E3C; --code-func:#33557E; --code-comment:#9A9B9F; --code-punct:#6E6F73;
@@ -289,10 +292,12 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .sheet-wrap--text{max-width:var(--container-text)}
 /* the article/page card: glassy, rounded, floated high over the hero like a normal article
    position. The image glows through the translucent top; below the banner it sits on base. */
+/* no drop shadow: §1 of the system says never one (the floating mobile nav sheet is the single
+   exception). The 64px smear was the loudest thing on the page in light theme. The border and the
+   plane change carry the lift instead. */
 .sheet{background:var(--sheet-bg);
   -webkit-backdrop-filter:blur(18px) saturate(1.15);backdrop-filter:blur(18px) saturate(1.15);
   border:1px solid var(--sheet-border);border-radius:16px;
-  box-shadow:0 24px 64px rgba(0,0,0,.28);
   margin-top:-300px;padding:var(--space-12) clamp(24px,4vw,var(--space-16)) var(--space-12)}
 @supports not (backdrop-filter:blur(1px)){.sheet{background:var(--sheet-solid)}}
 /* sections flowing inside the sheet already sit in its padding: neutralise their own gutter */
@@ -302,12 +307,12 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 /* a title-only sheet (marketingPage) holds nothing after the head, so the head's trailing margin
    is dead space stacked on the sheet's own bottom padding */
 .sheet--head .sheet__head{margin-bottom:0}
-.sheet__head--center{text-align:center}
-.sheet__head--center .sheet__rule{margin-inline:auto}
-.sheet__head--center .lede{max-width:640px;margin-inline:auto}
 .sheet__head .eyebrow{margin-bottom:var(--space-4)}
 .sheet__head h1{margin:0}
-.sheet__head .lede{margin:0}
+/* the head shares the page's left axis: the sheet, the sections below it and the footer all start
+   at the gutter, so a marketing page reads on one edge from masthead to footer. The measure is
+   capped so the lede never runs the full 1120 of the sheet. */
+.sheet__head .lede{margin:var(--space-6) 0 0;max-width:58ch}
 .sheet__rule{width:40px;height:2px;background:var(--accent);border:0;margin:var(--space-6) 0}
 /* article heading block: first row of the article grid, so it aligns with the reading column */
 .article__head{grid-column:1/-1}
@@ -548,8 +553,18 @@ a.chip:hover,.chip.is-active{border-color:var(--accent);color:var(--text)}
 .cta-band__act{margin-top:var(--space-6)}
 
 /* ── marketing sections (studio/work/research redesign) ─────────────────────── */
+/* the sheet's -300px pull drags the whole following flow up into the hero's box, and .hero is
+   positioned, so an unpositioned .marketing paints UNDER it and the first line of the first section
+   gets clipped. Sit above the hero (z 1) and below the sheet (z 3). */
+.marketing{position:relative;z-index:2}
 .marketing .section{border-bottom:1px solid var(--border)}
 .marketing .section:last-of-type{border-bottom:0}
+/* a narrow reading measure inside a marketing page keeps the measure but NOT the centring: centred,
+   it introduced a third left edge (gutter 160, prose 380, next section back to 160) and the reader
+   reset their margin twice on one page. The container keeps the page's own width and gutter, so it
+   starts on the same edge as every other section; the MEASURE is capped on the content instead. */
+.marketing .container--text{max-width:var(--container)}
+.marketing .container--text>*{max-width:var(--container-text)}
 .section--sunk{background:var(--bg-sunk)}
 .anchor{scroll-margin-top:88px}
 /* left-aligned editorial section head (mono eyebrow + Garamond h2 + lede) */

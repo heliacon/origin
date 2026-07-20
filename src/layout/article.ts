@@ -45,11 +45,18 @@ export function articleHead(o: ArticleHeroOpts): string {
  * journal, contact, definitions, 404): the masthead, then just the TITLE in a sheet pulled over it,
  * then the page's sections flow on the paper below in their own rhythm, not trapped in one
  * container. Replaced the old pageHero glass box (removed 2026-07-20).
+ *
+ * The head is LEFT-aligned (design review 2026-07-20): centred, it put the sheet on a different
+ * alignment logic from every section beneath it, so one page carried two axes 70px apart.
+ *
+ * `eyebrow` is optional and means one thing: the PARENT section this page sits under, read as a
+ * breadcrumb. Do not pass it where it would only echo the title (STUDIO / Studio); an element that
+ * always appears means nothing, which is the colour law applied to layout.
  */
 export function marketingPage(o: { title: string; lede?: string; eyebrow?: string; section?: Section }, sections = ""): string {
   return heroBanner(o.section ?? "", "hero--page") +
     `<div class="sheet-wrap"><div class="sheet sheet--head">` +
-      `<header class="sheet__head sheet__head--center">` +
+      `<header class="sheet__head">` +
         (o.eyebrow ? sectionLabel(o.eyebrow) : "") +
         `<h1>${esc(o.title)}</h1>` +
         `<hr class="sheet__rule">` +

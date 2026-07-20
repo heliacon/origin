@@ -51,7 +51,7 @@ export function contact(jsonld: unknown): string {
       `<a href="${MAILTO}">email directly</a>.</p>`;
 
   const body = marketingPage(
-    { title: "Get in touch", lede: "Let's build clarity together.", eyebrow: "Contact", section: "contact" },
+    { title: "Get in touch", section: "contact" },
     `<section class="section"><div class="container">` +
       sectionHead(
         "Start a conversation",

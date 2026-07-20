@@ -135,7 +135,7 @@ async function main(): Promise<void> {
   // interior page, so a wrong turn still lands somewhere that looks like the site.
   write(join(DIST, "404.html"), minifyHtml(page("Not found · Heliacon",
     marketingPage(
-      { title: "Not found", lede: "That projection does not exist yet.", eyebrow: "404", section: "" },
+      { title: "Not found", lede: "That projection does not exist yet.", section: "" },
       `<section class="section"><div class="container container--text">` +
         `<p class="prose">Every consumer negotiates a projection of the same origin. This path is not one of them.</p>` +
         `<p class="section__after">${ctaLink("Back to the origin", "/")}</p>` +

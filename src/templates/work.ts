@@ -41,7 +41,7 @@ export function work(_htmlBody: string, jsonld: unknown): string {
 </div></section>`;
 
   const body = marketingPage(
-    { title: "Our work", lede: "We help organisations be found, trusted and invoked in a world where the reader is as often a machine as a person.", eyebrow: "Work", section: "work" },
+    { title: "Our work", lede: "We help organisations be found, trusted and invoked in a world where the reader is as often a machine as a person.", section: "work" },
     grid + clientNote + cta,
   );
 

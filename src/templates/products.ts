@@ -10,7 +10,7 @@ import { ctaLink } from "../components";
 /** htmlBody is products.md rendered to HTML with its leading <h1> removed. */
 export function products(htmlBody: string, jsonld: unknown): string {
   const body = marketingPage(
-    { title: "Products", lede: "Apps, tools and games that prove the research. Each a projection of the same origin.", eyebrow: "Products", section: "" },
+    { title: "Products", lede: "Apps, tools and games that prove the research. Each a projection of the same origin.", section: "" },
     `<section class="section"><div class="container container--text">` +
       `<div class="prose">${htmlBody}</div>` +
       `<div class="prose-ctas">${ctaLink("See our work", "/work/")}${ctaLink("Read the research", "/research/")}</div>` +

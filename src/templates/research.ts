@@ -39,7 +39,7 @@ export function research(defs: Dict[], jsonld: unknown): string {
 
   const definitions = `
 <section class="section"><div class="container">
-  ${sectionHead("Definitions", "The canonical vocabulary", "Each term defined once, versioned, carrying its provenance.")}
+  ${sectionHead("Definitions", "The canonical vocabulary")}
   ${originCard}
   <div class="grid-3 cardgrid">${restCards}</div>
 </div></section>`;
@@ -58,7 +58,7 @@ export function research(defs: Dict[], jsonld: unknown): string {
 </div></section>`;
 
   const body = marketingPage(
-    { title: "Research", lede: "The canonical vocabulary behind the studio. The definitions the consulting applies, and what the ask endpoint retrieves.", eyebrow: "Research", section: "research" },
+    { title: "Research", lede: "The canonical vocabulary behind the studio. The definitions the consulting applies, and what the ask endpoint retrieves.", section: "research" },
     definitions + foundationsSec + machines,
   );
 
