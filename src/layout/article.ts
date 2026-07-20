@@ -41,27 +41,10 @@ export function articleHead(o: ArticleHeroOpts): string {
 }
 
 /**
- * The interior-page header for index/marketing pages (studio, work, about, etc). Banner first,
- * then the sheet: the centred heading block at its top and the page's sections flowing inside it,
- * so nothing floats on the image and there is no disjoint gap.
- */
-export function pageHero(o: { title: string; lede?: string; eyebrow?: string; section?: Section }, content = ""): string {
-  return heroBanner(o.section ?? "", "hero--page") +
-    `<div class="sheet-wrap"><div class="sheet">` +
-      `<header class="sheet__head sheet__head--center">` +
-        (o.eyebrow ? sectionLabel(o.eyebrow) : "") +
-        `<h1>${esc(o.title)}</h1>` +
-        `<hr class="sheet__rule">` +
-        (o.lede ? `<p class="lede">${esc(o.lede)}</p>` : "") +
-      `</header>` +
-      content +
-    `</div></div>`;
-}
-
-/**
- * Marketing-page shell (studio, work, research, about): the masthead, then just the TITLE in a
- * sheet pulled over it, then the page's sections flow on the paper below in their own rhythm — not
- * trapped in one container. Supersedes pageHero for multi-section marketing pages.
+ * Marketing-page shell, and now the shell for every index page (studio, work, research, about,
+ * journal, contact, definitions, 404): the masthead, then just the TITLE in a sheet pulled over it,
+ * then the page's sections flow on the paper below in their own rhythm, not trapped in one
+ * container. Replaced the old pageHero glass box (removed 2026-07-20).
  */
 export function marketingPage(o: { title: string; lede?: string; eyebrow?: string; section?: Section }, sections = ""): string {
   return heroBanner(o.section ?? "", "hero--page") +

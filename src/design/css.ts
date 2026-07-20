@@ -121,11 +121,6 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .section{padding-block:var(--space-16)}
 .hero--home + .section{margin-top:calc(var(--space-20) * -1);position:relative;z-index:3}
 .section--tight{padding-block:var(--space-10)}
-.section-head{margin-bottom:var(--space-8);text-align:center}
-.section-head .eyebrow{margin-bottom:var(--space-4)}
-.pagehead{padding-block:var(--space-16) var(--space-10);border-bottom:1px solid var(--border);text-align:center}
-.pagehead h1{margin-bottom:var(--space-4)}
-.pagehead .lede,.pagehead p{max-width:640px;margin-inline:auto}
 .stack>*+*{margin-top:var(--space-4)}
 
 /* ── nav (§4.2) ─────────────────────────────────────────────────────────── */
@@ -304,6 +299,9 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .sheet .container{padding-inline:0}
 .sheet .section:last-child,.sheet .cta-band:last-child{padding-bottom:0}
 .sheet__head{margin-bottom:var(--space-8)}
+/* a title-only sheet (marketingPage) holds nothing after the head, so the head's trailing margin
+   is dead space stacked on the sheet's own bottom padding */
+.sheet--head .sheet__head{margin-bottom:0}
 .sheet__head--center{text-align:center}
 .sheet__head--center .sheet__rule{margin-inline:auto}
 .sheet__head--center .lede{max-width:640px;margin-inline:auto}
@@ -482,6 +480,14 @@ a.chip:hover,.chip.is-active{border-color:var(--accent);color:var(--text)}
 .contact-rail__row{display:flex;gap:var(--space-3);align-items:flex-start;margin-bottom:var(--space-6)}
 .contact-rail__icon{color:var(--accent);flex:none}.contact-rail__icon .ico{width:20px;height:20px}
 .contact-rail__label{font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:2px}
+.contact-rail__more{display:block;margin-top:6px}
+.contact-rail__more .ctalink{text-decoration:underline;text-underline-offset:3px}
+/* the two columns are the rail and the form: give the form the wider share and align their tops */
+.contact-grid{grid-template-columns:minmax(0,4fr) minmax(0,5fr);gap:var(--space-16);align-items:start}
+.contact-col__h{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--text);margin:0 0 var(--space-5)}
+.contact-form__note{margin-top:var(--space-4)}
+.contact-form__act{margin-top:var(--space-4)}
+.contact-form__alt{margin-top:var(--space-4)}
 .copybtn{background:none;border:0;color:var(--accent);cursor:pointer;font:inherit;padding:0;display:inline-flex;gap:6px;align-items:center}
 .copybtn:hover{color:var(--accent-strong)}
 
@@ -538,6 +544,7 @@ a.chip:hover,.chip.is-active{border-color:var(--accent);color:var(--text)}
 .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-6)}
 .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-6)}
 .cta-band{text-align:center;padding-block:var(--space-16);border-top:1px solid var(--border)}
+.cta-band__sub{color:var(--text-muted);font-size:15px;line-height:1.55;max-width:52ch;margin:var(--space-4) auto 0}
 .cta-band__act{margin-top:var(--space-6)}
 
 /* ── marketing sections (studio/work/research redesign) ─────────────────────── */
@@ -552,6 +559,12 @@ a.chip:hover,.chip.is-active{border-color:var(--accent);color:var(--text)}
 .shead__h{font-size:clamp(26px,3.4vw,36px);line-height:1.12;margin:0}
 .shead__lede{margin-top:var(--space-4);max-width:58ch}
 .shead--center .shead__lede{margin-inline:auto}
+/* a section head with a trailing link on the same baseline (index -> "read all") */
+.shead-row{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--space-6);
+  flex-wrap:wrap;margin-bottom:var(--space-10)}
+.shead-row .shead{margin-bottom:0}
+/* a closing link that follows a section's content */
+.section__after{margin-top:var(--space-8)}
 /* two-column reading block for a section intro */
 .prose-cols{columns:2;column-gap:var(--space-16);max-width:900px;margin-bottom:var(--space-12)}
 .prose-cols p{margin:0 0 1em;break-inside:avoid;font-family:var(--font-serif);font-size:18px;line-height:1.62;color:var(--text)}

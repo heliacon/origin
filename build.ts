@@ -18,8 +18,8 @@ import { marked } from "marked";
 import { CANON, Dict, esc, collapse } from "./src/util";
 import { css } from "./src/design/css";
 import { page } from "./src/layout/shell";
-import { pageHero } from "./src/layout/article";
-import { pageHead } from "./src/components";
+import { marketingPage } from "./src/layout/article";
+import { linkCard, ctaLink } from "./src/components";
 import { home } from "./src/templates/home";
 import { studio } from "./src/templates/studio";
 import { work } from "./src/templates/work";
@@ -131,11 +131,17 @@ async function main(): Promise<void> {
   // homepage
   write(join(DIST, "index.html"), minifyHtml(home(origin, defs, posts, S.homeGraph(origin, defs))));
 
-  // 404 (served by the Worker's not_found_handling)
+  // 404 (served by the Worker's not_found_handling). On the marketing shell like every other
+  // interior page, so a wrong turn still lands somewhere that looks like the site.
   write(join(DIST, "404.html"), minifyHtml(page("Not found · Heliacon",
-    `${pageHead("Not found", "That projection does not exist yet.")}` +
-    `<section class="section"><div class="container container--text"><p class="prose">Every consumer negotiates a projection of the same origin. This path is not one of them.</p></div></section>`,
-    "/404", {})));
+    marketingPage(
+      { title: "Not found", lede: "That projection does not exist yet.", eyebrow: "404", section: "" },
+      `<section class="section"><div class="container container--text">` +
+        `<p class="prose">Every consumer negotiates a projection of the same origin. This path is not one of them.</p>` +
+        `<p class="section__after">${ctaLink("Back to the origin", "/")}</p>` +
+      `</div></section>`,
+    ),
+    "/404", { overHero: true })));
 
   // ── STUDIO / WORK / ABOUT / PRODUCTS (root-doc templates + .md alternates) ──
   write(join(DIST, "studio", "index.html"), minifyHtml(studio(await md2html(stripH1(readFileSync(join(ROOT, "consulting.md"), "utf8"))), S.studioGraph())));
@@ -162,14 +168,23 @@ async function main(): Promise<void> {
     write(join(DIST, "research", "definitions", `${d.id}.md`), S.definitionMarkdown(d));
   }
   write(join(DIST, "research", "definitions", "index.json"), defs);
-  const defCards = defs.map((d) =>
-    `<a class="card" href="/research/definitions/${d.id}/"><div class="card__body"><span class="eyebrow card__kicker">Definition</span>` +
-    // h2 not h3: on this collection page the card titles sit directly under the page h1 (WCAG 1.3.1)
-    `<h2 class="card__title">${esc(d.title)}</h2><p class="card__cap">${esc(collapse(d.summary))}</p></div></a>`).join("");
+  // same linkCard and same Origin-keystone composition as the research hub, so the collection and
+  // the hub read as one system. Card titles are h2: on this page they sit directly under the page
+  // h1 with no section head between them (WCAG 1.3.1).
+  const defCard = (d: Dict, wide = false) => linkCard({
+    kicker: wide ? "The keystone definition" : "Definition", title: d.title,
+    href: `/research/definitions/${d.id}/`, caption: collapse(d.summary),
+    ctaLabel: "Read the definition", titleTag: "h2", wide,
+  });
+  const defOrigin = defs.find((d) => d.id === "origin");
+  const defRest = defs.filter((d) => d.id !== "origin").map((d) => defCard(d)).join("");
   write(join(DIST, "research", "definitions", "index.html"), minifyHtml(page("Definitions · Heliacon",
-    pageHero(
+    marketingPage(
       { title: "Definitions", lede: "The canonical vocabulary. Each term defined once, versioned, and carrying its provenance.", eyebrow: "Research", section: "research" },
-      `<section class="section"><div class="container"><div class="grid-3">${defCards}</div></div></section>`,
+      `<section class="section"><div class="container">` +
+        (defOrigin ? defCard(defOrigin, true) : "") +
+        `<div class="grid-3 cardgrid">${defRest}</div>` +
+      `</div></section>`,
     ),
     "/research/definitions/", { section: "research", overHero: true, description: "The Heliacon origin vocabulary. Canonical, versioned definitions.", jsonld: S.collectionGraph("/research/definitions/", "Definitions", [["Heliacon", "/"], ["Research", "/research/"], ["Definitions", "/research/definitions/"]]) })));
 

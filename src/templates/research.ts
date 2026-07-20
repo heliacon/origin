@@ -9,34 +9,33 @@
 import { Dict, esc, collapse } from "../util";
 import { page } from "../layout/shell";
 import { marketingPage } from "../layout/article";
-import { sectionHead } from "../components";
-
-const arw = `<span class="arw" aria-hidden="true">&rarr;</span>`;
-
-/** A body-only link card (no media): the right form for a vocabulary term. */
-function linkCard(kicker: string, title: string, href: string, cap: string, cta = "Read", wide = false): string {
-  return `<a class="card${wide ? " card--wide" : ""}" href="${esc(href)}"><div class="card__body">` +
-    (kicker ? `<span class="eyebrow card__kicker">${esc(kicker)}</span>` : "") +
-    `<h3 class="card__title">${esc(title)}</h3>` +
-    (cap ? `<p class="card__cap">${esc(cap)}</p>` : "") +
-    `<span class="ctalink card__cta">${esc(cta)} ${arw}</span>` +
-    `</div></a>`;
-}
+import { sectionHead, linkCard } from "../components";
 
 export function research(defs: Dict[], jsonld: unknown): string {
   const origin = defs.find((d) => d.id === "origin");
   const rest = defs.filter((d) => d.id !== "origin");
   const restCards = rest
-    .map((d) => linkCard("Definition", d.title, `/research/definitions/${d.id}/`, collapse(d.summary), "Read the definition"))
-    .join("");
+    .map((d) => linkCard({
+      kicker: "Definition", title: d.title, href: `/research/definitions/${d.id}/`,
+      caption: collapse(d.summary), ctaLabel: "Read the definition",
+    })).join("");
   const originCard = origin
-    ? linkCard("The keystone definition", origin.title, "/research/definitions/origin/", collapse(origin.summary), "Read the definition", true)
+    ? linkCard({
+        kicker: "The keystone definition", title: origin.title, href: "/research/definitions/origin/",
+        caption: collapse(origin.summary), ctaLabel: "Read the definition", wide: true,
+      })
     : "";
   const foundations =
-    linkCard("Foundation", "Architecture", "/architecture/",
-      "How Heliacon is built. One canonical origin, many projections, negotiated for whoever asks.", "Read the architecture") +
-    linkCard("Foundation", "Manifesto", "/manifesto/",
-      "The belief. Why we build origin-first, and what that commits us to.", "Read the manifesto");
+    linkCard({
+      kicker: "Foundation", title: "Architecture", href: "/architecture/",
+      caption: "How Heliacon is built. One canonical origin, many projections, negotiated for whoever asks.",
+      ctaLabel: "Read the architecture",
+    }) +
+    linkCard({
+      kicker: "Foundation", title: "Manifesto", href: "/manifesto/",
+      caption: "The belief. Why we build origin-first, and what that commits us to.",
+      ctaLabel: "Read the manifesto",
+    });
 
   const definitions = `
 <section class="section"><div class="container">

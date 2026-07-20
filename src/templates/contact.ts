@@ -9,8 +9,8 @@
 // note tells the visitor it opens their mail client and sends nothing to a server.
 import { esc } from "../util";
 import { page } from "../layout/shell";
-import { pageHero } from "../layout/article";
-import { sectionLabel, filledButton, contactField } from "../components";
+import { marketingPage } from "../layout/article";
+import { sectionHead, filledButton, contactField } from "../components";
 import { icon } from "../icons";
 
 const EMAIL = "hello@heliacon.com";
@@ -28,7 +28,7 @@ export function contact(jsonld: unknown): string {
     railRow("connections", "Email",
       `<button class="copybtn" type="button" data-copy="${EMAIL}" aria-label="Copy ${EMAIL} to clipboard">${EMAIL}</button>` +
       `<span class="caption" data-copy-flag role="status" aria-live="polite" hidden> Copied</span>` +
-      `<span style="display:block;margin-top:6px"><a class="ctalink" style="text-decoration:underline;text-underline-offset:3px" href="${MAILTO}">Email directly</a></span>`) +
+      `<span class="contact-rail__more"><a class="ctalink" href="${MAILTO}">Email directly</a></span>`) +
     railRow("navigation", "Location", `<span>Remote-first</span>`) +
     // NEEDS-PETE: no verified X handle exists in the source. LinkedIn is real; X is a best-guess
     // href, flagged for Pete to confirm or replace.
@@ -43,27 +43,26 @@ export function contact(jsonld: unknown): string {
       contactField({ name: "email", label: "Email address", type: "email", placeholder: "you@example.com", required: true }) +
       contactField({ name: "company", label: "Company", placeholder: "Optional" }) +
       contactField({ name: "message", label: "Message", placeholder: "What are you trying to be found for, or build?", required: true, textarea: true }) +
-      `<p class="caption" style="margin-top:16px">The button opens your email app with your message ` +
+      `<p class="caption contact-form__note">The button opens your email app with your message ` +
         `filled in. Nothing is sent to a server.</p>` +
-      `<div style="margin-top:8px">${filledButton("Compose email", { type: "submit" })}</div>` +
+      `<div class="contact-form__act">${filledButton("Compose email", { type: "submit" })}</div>` +
     `</form>` +
-    `<p class="caption" style="margin-top:16px">You can also copy the address on the left or ` +
+    `<p class="caption contact-form__alt">You can also copy the address on the left or ` +
       `<a href="${MAILTO}">email directly</a>.</p>`;
 
-  const body = pageHero(
+  const body = marketingPage(
     { title: "Get in touch", lede: "Let's build clarity together.", eyebrow: "Contact", section: "contact" },
-    `<section class="section"><div class="container"><div class="grid-2">` +
-      `<div>` +
-        `<p class="lede" style="margin-bottom:32px">Tell us what you are trying to be found for, or ` +
-        `what you are trying to build. We take a few engagements at a time, so we will be honest ` +
-        `fast about whether we are the right fit.</p>` +
-        details +
+    `<section class="section"><div class="container">` +
+      sectionHead(
+        "Start a conversation",
+        "Tell us what you are trying to be found for",
+        "Or what you are trying to build. We take a few engagements at a time, so we will be honest fast about whether we are the right fit.",
+      ) +
+      `<div class="grid-2 contact-grid">` +
+        `<div class="contact-rail">${details}</div>` +
+        `<div><h3 class="contact-col__h">Send a message</h3>${form}</div>` +
       `</div>` +
-      `<div>` +
-        sectionLabel("Send a message") + `<div style="height:16px"></div>` +
-        form +
-      `</div>` +
-    `</div></div></section>`,
+    `</div></section>`,
   );
 
   return page("Get in touch · Heliacon", body, "/contact/", {

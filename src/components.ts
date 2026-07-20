@@ -20,15 +20,6 @@ export const sectionLabel = (text: string, accent = false, tag: "span" | "h2" = 
   `<${tag} class="eyebrow${accent ? " eyebrow--accent" : ""}">${esc(text)}</${tag}>`;
 export const eyebrow = sectionLabel;
 
-/** Standard interior page header: optional eyebrow, H1, lede, inside a text container. */
-export function pageHead(title: string, lede?: string, eyebrowText?: string): string {
-  return `<section class="pagehead"><div class="container">` +
-    (eyebrowText ? sectionLabel(eyebrowText) + `<div style="height:16px"></div>` : "") +
-    `<h1>${esc(title)}</h1>` +
-    (lede ? `<p class="lede">${esc(lede)}</p>` : "") +
-    `</div></section>`;
-}
-
 // ── CTAs (§4.4) ─────────────────────────────────────────────────────────────
 export interface CtaOpts { quiet?: boolean; disabled?: boolean; newTab?: boolean; ariaLabel?: string; }
 /** Inline link-CTA with trailing arrow. The dominant CTA form across the site. */
@@ -95,6 +86,23 @@ export function projectCard(o: ProjectCardOpts): string {
   return o.href
     ? `<a class="card" href="${esc(o.href)}"${data}>${media}${body}</a>`
     : `<div class="card card--static"${data}>${media}${body}</div>`;
+}
+
+/** A body-only link card: no media, so the words carry it. The right form for a vocabulary term or
+ *  a landmark doc, where generative art would be noise. `wide` spans the grid as a keystone lead.
+ *  Shared so the research hub and the definitions collection stay one system, not two. */
+export interface LinkCardOpts {
+  kicker?: string; title: string; caption?: string; href: string; ctaLabel?: string;
+  wide?: boolean; titleTag?: "h2" | "h3";
+}
+export function linkCard(o: LinkCardOpts): string {
+  const t = o.titleTag ?? "h3";
+  return `<a class="card${o.wide ? " card--wide" : ""}" href="${esc(o.href)}"><div class="card__body">` +
+    (o.kicker ? `<span class="eyebrow card__kicker">${esc(o.kicker)}</span>` : "") +
+    `<${t} class="card__title">${esc(o.title)}</${t}>` +
+    (o.caption ? `<p class="card__cap">${esc(o.caption)}</p>` : "") +
+    `<span class="ctalink card__cta">${esc(o.ctaLabel ?? "Read")} ${arw}</span>` +
+    `</div></a>`;
 }
 
 // ── journal row (§4.7) ───────────────────────────────────────────────────────

@@ -1,6 +1,6 @@
-// Journal index, to ia-and-ux §2.8 and the article family. Page head (H1 Journal + lede), then the
-// posts as journalRow items, most recent first (build.ts sorts by published desc), then an honest
-// subscribe band.
+// Journal index, to ia-and-ux §2.8, on the marketing shell: masthead, the title in a sheet over it,
+// then the posts flow on the paper as journalRow items, most recent first (build.ts sorts by
+// published desc), closing on an honest subscribe band.
 //
 // No filter tabs (ia gap 4): posts carry no `category` frontmatter, so tabs would be empty/dead.
 // We ship no tabs rather than fake categories; they light up only when posts gain a category field.
@@ -9,9 +9,8 @@
 // feed (/feed.xml) rather than shipping a dead email input.
 import { Dict, fmtDate, collapse } from "../util";
 import { page } from "../layout/shell";
-import { pageHero } from "../layout/article";
+import { marketingPage } from "../layout/article";
 import { journalRow, ctaLink } from "../components";
-import { icon } from "../icons";
 
 /** Minutes to read, from the source markdown word count (~200 wpm), floored at 1. */
 function readMinutes(md: string): number {
@@ -27,15 +26,13 @@ function rowMeta(p: Dict): string {
   return parts.join(" · ");
 }
 
-/** Honest subscribe band: the real Atom feed, styled as the §4.15 newsletter box (no dead input). */
+/** Honest subscribe close: the real Atom feed in the site's closing cta-band, not a dead email
+ *  input. The h2 follows the page h1 directly (WCAG 1.3.1). */
 function subscribeBand(): string {
-  return `<section class="section section--tight"><div class="container">` +
-    `<div class="newsletter" style="max-width:520px;margin:0 auto">` +
-      `<span class="newsletter__icon">${icon("evidence")}</span>` +
-      `<h2>Keep up with the journal</h2>` + // h2: it follows the page h1 directly (WCAG 1.3.1)
-      `<p class="caption">New field notes and research as they publish. Follow the feed, no inbox required.</p>` +
-      `<p style="margin-top:var(--space-4)">${ctaLink("Subscribe by feed", "/feed.xml")}</p>` +
-    `</div>` +
+  return `<section class="cta-band"><div class="container">` +
+    `<h2>Keep up with the journal</h2>` +
+    `<p class="cta-band__sub">New field notes and research as they publish. Follow the feed, no inbox required.</p>` +
+    `<div class="cta-band__act">${ctaLink("Subscribe by feed", "/feed.xml")}</div>` +
   `</div></section>`;
 }
 
@@ -50,7 +47,7 @@ export function journal(posts: Dict[], jsonld: unknown): string {
     })).join("");
 
   const body =
-    pageHero(
+    marketingPage(
       {
         title: "Journal",
         lede: "Field notes and research on being found, trusted and invoked in an agentic web. Engineering, strategy and the occasional argument. Every post carries its receipts.",

@@ -8,10 +8,9 @@
  * British English, no em dash, no fabricated proof.
  */
 import { CANON, Dict, esc, collapse, fmtDate } from "../util";
-import { page } from "../layout/shell";
-import { navBar } from "../layout/shell";
+import { page, navBar } from "../layout/shell";
 import {
-  heroMesh, sectionLabel, ctaLink, whatWeDoRow, journalRow,
+  heroMesh, sectionHead, ctaLink, whatWeDoRow, journalRow,
 } from "../components";
 
 const FACETS = [
@@ -63,14 +62,18 @@ export function home(origin: Dict, defs: Dict[], posts: Dict[], graph: unknown):
 </section>
 
 <section class="section"><div class="container">
-  <div class="section-head">${sectionLabel("What we do")}</div>
+  ${sectionHead("What we do", "Five ways we work", "One studio, one team. Each is a way in; most engagements braid a few together.")}
   ${facets}
 </div></section>
 
 <section class="section"><div class="container">
-  <div class="section-head">${sectionLabel("Ask our origin")}<h2 style="margin-top:16px">We practise what we sell</h2></div>
+  ${sectionHead(
+    "Ask our origin",
+    "We practise what we sell",
+    "Do not take our word for it. Ask our own origin a question. It answers from our corpus and every answer cites its source. This is exactly what we build for clients: knowledge a machine can find, trust and invoke.",
+    "center",
+  )}
   <div class="feature-col">
-    <p class="lede" style="margin-bottom:32px">Do not take our word for it. Ask our own origin a question. It answers from our corpus and every answer cites its source. This is exactly what we build for clients: knowledge a machine can find, trust and invoke.</p>
     <form class="ask__box" id="ask" action="/ask" method="get" role="search">
       <label class="sr-only" for="q">Ask the origin a question</label>
       <input id="q" name="q" placeholder="What is an origin? How do I become invocable?" autocomplete="off">
@@ -85,12 +88,12 @@ export function home(origin: Dict, defs: Dict[], posts: Dict[], graph: unknown):
 </div></section>
 
 <section class="section"><div class="container">
-  <div class="section-head" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
-    <div>${sectionLabel("Latest from the journal")}</div>
+  <div class="shead-row">
+    ${sectionHead("Journal", "Latest field notes")}
     ${ctaLink("Read the journal", "/journal/")}
   </div>
   <div class="jlist">${latest}</div>
-  <p style="margin-top:32px">${ctaLink("About Heliacon", "/about/")}</p>
+  <p class="section__after">${ctaLink("About Heliacon", "/about/")}</p>
 </div></section>`;
 
   return page("Heliacon · Be found, trusted and invoked in AI search", body, "/", {

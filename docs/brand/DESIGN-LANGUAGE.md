@@ -30,6 +30,18 @@ component build. Modelled on the Kenovar guide (topkay/docs/brand), grounded in 
 - [x] Pass 3 — Components: actions & CTA, cards, the ask experience, article & reading kit, forms & states.
 - [x] Pass 4 — Quality & reference: tone of voice, accessibility & state matrix, provenance patterns, token reference.
 
+## Rollout
+
+Every page now renders on the Prussian kit. `marketingPage` (masthead, title sheet, sections
+flowing on the paper) is the shell for **all** index pages: studio, work, research, about, products,
+journal, contact, the definitions collection and 404. The article family (post, corpus, workDetail,
+doc, definition) sits on `articleLayout`. The old `pageHero` glass box and `pageHead` were removed
+2026-07-20 along with `.section-head` and `.pagehead`; there is one section-head component,
+`sectionHead`, and one body-only card, `linkCard`, shared by the research hub and the collection.
+
+Note: `docs/revamp/PLAN.md` still describes the retired dawn direction (amber, Cinzel, photo hero)
+and its checkboxes were never ticked. It is stale, not a live plan.
+
 ## Editing note
 
 Built by string-injection (`inject_guide.py`) and rendered/verified with headless Chromium in
