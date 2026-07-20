@@ -231,35 +231,35 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 :root[data-theme=dark] .hero__mesh{background:#0A1524}
 :root[data-theme=dark] .hero__mesh .hm-base{opacity:1}
 /* light theme: the home hero sky is light, so its over-hero chrome (nav, wordmark, toggle) is ink */
-.hero--home .nav--over .nav__link,.hero--home .nav--over .nav__link:hover,
-.hero--home .nav--over .nav__link[aria-current=page]{color:#222F3E;text-shadow:none}
-.hero--home .nav--over .nav__link[aria-current=page]::after{background:#222F3E;box-shadow:none}
-.hero--home .nav--over .nav__logo{color:#17181B}
-.hero--home .nav--over .nav__logo .wm-o{fill:#1E3D63}
-.hero--home .nav--over .theme-toggle{color:#4A5A6E}
-.hero--home .nav--over .nav__toggle span{background:#222F3E}
-.hero--home .hero__star{mix-blend-mode:multiply}
-.hero--home .hero__star svg{fill:#8A6522;filter:none}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .hero--home .nav--over .nav__link,
-  :root:not([data-theme=light]) .hero--home .nav--over .nav__link:hover,
-  :root:not([data-theme=light]) .hero--home .nav--over .nav__link[aria-current=page]{color:var(--on-image);text-shadow:0 1px 3px rgba(0,0,0,.85),0 1px 16px rgba(0,0,0,.55)}
-  :root:not([data-theme=light]) .hero--home .nav--over .nav__link[aria-current=page]::after{background:var(--on-image)}
-  :root:not([data-theme=light]) .hero--home .nav--over .nav__logo{color:var(--on-image)}
-  :root:not([data-theme=light]) .hero--home .nav--over .nav__logo .wm-o{fill:var(--on-image)}
-  :root:not([data-theme=light]) .hero--home .nav--over .theme-toggle{color:var(--on-image)}
-  :root:not([data-theme=light]) .hero--home .nav--over .nav__toggle span{background:var(--on-image)}
-  :root:not([data-theme=light]) .hero--home .hero__star{mix-blend-mode:normal}
-  :root:not([data-theme=light]) .hero--home .hero__star svg{fill:#E9CE93;filter:drop-shadow(0 0 6px rgba(233,206,147,.8))}}
-:root[data-theme=dark] .hero--home .nav--over .nav__link,
-:root[data-theme=dark] .hero--home .nav--over .nav__link:hover,
-:root[data-theme=dark] .hero--home .nav--over .nav__link[aria-current=page]{color:var(--on-image);text-shadow:0 1px 3px rgba(0,0,0,.85),0 1px 16px rgba(0,0,0,.55)}
-:root[data-theme=dark] .hero--home .nav--over .nav__link[aria-current=page]::after{background:var(--on-image)}
-:root[data-theme=dark] .hero--home .nav--over .nav__logo{color:var(--on-image)}
-:root[data-theme=dark] .hero--home .nav--over .nav__logo .wm-o{fill:var(--on-image)}
-:root[data-theme=dark] .hero--home .nav--over .theme-toggle{color:var(--on-image)}
-:root[data-theme=dark] .hero--home .nav--over .nav__toggle span{background:var(--on-image)}
-:root[data-theme=dark] .hero--home .hero__star{mix-blend-mode:normal}
-:root[data-theme=dark] .hero--home .hero__star svg{fill:#E9CE93;filter:drop-shadow(0 0 6px rgba(233,206,147,.8))}
+.hero .nav--over .nav__link,.hero .nav--over .nav__link:hover,
+.hero .nav--over .nav__link[aria-current=page]{color:#222F3E;text-shadow:none}
+.hero .nav--over .nav__link[aria-current=page]::after{background:#222F3E;box-shadow:none}
+.hero .nav--over .nav__logo{color:#17181B}
+.hero .nav--over .nav__logo .wm-o{fill:#1E3D63}
+.hero .nav--over .theme-toggle{color:#4A5A6E}
+.hero .nav--over .nav__toggle span{background:#222F3E}
+.hero .hero__star{mix-blend-mode:multiply}
+.hero .hero__star svg{fill:#8A6522;filter:none}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .hero .nav--over .nav__link,
+  :root:not([data-theme=light]) .hero .nav--over .nav__link:hover,
+  :root:not([data-theme=light]) .hero .nav--over .nav__link[aria-current=page]{color:var(--on-image);text-shadow:0 1px 3px rgba(0,0,0,.85),0 1px 16px rgba(0,0,0,.55)}
+  :root:not([data-theme=light]) .hero .nav--over .nav__link[aria-current=page]::after{background:var(--on-image)}
+  :root:not([data-theme=light]) .hero .nav--over .nav__logo{color:var(--on-image)}
+  :root:not([data-theme=light]) .hero .nav--over .nav__logo .wm-o{fill:var(--on-image)}
+  :root:not([data-theme=light]) .hero .nav--over .theme-toggle{color:var(--on-image)}
+  :root:not([data-theme=light]) .hero .nav--over .nav__toggle span{background:var(--on-image)}
+  :root:not([data-theme=light]) .hero .hero__star{mix-blend-mode:normal}
+  :root:not([data-theme=light]) .hero .hero__star svg{fill:#E9CE93;filter:drop-shadow(0 0 6px rgba(233,206,147,.8))}}
+:root[data-theme=dark] .hero .nav--over .nav__link,
+:root[data-theme=dark] .hero .nav--over .nav__link:hover,
+:root[data-theme=dark] .hero .nav--over .nav__link[aria-current=page]{color:var(--on-image);text-shadow:0 1px 3px rgba(0,0,0,.85),0 1px 16px rgba(0,0,0,.55)}
+:root[data-theme=dark] .hero .nav--over .nav__link[aria-current=page]::after{background:var(--on-image)}
+:root[data-theme=dark] .hero .nav--over .nav__logo{color:var(--on-image)}
+:root[data-theme=dark] .hero .nav--over .nav__logo .wm-o{fill:var(--on-image)}
+:root[data-theme=dark] .hero .nav--over .theme-toggle{color:var(--on-image)}
+:root[data-theme=dark] .hero .nav--over .nav__toggle span{background:var(--on-image)}
+:root[data-theme=dark] .hero .hero__star{mix-blend-mode:normal}
+:root[data-theme=dark] .hero .hero__star svg{fill:#E9CE93;filter:drop-shadow(0 0 6px rgba(233,206,147,.8))}
 /* the heliacal star: first light, high in the sky, brass point + soft glow (echoes the logo O) */
 .hero__star{position:absolute;left:47%;top:22%;width:150px;height:150px;margin:-75px 0 0 -75px;z-index:1;
   display:flex;align-items:center;justify-content:center;

@@ -401,6 +401,22 @@ export function heroMesh(object: "monolith" | "planes" = "monolith", style: "glo
     g("far", 0.4) + g("mid", 0.28) + g(object, 0.2) + g("near", 0.12) + g("motes", 0.04) + `</div>`;
 }
 
+/** The interior masthead: the same world as the home hero but read as the SKY above it — the
+ *  theme-aware atmosphere (dusk / night), the solid horizon rising to meet the content sheet, and
+ *  the heliacal star. No monolith: the landmark is reserved for the home. The sheet pulls up over
+ *  the lower part, so this reads as a calm band of sky and horizon. */
+export function heroBannerMesh(): string {
+  const img = (cls: string, file: string, f: number) =>
+    `<img class="hm ${cls}" data-parallax="${f}" src="/assets/hero-mesh/${file}.webp" alt="" aria-hidden="true">`;
+  return `<div class="hero__mesh hero__mesh--band" aria-hidden="true">` +
+    img("hm-base", "atmos", 0.3) +
+    img("hm-al", "far-s", 0.2) +
+    img("hm-al", "mid-s", 0.14) +
+    `<span class="hero__star hero__star--band" data-parallax="0.24" aria-hidden="true">` +
+    `<svg viewBox="0 0 100 100"><path d="M50 6 L57 43 L94 50 L57 57 L50 94 L43 57 L6 50 L43 43 Z"/></svg></span>` +
+    `</div>`;
+}
+
 // ── hero (§4.3) ──────────────────────────────────────────────────────────────
 /** Responsive <picture> for the full-bleed hero, AVIF -> WebP -> JPEG (seo HEL-038). */
 export function heroPicture(alt: string): string {
