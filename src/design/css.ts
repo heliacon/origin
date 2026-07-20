@@ -59,6 +59,13 @@ export const css = `${fontFace}
   /* layout (§3.2) */
   --container:1200px; --container-text:760px; --measure:640px; --sidebar:300px;
   --gutter:clamp(20px,4vw,40px);
+  /* MASTHEAD GEOMETRY. The visible strip of sky between the nav and the content sheet is the thing
+     that matters (it is all the section motif ever gets), so it is defined DIRECTLY and the hero
+     height is derived from it. Previously the hero was min(56vh,520px) and the sheet pulled up a
+     fixed -300px, which made the band a difference of two independent numbers: 220px at a 1200px
+     viewport, 47px at 620px, and NEGATIVE below ~536px, where the sheet climbed over the nav. */
+  --masthead-band:clamp(148px,20vh,220px);
+  --sheet-overlap:clamp(190px,28vh,300px);
 }
 
 /* dark: the equal second world. Same names, flipped values. prefers-color-scheme is the
@@ -188,7 +195,7 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
    lands exactly where it did against the first screen. */
 .hero--home{min-height:120vh}
 /* interior banners: no text on the image (the heading lives in the sheet pulled up over it) */
-.hero--page,.hero--article{min-height:min(56vh,520px)}
+.hero--page,.hero--article{min-height:calc(var(--masthead-band) + var(--sheet-overlap))}
 .hero--page .hero__media img{object-position:center 91%}
 /* interior banners carry no text, so the image stays bright (comparable to home): only the home
    top band survives for over-hero nav legibility (a11y-validated), plus the .hero::after blend.
@@ -325,7 +332,8 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .sheet{background:var(--sheet-bg);
   -webkit-backdrop-filter:blur(18px) saturate(1.15);backdrop-filter:blur(18px) saturate(1.15);
   border:1px solid var(--sheet-border);border-radius:16px;
-  margin-top:-300px;padding:var(--space-12) clamp(24px,4vw,var(--space-16)) var(--space-12)}
+  margin-top:calc(var(--sheet-overlap) * -1);
+  padding:var(--space-12) clamp(24px,4vw,var(--space-16)) var(--space-12)}
 @supports not (backdrop-filter:blur(1px)){.sheet{background:var(--sheet-solid)}}
 /* sections flowing inside the sheet already sit in its padding: neutralise their own gutter */
 .sheet .container{padding-inline:0}
@@ -684,10 +692,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 }
 @media(max-width:640px){
   .section{padding-block:var(--space-12)}
-  /* the sheet spans nearly full width and the pull-up shrinks gracefully */
-  .hero--page,.hero--article{min-height:min(44vh,400px)}
+  /* height and pull-up now come from --masthead-band / --sheet-overlap, which already clamp for
+     short viewports: no second set of magic numbers here. Only the cosmetics change. */
   .sheet-wrap{padding-inline:10px}
-  .sheet{margin-top:-160px;border-radius:12px;padding:var(--space-8) var(--space-5) var(--space-8)}
+  .sheet{border-radius:12px;padding:var(--space-8) var(--space-5) var(--space-8)}
   .wwd{grid-template-columns:repeat(2,1fr)}
   .grid-3,.grid-2{grid-template-columns:1fr}
   .stats{grid-template-columns:1fr;gap:var(--space-6)}
