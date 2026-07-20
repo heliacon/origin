@@ -10,3 +10,6 @@ node_modules/
 
 # os
 .DS_Store
+
+# raw hero-art generation source (shipped webp live in assets/hero-mesh)
+wire mesh parallax/

@@ -7,7 +7,7 @@
  */
 import { esc, collapse, slugify } from "../util";
 import { navBar, Section } from "./shell";
-import { heroPicture, sectionLabel } from "../components";
+import { heroScene, sectionLabel } from "../components";
 import type { TocEntry } from "../components";
 
 /**
@@ -16,7 +16,7 @@ import type { TocEntry } from "../components";
  */
 export function heroBanner(section: Section, variant: "hero--page" | "hero--article" = "hero--page"): string {
   return `<section class="hero ${variant}">` +
-    heroPicture("") +
+    heroScene((section || "home") as Parameters<typeof heroScene>[0]) +
     `<div class="hero__overlay"></div>` +
     navBar(section, true) +
     `</section>`;

@@ -40,12 +40,12 @@
   // needs layers in the markup with their own factors. The flattened hero image
   // gets a default 0.35. Transform-only, rAF-throttled, off under reduced motion.
   const motionOK = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const heroMedia = document.querySelector(".hero .hero__media");
-  if (motionOK && heroMedia) {
-    if (!heroMedia.hasAttribute("data-parallax")) heroMedia.setAttribute("data-parallax", "0.35");
-    const layers = [...document.querySelectorAll(".hero [data-parallax]")]
-      .map((el) => ({ el, f: parseFloat(el.getAttribute("data-parallax")) || 0 }));
-    const heroEl = heroMedia.closest(".hero");
+  const heroEl = document.querySelector(".hero");
+  const heroMedia = heroEl && heroEl.querySelector(".hero__media");
+  if (heroMedia && !heroMedia.hasAttribute("data-parallax")) heroMedia.setAttribute("data-parallax", "0.35");
+  const parallaxLayers = heroEl ? [...heroEl.querySelectorAll("[data-parallax]")] : [];
+  if (motionOK && parallaxLayers.length) {
+    const layers = parallaxLayers.map((el) => ({ el, f: parseFloat(el.getAttribute("data-parallax")) || 0 }));
     let ticking = false;
     const apply = () => {
       ticking = false;

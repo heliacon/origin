@@ -204,7 +204,7 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
              linear-gradient(0deg,rgba(9,10,12,.52) 0%,rgba(9,10,12,0) 42%)}
 .hero__inner{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;
   max-width:var(--container);width:100%;margin:0 auto;padding-inline:var(--gutter)}
-.hero--home .hero__inner{justify-content:center;padding-block:var(--space-24)}
+.hero--home .hero__inner{justify-content:flex-end;padding-block:var(--space-16) clamp(48px,13vh,150px)}
 .hero__block{max-width:620px}
 .hero__h1{font-size:clamp(40px,6vw,64px);line-height:1.05;letter-spacing:-.01em;color:var(--on-image);
   text-shadow:0 1px 3px rgba(0,0,0,.65),0 2px 30px rgba(0,0,0,.82);margin:0}
@@ -216,6 +216,78 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
    dark over the sky in the light theme). The arrow and hover-underline carry the affordance. */
 .hero__ctas .ctalink{color:var(--on-image);text-shadow:0 1px 4px rgba(0,0,0,.55)}
 .hero__ctas .ctalink:hover{color:var(--on-image);text-decoration:underline;text-underline-offset:3px}
+
+/* ── hero mesh: the generated data-terrain, screened + cooled to Prussian ──────── */
+.hero__mesh{position:absolute;inset:0;overflow:hidden;z-index:0}
+.hero__mesh .hm{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hm-scr{mix-blend-mode:screen}
+.hm-al{mix-blend-mode:normal}
+/* Light theme swaps only the sky (L0): a paper sky with the dark terrain and monolith silhouetted
+   against it. Dark theme keeps the navy atmosphere. Terrain planes are unchanged in both. */
+.hero__mesh{background:linear-gradient(180deg,#F4F4F0 0%,#E9ECEF 58%,#DEE3E9 100%)}
+.hero__mesh .hm-base{opacity:0}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .hero__mesh{background:#0A1524}
+  :root:not([data-theme=light]) .hero__mesh .hm-base{opacity:1}}
+:root[data-theme=dark] .hero__mesh{background:#0A1524}
+:root[data-theme=dark] .hero__mesh .hm-base{opacity:1}
+/* light theme: the home hero sky is light, so its over-hero chrome (nav, wordmark, toggle) is ink */
+.hero--home .nav--over .nav__link,.hero--home .nav--over .nav__link:hover,
+.hero--home .nav--over .nav__link[aria-current=page]{color:#222F3E;text-shadow:none}
+.hero--home .nav--over .nav__link[aria-current=page]::after{background:#222F3E;box-shadow:none}
+.hero--home .nav--over .nav__logo{color:#17181B}
+.hero--home .nav--over .nav__logo .wm-o{fill:#1E3D63}
+.hero--home .nav--over .theme-toggle{color:#4A5A6E}
+.hero--home .nav--over .nav__toggle span{background:#222F3E}
+.hero--home .hero__star{mix-blend-mode:multiply}
+.hero--home .hero__star svg{fill:#8A6522;filter:none}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .hero--home .nav--over .nav__link,
+  :root:not([data-theme=light]) .hero--home .nav--over .nav__link:hover,
+  :root:not([data-theme=light]) .hero--home .nav--over .nav__link[aria-current=page]{color:var(--on-image);text-shadow:0 1px 3px rgba(0,0,0,.85),0 1px 16px rgba(0,0,0,.55)}
+  :root:not([data-theme=light]) .hero--home .nav--over .nav__link[aria-current=page]::after{background:var(--on-image)}
+  :root:not([data-theme=light]) .hero--home .nav--over .nav__logo{color:var(--on-image)}
+  :root:not([data-theme=light]) .hero--home .nav--over .nav__logo .wm-o{fill:var(--on-image)}
+  :root:not([data-theme=light]) .hero--home .nav--over .theme-toggle{color:var(--on-image)}
+  :root:not([data-theme=light]) .hero--home .nav--over .nav__toggle span{background:var(--on-image)}
+  :root:not([data-theme=light]) .hero--home .hero__star{mix-blend-mode:normal}
+  :root:not([data-theme=light]) .hero--home .hero__star svg{fill:#E9CE93;filter:drop-shadow(0 0 6px rgba(233,206,147,.8))}}
+:root[data-theme=dark] .hero--home .nav--over .nav__link,
+:root[data-theme=dark] .hero--home .nav--over .nav__link:hover,
+:root[data-theme=dark] .hero--home .nav--over .nav__link[aria-current=page]{color:var(--on-image);text-shadow:0 1px 3px rgba(0,0,0,.85),0 1px 16px rgba(0,0,0,.55)}
+:root[data-theme=dark] .hero--home .nav--over .nav__link[aria-current=page]::after{background:var(--on-image)}
+:root[data-theme=dark] .hero--home .nav--over .nav__logo{color:var(--on-image)}
+:root[data-theme=dark] .hero--home .nav--over .nav__logo .wm-o{fill:var(--on-image)}
+:root[data-theme=dark] .hero--home .nav--over .theme-toggle{color:var(--on-image)}
+:root[data-theme=dark] .hero--home .nav--over .nav__toggle span{background:var(--on-image)}
+:root[data-theme=dark] .hero--home .hero__star{mix-blend-mode:normal}
+:root[data-theme=dark] .hero--home .hero__star svg{fill:#E9CE93;filter:drop-shadow(0 0 6px rgba(233,206,147,.8))}
+/* the heliacal star: first light, high in the sky, brass point + soft glow (echoes the logo O) */
+.hero__star{position:absolute;left:47%;top:22%;width:150px;height:150px;margin:-75px 0 0 -75px;z-index:1;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle,rgba(233,206,147,.42) 0%,rgba(205,167,101,.13) 34%,transparent 62%)}
+.hero__star svg{width:46px;height:46px;fill:#E9CE93;filter:drop-shadow(0 0 6px rgba(233,206,147,.8))}
+
+/* ── hero scene: flat vector parallax landscape, the chart as landscape (§10) ── */
+/* Theme-independent Prussian atmosphere: deep navy near, pale steel far, one brass light. Each
+   layer is a parallax plane driven by app.js; still and correct with no JS or reduced motion. */
+.hero__scene{position:absolute;inset:0;overflow:hidden;z-index:0}
+.hero__sky{position:absolute;inset:0;background:linear-gradient(180deg,#0A1524 0%,#122740 40%,#1C3A5E 72%,#2C5078 100%)}
+.hero__stars{position:absolute;inset:0;width:100%;height:100%}
+.hero__stars circle{fill:#B4C4D8;opacity:.62}
+.hero__sun{position:absolute;border-radius:50%;
+  background:radial-gradient(circle,#EAD199 0%,#CDA765 40%,rgba(205,167,101,0) 72%);
+  box-shadow:0 0 100px 26px rgba(205,167,101,.15)}
+.hero__motif{position:absolute;inset:0;width:100%;height:100%}
+.hero__ridge{position:absolute;inset:0;width:100%;height:100%}
+.hero__ridge--far path{fill:#33567A}
+.hero__ridge--mid path{fill:#20406A}
+.hero__ridge--near path{fill:#152E4D}
+.hero__ridge--fore path{fill:#0A192C}
+.hero__line{fill:none;stroke:#4E75A0;stroke-width:1.3;opacity:.55;stroke-linecap:round}
+.hero__contour{fill:none;stroke:#CDA765;stroke-width:1.4;opacity:.4;stroke-linecap:round}
+.hero__trail{fill:none;stroke:#CDA765;stroke-width:1.5;opacity:.55;stroke-dasharray:2 9;stroke-linecap:round}
+.hero__node{fill:#89A6CA;opacity:.82}
+.hero__mk{fill:#CDA765}
+.hero__mk-ring{fill:none;stroke:#CDA765;stroke-width:1.4;opacity:.5}
 
 /* ── content sheet (interior pages: the solid container pulled up over the banner) ── */
 .sheet-wrap{max-width:var(--container);margin:0 auto;padding-inline:var(--gutter);position:relative;z-index:3}
@@ -301,6 +373,16 @@ a.wwd__cell:hover .wwd__title{color:var(--accent)}
 /* image placeholder: the cartographic Prussian wash (design-language §10), a light survey icon
    floated over it — theme-independent atmosphere, never muddy brass */
 .card__ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--on-image);background:linear-gradient(140deg,#16314F,#1E3D63 55%,#33557E)}
+/* generative card art: the hero's motif kit scaled down, one brass accent per card (§10) */
+.card__media--art{aspect-ratio:16/9;overflow:hidden}
+.cardart{width:100%;height:100%;display:block}
+.cardart .ca-bg{fill:#122740}
+.cardart .ca-r1{fill:#0E2540}.cardart .ca-r2{fill:#1A3860}.cardart .ca-r3{fill:#284F7C}
+.cardart .ca-sun{fill:#CDA765}
+.cardart .ca-line{fill:none;stroke:#4E75A0;stroke-width:1.2;opacity:.75}
+.cardart .ca-node{fill:#7FA0C6}
+.cardart .ca-bar{fill:#325682}
+.cardart .ca-acc,.cardart .ca-acc-f{fill:#CDA765}
 .card__ph .ico{width:44px;height:44px;transform:none}
 .card__body{padding:var(--space-5);display:flex;flex-direction:column;gap:var(--space-2);flex:1}
 .card--wide .card__body{max-width:760px;padding:var(--space-6)}

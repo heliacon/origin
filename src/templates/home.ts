@@ -11,7 +11,7 @@ import { CANON, Dict, esc, collapse, fmtDate } from "../util";
 import { page } from "../layout/shell";
 import { navBar } from "../layout/shell";
 import {
-  heroPicture, sectionLabel, ctaLink, whatWeDoRow, journalRow,
+  heroMesh, sectionLabel, ctaLink, whatWeDoRow, journalRow,
 } from "../components";
 
 const FACETS = [
@@ -47,8 +47,7 @@ export function home(origin: Dict, defs: Dict[], posts: Dict[], graph: unknown):
 
   const body = `
 <section class="hero hero--home">
-  ${heroPicture("Dawn over a valley with a river and radio dish, blue signal beams rising from the forest")}
-  <div class="hero__overlay"></div>
+  ${heroMesh("monolith", "solid")}
   ${navBar("", true)}
   <div class="hero__inner">
     <div class="hero__block">
