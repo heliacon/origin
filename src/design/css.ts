@@ -575,6 +575,7 @@ a.chip:hover,.chip.is-active{border-color:var(--accent);color:var(--text)}
 .process__title{font-family:var(--font-serif);font-weight:500;font-size:20px;margin:0 0 var(--space-2)}
 .process__body{color:var(--text-muted);font-size:15px;line-height:1.55;margin:0}
 .engagement__note{color:var(--text-muted);font-size:15px;max-width:58ch;margin:var(--space-10) 0 0}
+.prose-ctas{display:flex;gap:var(--space-8);flex-wrap:wrap;margin-top:var(--space-10)}
 @media(max-width:820px){.features--2,.features--3,.process{grid-template-columns:1fr;gap:var(--space-6)}
   .process::before{display:none}.process__step{padding-top:var(--space-10)}.prose-cols{columns:1}}
 
