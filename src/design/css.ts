@@ -217,7 +217,14 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 
 /* ── hero mesh: the generated data-terrain, screened + cooled to Prussian ──────── */
 .hero__mesh{position:absolute;inset:0;overflow:hidden;z-index:0}
-.hero__mesh .hm{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* Each layer OVERSCANS above the hero so the parallax translate has material to reveal. Without
+   this the layers slid down out of their own frame and emptied the top of the hero: at 400px of
+   scroll the sky, the star and the orbit rings were gone and the monolith was beheaded.
+   The budget must cover the largest translate (max factor x PARALLAX_RANGE in app.js).
+   object-position is pushed down by half the overscan so the at-rest framing is unchanged. */
+.hero__mesh .hm{position:absolute;left:0;right:0;top:calc(var(--px-overscan) * -1);
+  width:100%;height:calc(100% + var(--px-overscan));object-fit:cover;
+  object-position:center calc(50% + (var(--px-overscan) / 2))}
 .hm-scr{mix-blend-mode:screen}
 .hm-al{mix-blend-mode:normal}
 /* Light theme swaps only the sky (L0): a paper sky with the dark terrain and monolith silhouetted

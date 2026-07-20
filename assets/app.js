@@ -34,15 +34,18 @@
     sheet.addEventListener("click", (e) => { if (e.target.closest("a")) close(); });
   }
 
-  // ── hero parallax (single-layer; the image scrolls slower than the page) ──
-  // Layer-ready: any element inside .hero carrying data-parallax="<factor>" is
-  // translated by scrollY * factor, so multi-layer art (Firewatch-style) only
-  // needs layers in the markup with their own factors. The flattened hero image
-  // gets a default 0.35. Transform-only, rAF-throttled, off under reduced motion.
+  // ── hero parallax (multi-layer: each layer lags the page by its own factor) ──
+  // Any element inside .hero carrying data-parallax="<factor>" is translated by
+  // min(scrollY, PARALLAX_RANGE) * factor. Larger factor = lags further behind =
+  // reads as further away. Transform-only, rAF-throttled, off under reduced motion.
+  //
+  // The clamp is a FIXED PIXEL RANGE, not the hero height. Clamping to hero height
+  // meant a 792px home hero moved the base layer 364px, which slid the art out of
+  // its own frame. The effect wants to be spent in the first screen of scroll and
+  // then hold. Keep max(factor) * PARALLAX_RANGE <= --px-overscan in css.ts.
+  const PARALLAX_RANGE = 480;
   const motionOK = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const heroEl = document.querySelector(".hero");
-  const heroMedia = heroEl && heroEl.querySelector(".hero__media");
-  if (heroMedia && !heroMedia.hasAttribute("data-parallax")) heroMedia.setAttribute("data-parallax", "0.35");
   const parallaxLayers = heroEl ? [...heroEl.querySelectorAll("[data-parallax]")] : [];
   if (motionOK && parallaxLayers.length) {
     const layers = parallaxLayers.map((el) => ({ el, f: parseFloat(el.getAttribute("data-parallax")) || 0 }));
@@ -50,7 +53,7 @@
     const apply = () => {
       ticking = false;
       if (window.scrollY > heroEl.offsetHeight + 200) return; // hero gone; skip work
-      const y = Math.min(window.scrollY, heroEl.offsetHeight); // clamp to the overscan budget
+      const y = Math.min(window.scrollY, PARALLAX_RANGE);
       layers.forEach(({ el, f }) => { el.style.transform = `translate3d(0,${(y * f).toFixed(1)}px,0)`; });
     };
     window.addEventListener("scroll", () => {
