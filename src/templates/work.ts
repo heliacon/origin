@@ -1,56 +1,49 @@
 /**
- * Work index — built to ia-and-ux §2.3 with copy from voice-and-copy §2 and work.md.
- * Section order: page head -> capability grid (the four OFFER areas as "Capability" cards, each
- * linking to the Studio facet that explains it) -> honest client-work note -> CTA band.
+ * Work index — the capability offer. Redesigned (2026-07) onto the marketing kit: title sheet over
+ * the masthead, then the capabilities as cards carrying their generative art, an honest client-work
+ * note on a sunk ground, and a CTA. Copy from work.md / voice-and-copy §2.
  *
- * Honesty rules (ia §3.3, voice F7): no card carries a fabricated client metric; the four offer
- * areas are capabilities not case studies, and there is no client proof to show yet, so the page
- * reads as "what we can do + shown, not claimed". Structured markup is composed here rather than
- * rendered from the work.md prose blob. build.ts passes the rendered blob positionally, so the
- * first parameter is kept for signature compatibility and deliberately unused.
+ * Honesty rules (ia §3.3, voice F7): the four areas are capabilities not case studies, and there is
+ * no client proof yet, so the page reads "what we can do + shown, not claimed". `_htmlBody` (work.md
+ * rendered) is unused: structure is composed here for stable markup.
  */
 import { CANON } from "../util";
 import { page } from "../layout/shell";
-import { pageHero } from "../layout/article";
-import { projectCard, ctaLink, sectionLabel } from "../components";
+import { marketingPage } from "../layout/article";
+import { projectCard, ctaLink, sectionHead } from "../components";
 import type { ProjectCardOpts } from "../components";
 
-// The four offer areas carry "Capability". They are offer areas, not client case studies, so the
-// cards are static: a proof page where every card exits elsewhere reads wrong (owner note).
 const CAPABILITIES: ProjectCardOpts[] = [
-  { kicker: "Capability", title: "AI search strategy", iconName: "focus", dataType: "strategy", caption: "Decide what to be found for, then build the plan to be cited and invoked across search, assistants and agents." },
-  { kicker: "Capability", title: "Content intelligence", iconName: "research", dataType: "research", caption: "Make your knowledge legible and verifiable, so the models that now read the web can quote it with confidence." },
-  { kicker: "Capability", title: "Agent experience design", iconName: "connections", dataType: "products", caption: "Design experiences an agent can invoke, grounded and provenance-first, not a demo that falls over on the wire." },
-  { kicker: "Capability", title: "Data and signal strategy", iconName: "signals", dataType: "research", caption: "Turn measurement, experimentation and signal into decisions you can act on and defend." },
+  { kicker: "Capability", title: "AI search strategy", dataType: "strategy", caption: "Decide what to be found for, then build the plan to be cited and invoked across search, assistants and agents." },
+  { kicker: "Capability", title: "Content intelligence", dataType: "research", caption: "Make your knowledge legible and verifiable, so the models that now read the web can quote it with confidence." },
+  { kicker: "Capability", title: "Agent experience design", dataType: "products", caption: "Design experiences an agent can invoke, grounded and provenance-first, not a demo that falls over on the wire." },
+  { kicker: "Capability", title: "Data and signal strategy", dataType: "research", caption: "Turn measurement, experimentation and signal into decisions you can act on and defend." },
 ];
 
 /** `_htmlBody` is work.md rendered to HTML by build.ts. Unused: see file header. */
 export function work(_htmlBody: string, jsonld: unknown): string {
-  const cards = CAPABILITIES.map((c) => projectCard(c)).join("");
-
   const grid = `
 <section class="section"><div class="container">
-  <div class="section-head">${sectionLabel("What we can do", false, "h2")}</div>
-  <div class="grid-2" style="max-width:960px;margin:40px auto 0">${cards}</div>
+  ${sectionHead("What we can do", "Four ways in", "Offer areas, not case studies. Most engagements braid a few together.")}
+  <div class="grid-2 cardgrid">${CAPABILITIES.map((c) => projectCard(c)).join("")}</div>
 </div></section>`;
 
   const clientNote = `
-<section class="section--tight"><div class="container container--text">
-  ${sectionLabel("Client work", false, "h2")}
-  <p style="margin-top:16px;color:var(--text-muted)">Client engagements are underway. As each one lands it will appear here with the metric we moved and its provenance, on the same terms as everything else on this site. Shown, not claimed.</p>
+<section class="section section--sunk"><div class="container">
+  ${sectionHead("Client work", "Shown, not claimed")}
+  <p class="engagement__note">Client engagements are underway. As each one lands it will appear here with the metric we moved and its provenance, on the same terms as everything else on this site. Nothing is claimed until it can be shown.</p>
 </div></section>`;
 
   const cta = `
 <section class="cta-band"><div class="container">
-  <h2 style="margin-bottom:24px">Want this for your origin?</h2>
-  ${ctaLink("Work with us", "/contact/")}
+  <h2>Want this for your origin?</h2>
+  <div class="cta-band__act">${ctaLink("Work with us", "/contact/")}</div>
 </div></section>`;
 
-  const body =
-    pageHero(
-      { title: "Our work", lede: "We help organisations be found, trusted and invoked in a world where the reader is as often a machine as a person.", eyebrow: "Work", section: "work" },
-      grid + clientNote + cta,
-    );
+  const body = marketingPage(
+    { title: "Our work", lede: "We help organisations be found, trusted and invoked in a world where the reader is as often a machine as a person.", eyebrow: "Work", section: "work" },
+    grid + clientNote + cta,
+  );
 
   return page("Our work · Heliacon", body, "/work/", {
     section: "work", overHero: true, jsonld,
