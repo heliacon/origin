@@ -59,6 +59,24 @@ export function pageHero(o: { title: string; lede?: string; eyebrow?: string; se
 }
 
 /**
+ * Marketing-page shell (studio, work, research, about): the masthead, then just the TITLE in a
+ * sheet pulled over it, then the page's sections flow on the paper below in their own rhythm — not
+ * trapped in one container. Supersedes pageHero for multi-section marketing pages.
+ */
+export function marketingPage(o: { title: string; lede?: string; eyebrow?: string; section?: Section }, sections = ""): string {
+  return heroBanner(o.section ?? "", "hero--page") +
+    `<div class="sheet-wrap"><div class="sheet sheet--head">` +
+      `<header class="sheet__head sheet__head--center">` +
+        (o.eyebrow ? sectionLabel(o.eyebrow) : "") +
+        `<h1>${esc(o.title)}</h1>` +
+        `<hr class="sheet__rule">` +
+        (o.lede ? `<p class="lede">${esc(o.lede)}</p>` : "") +
+      `</header>` +
+    `</div></div>` +
+    `<div class="marketing">${sections}</div>`;
+}
+
+/**
  * Give every <h2>/<h3> in rendered markdown a stable id (deep-linkable passages, seo §2e) and
  * return the table of contents built from them. H2 are top-level TOC items, H3 are sub-items.
  */

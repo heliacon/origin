@@ -417,6 +417,40 @@ export function heroBannerMesh(): string {
     `</div>`;
 }
 
+// ── marketing sections (studio/work/research redesign) ────────────────────────
+/** A section header: mono eyebrow + Garamond H2 + optional lede. Left-aligned by default (editorial
+ *  hierarchy); pass center for the rare centred head. */
+export function sectionHead(eyebrow: string, title: string, lede?: string, align: "left" | "center" = "left"): string {
+  return `<div class="shead shead--${align}">` +
+    `<p class="eyebrow eyebrow--accent shead__k">${esc(eyebrow)}</p>` +
+    `<h2 class="shead__h">${esc(title)}</h2>` +
+    (lede ? `<p class="lede shead__lede">${esc(lede)}</p>` : "") +
+    `</div>`;
+}
+
+/** Feature / principle cards: a bordered card with an accent eyebrow, serif title and one line of
+ *  body. No image — the text-forward counterpart to projectCard (used for "how we work", facets). */
+export interface Feature { kicker?: string; title: string; body: string; icon?: string; }
+export function featureGrid(items: Feature[], cols: 2 | 3 = 3): string {
+  const card = (f: Feature) =>
+    `<div class="feature">` +
+      (f.icon ? `<span class="feature__icon">${icon(f.icon)}</span>` : "") +
+      (f.kicker ? `<span class="eyebrow eyebrow--accent feature__k">${esc(f.kicker)}</span>` : "") +
+      `<h3 class="feature__title">${esc(f.title)}</h3>` +
+      `<p class="feature__body">${esc(f.body)}</p>` +
+    `</div>`;
+  return `<div class="features features--${cols}">${items.map(card).join("")}</div>`;
+}
+
+/** An ordered process laid out horizontally on a connecting line, each stage a numbered node. */
+export interface ProcessStep { n: string; title: string; body: string; }
+export function processSteps(steps: ProcessStep[]): string {
+  return `<ol class="process">` + steps.map((s) =>
+    `<li class="process__step"><span class="process__n">${esc(s.n)}</span>` +
+      `<h3 class="process__title">${esc(s.title)}</h3>` +
+      `<p class="process__body">${esc(s.body)}</p></li>`).join("") + `</ol>`;
+}
+
 // ── hero (§4.3) ──────────────────────────────────────────────────────────────
 /** Responsive <picture> for the full-bleed hero, AVIF -> WebP -> JPEG (seo HEL-038). */
 export function heroPicture(alt: string): string {
