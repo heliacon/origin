@@ -407,10 +407,11 @@ export function heroBannerMesh(section = ""): string {
   const motif = SECTION_MOTIF[section];
   return `<div class="hero__mesh hero__mesh--band" aria-hidden="true">` +
     img("hm-base", "atmos", 0.16) +
-    img("hm-al", "far-s", 0.11) +
-    // the subject sits between the far and mid terrain, so the near ridge still occludes its base
+    // NO terrain layers. The band is the SKY above the world, which is what this masthead always
+    // claimed to be; the terrain belongs to the home hero, where the whole scene is in frame. With
+    // the sheet gone there is no horizon line for a crest to meet, and a short band cover-crops a
+    // 16:9 source to sky anyway. Dropping far-s and mid-s also takes 1.08MB off every interior page.
     (motif ? `<span class="hm hm-subject" data-parallax="0.095">${heroMotif(motif)}</span>` : "") +
-    img("hm-al", "mid-s", 0.075) +
     `<span class="hero__star hero__star--band" data-parallax="0.15" aria-hidden="true">` +
     `<svg viewBox="0 0 100 100"><path d="M50 6 L57 43 L94 50 L57 57 L50 94 L43 57 L6 50 L43 43 Z"/></svg></span>` +
     `</div>`;

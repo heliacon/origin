@@ -64,7 +64,7 @@ export const css = `${fontFace}
      height is derived from it. Previously the hero was min(56vh,520px) and the sheet pulled up a
      fixed -300px, which made the band a difference of two independent numbers: 220px at a 1200px
      viewport, 47px at 620px, and NEGATIVE below ~536px, where the sheet climbed over the nav. */
-  --masthead-band:clamp(148px,20vh,220px);
+  --masthead-band:clamp(190px,26vh,300px);
   --sheet-overlap:clamp(190px,28vh,300px);
 }
 
@@ -130,6 +130,13 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .container--text{max-width:var(--container-text)}
 .section{padding-block:var(--space-16)}
 .hero--home + .section{margin-top:calc(var(--space-20) * -1);position:relative;z-index:3}
+/* the index-page title: an ordinary block on the paper, sharing the gutter with every section
+   below it. Replaced the over-hero sheet (2026-07-20). */
+.pagetitle{padding-block:var(--space-16) var(--space-12);border-bottom:1px solid var(--border)}
+.pagetitle .eyebrow{margin-bottom:var(--space-4)}
+.pagetitle h1{margin:0;font-size:clamp(36px,5vw,52px)}
+.pagetitle__rule{width:40px;height:2px;background:var(--accent);border:0;margin:var(--space-6) 0 0}
+.pagetitle__lede{margin:var(--space-6) 0 0;max-width:58ch}
 .section--tight{padding-block:var(--space-10)}
 .stack>*+*{margin-top:var(--space-4)}
 
@@ -189,13 +196,20 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .hero{position:relative;overflow:hidden;background:var(--bg-base);display:flex;flex-direction:column}
 .hero::after{content:"";position:absolute;inset-inline:0;bottom:0;height:120px;z-index:1;pointer-events:none;
   background:linear-gradient(0deg,var(--bg-base) 0%,rgba(15,15,18,0) 100%)}
+/* the fade is sized for a full hero; on a short art band a fixed 120px swallowed most of it and the
+   band read as empty. Scale it to the band and keep a crisp lower edge. */
+.hero--page::after{height:clamp(28px,22%,64px)}
 /* The home hero is TALLER than the viewport on purpose: parallax reads as depth only when the
    layers have real distance to travel, and a one-screen hero gives them none. The extra 32vh is
    travel room, not more art above the fold, so the content block is pushed up by the same 32vh and
    lands exactly where it did against the first screen. */
 .hero--home{min-height:120vh}
 /* interior banners: no text on the image (the heading lives in the sheet pulled up over it) */
-.hero--page,.hero--article{min-height:calc(var(--masthead-band) + var(--sheet-overlap))}
+/* hero--page carries no sheet over it any more, so its height IS the visible art band: nothing is
+   occluded and the section motif reads in full. hero--article still has the sheet pulled over it,
+   so it keeps band + overlap. */
+.hero--page{min-height:var(--masthead-band)}
+.hero--article{min-height:calc(var(--masthead-band) + var(--sheet-overlap))}
 .hero--page .hero__media img{object-position:center 91%}
 /* interior banners carry no text, so the image stays bright (comparable to home): only the home
    top band survives for over-hero nav legibility (a11y-validated), plus the .hero::after blend.
@@ -237,6 +251,11 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .hero__mesh .hm{position:absolute;left:0;right:0;top:calc(var(--px-overscan) * -1);
   width:100%;height:calc(100% + var(--px-overscan));object-fit:cover;
   object-position:center calc(50% + (var(--px-overscan) / 2))}
+/* A standalone art band is a short slice of a 16:9 source, so the default centre crop shows only
+   sky. Pull the framing down so the terrain CREST lands near the band's lower edge: the band reads
+   as sky meeting a horizon, and the page begins below that horizon. Must come AFTER the rule above
+   (equal specificity, later wins) or it silently does nothing. */
+.hero--page .hm{object-position:center var(--band-crop,72%)}
 .hm-scr{mix-blend-mode:screen}
 .hm-al{mix-blend-mode:normal}
 /* ── the section subject: parametric motif drawn at hero scale (components.ts heroMotif) ──
@@ -338,16 +357,8 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 /* sections flowing inside the sheet already sit in its padding: neutralise their own gutter */
 .sheet .container{padding-inline:0}
 .sheet .section:last-child,.sheet .cta-band:last-child{padding-bottom:0}
-.sheet__head{margin-bottom:var(--space-8)}
-/* a title-only sheet (marketingPage) holds nothing after the head, so the head's trailing margin
-   is dead space stacked on the sheet's own bottom padding */
-.sheet--head .sheet__head{margin-bottom:0}
-.sheet__head .eyebrow{margin-bottom:var(--space-4)}
-.sheet__head h1{margin:0}
-/* the head shares the page's left axis: the sheet, the sections below it and the footer all start
-   at the gutter, so a marketing page reads on one edge from masthead to footer. The measure is
-   capped so the lede never runs the full 1120 of the sheet. */
-.sheet__head .lede{margin:var(--space-6) 0 0;max-width:58ch}
+/* .sheet__head and .sheet--head retired with the index-page sheet (2026-07-20):
+   the article family uses .article__head, which lives in the article grid. */
 .sheet__rule{width:40px;height:2px;background:var(--accent);border:0;margin:var(--space-6) 0}
 /* article heading block: first row of the article grid, so it aligns with the reading column */
 .article__head{grid-column:1/-1}

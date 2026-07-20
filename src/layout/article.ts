@@ -41,13 +41,18 @@ export function articleHead(o: ArticleHeroOpts): string {
 }
 
 /**
- * Marketing-page shell, and now the shell for every index page (studio, work, research, about,
- * journal, contact, definitions, 404): the masthead, then just the TITLE in a sheet pulled over it,
- * then the page's sections flow on the paper below in their own rhythm, not trapped in one
- * container. Replaced the old pageHero glass box (removed 2026-07-20).
+ * Marketing-page shell for every index page (studio, work, research, about, journal, contact,
+ * definitions, 404): a full-bleed band of the section's own art, then the page begins normally on
+ * the paper with its title, then its sections.
  *
- * The head is LEFT-aligned (design review 2026-07-20): centred, it put the sheet on a different
- * alignment logic from every section beneath it, so one page carried two axes 70px apart.
+ * NO SHEET (2026-07-20). The sheet is kept for the article family, where it holds a real document
+ * and reads as paper laid over the landscape. On an index page it held four lines and then the page
+ * restarted underneath it, so it promised a container and delivered a plaque. Removing it also
+ * removes everything that hung off it here: the translucency artefact in light theme, the second
+ * alignment axis, and the whole band-versus-overlap geometry, since nothing overlaps any more.
+ *
+ * The art band is now unoccluded, so the section motif is fully visible rather than living in the
+ * strip above a sheet.
  *
  * `eyebrow` is optional and means one thing: the PARENT section this page sits under, read as a
  * breadcrumb. Do not pass it where it would only echo the title (STUDIO / Studio); an element that
@@ -55,14 +60,12 @@ export function articleHead(o: ArticleHeroOpts): string {
  */
 export function marketingPage(o: { title: string; lede?: string; eyebrow?: string; section?: Section }, sections = ""): string {
   return heroBanner(o.section ?? "", "hero--page") +
-    `<div class="sheet-wrap"><div class="sheet sheet--head">` +
-      `<header class="sheet__head">` +
-        (o.eyebrow ? sectionLabel(o.eyebrow) : "") +
-        `<h1>${esc(o.title)}</h1>` +
-        `<hr class="sheet__rule">` +
-        (o.lede ? `<p class="lede">${esc(o.lede)}</p>` : "") +
-      `</header>` +
-    `</div></div>` +
+    `<header class="pagetitle"><div class="container">` +
+      (o.eyebrow ? sectionLabel(o.eyebrow) : "") +
+      `<h1>${esc(o.title)}</h1>` +
+      `<hr class="pagetitle__rule">` +
+      (o.lede ? `<p class="lede pagetitle__lede">${esc(o.lede)}</p>` : "") +
+    `</div></header>` +
     `<div class="marketing">${sections}</div>`;
 }
 
