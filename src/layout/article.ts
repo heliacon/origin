@@ -16,7 +16,7 @@ import type { TocEntry } from "../components";
  */
 export function heroBanner(section: Section, variant: "hero--page" | "hero--article" = "hero--page"): string {
   return `<section class="hero ${variant}">` +
-    heroBannerMesh() +
+    heroBannerMesh(section) +
     navBar(section, true) +
     `</section>`;
 }

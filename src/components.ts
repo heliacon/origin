@@ -279,7 +279,7 @@ export function heroMesh(object: "monolith" | "planes" = "monolith", style: "glo
   // atmos is the opaque Prussian base. `glow` (default) screen-blends the pure-black wireframe
   // layers so the black drops out and everything reads as light. `solid` composites occluding
   // planes normally (the -s/-solid variants) — kept as an option pending a proper solid image set.
-  const base = `<img class="hm hm-base" data-parallax="0.10" src="/assets/hero-mesh/atmos.webp" alt="" aria-hidden="true">`;
+  const base = `<img class="hm hm-base" data-parallax="0.20" src="/assets/hero-mesh/atmos.webp" alt="" aria-hidden="true">`;
   // the heliacal star: first light rising behind the ridge (the brand's namesake, echoing the logo O)
   const star = (f: number) =>
     `<span class="hero__star" data-parallax="${f}" aria-hidden="true">` +
@@ -289,28 +289,54 @@ export function heroMesh(object: "monolith" | "planes" = "monolith", style: "glo
     const s = (file: string, f: number) =>
       `<img class="hm hm-al" data-parallax="${f}" src="/assets/hero-mesh/${file}.webp" alt="" aria-hidden="true">`;
     return `<div class="hero__mesh" aria-hidden="true">` + base +
-      s("far-s", 0.085) + s("mid-s", 0.06) +
-      s(obj, 0.04) + s("near-s", 0.022) + s("motes-a", 0.008) +
-      star(0.095) + `</div>`;
+      s("far-s", 0.17) + s("mid-s", 0.12) +
+      s(obj, 0.085) + s("near-s", 0.05) + s("motes-a", 0.02) +
+      star(0.19) + `</div>`;
   }
   const g = (name: string, f: number) =>
     `<img class="hm hm-scr" data-parallax="${f}" src="/assets/hero-mesh/${name}.webp" alt="" aria-hidden="true">`;
   return `<div class="hero__mesh" aria-hidden="true">` + base +
-    g("far", 0.085) + g("mid", 0.06) + g(object, 0.04) + g("near", 0.022) + g("motes", 0.008) + `</div>`;
+    g("far", 0.17) + g("mid", 0.12) + g(object, 0.085) + g("near", 0.05) + g("motes", 0.02) + `</div>`;
 }
+
+/**
+ * The section motif: which vantage point on the data terrain each part of the site is seen from.
+ *
+ * ONE WORLD, DIFFERENT VANTAGE POINTS — not five identities. The atmosphere and both terrain layers
+ * are shared by every section; only the SUBJECT layer changes. That is what makes the sections read
+ * as connected rather than as separate microsites, and it is the same claim the site makes in words
+ * (one origin, many projections) made in the art.
+ *
+ * The motif names are deliberately the same four the card art draws from (cardArt below), so a
+ * section's masthead and the cards inside it come from one vocabulary instead of two.
+ */
+const SECTION_MOTIF: Record<string, string> = {
+  studio: "monolith",    // the landmark you come to: the offer
+  work: "nodes",         // the graph and its connections
+  research: "contour",   // the vocabulary mapped as terrain
+  journal: "horizon",    // first light on the ridge: the heliacal rising, the namesake
+  about: "signal",       // the single lit path
+  contact: "signal",
+};
 
 /** The interior masthead: the same world as the home hero but read as the SKY above it — the
  *  theme-aware atmosphere (dusk / night), the solid horizon rising to meet the content sheet, and
- *  the heliacal star. No monolith: the landmark is reserved for the home. The sheet pulls up over
- *  the lower part, so this reads as a calm band of sky and horizon. */
-export function heroBannerMesh(): string {
+ *  the heliacal star. The sheet pulls up over the lower part, so this reads as a calm band of sky
+ *  and horizon, with the section's own subject sitting in it.
+ *
+ *  Sections with no motif (products, 404, bare docs) get the shared sky alone, which is a legible
+ *  fallback rather than a gap: no subject means no section to name. */
+export function heroBannerMesh(section = ""): string {
   const img = (cls: string, file: string, f: number) =>
     `<img class="hm ${cls}" data-parallax="${f}" src="/assets/hero-mesh/${file}.webp" alt="" aria-hidden="true">`;
+  const motif = SECTION_MOTIF[section];
   return `<div class="hero__mesh hero__mesh--band" aria-hidden="true">` +
-    img("hm-base", "atmos", 0.10) +
-    img("hm-al", "far-s", 0.07) +
-    img("hm-al", "mid-s", 0.045) +
-    `<span class="hero__star hero__star--band" data-parallax="0.09" aria-hidden="true">` +
+    img("hm-base", "atmos", 0.16) +
+    img("hm-al", "far-s", 0.11) +
+    // the subject sits between the far and mid terrain, so the near ridge still occludes its base
+    (motif ? img("hm-al hm-subject", `subject-${motif}`, 0.095) : "") +
+    img("hm-al", "mid-s", 0.075) +
+    `<span class="hero__star hero__star--band" data-parallax="0.15" aria-hidden="true">` +
     `<svg viewBox="0 0 100 100"><path d="M50 6 L57 43 L94 50 L57 57 L50 94 L43 57 L6 50 L43 43 Z"/></svg></span>` +
     `</div>`;
 }

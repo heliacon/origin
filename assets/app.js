@@ -43,7 +43,7 @@
   // meant a 792px home hero moved the base layer 364px, which slid the art out of
   // its own frame. The effect wants to be spent in the first screen of scroll and
   // then hold. Keep max(factor) * PARALLAX_RANGE <= --px-overscan in css.ts.
-  const PARALLAX_RANGE = 480;
+  const PARALLAX_RANGE = 800;
   const motionOK = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const heroEl = document.querySelector(".hero");
   const parallaxLayers = heroEl ? [...heroEl.querySelectorAll("[data-parallax]")] : [];

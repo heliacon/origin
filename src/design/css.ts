@@ -182,7 +182,11 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
 .hero{position:relative;overflow:hidden;background:var(--bg-base);display:flex;flex-direction:column}
 .hero::after{content:"";position:absolute;inset-inline:0;bottom:0;height:120px;z-index:1;pointer-events:none;
   background:linear-gradient(0deg,var(--bg-base) 0%,rgba(15,15,18,0) 100%)}
-.hero--home{min-height:88vh}
+/* The home hero is TALLER than the viewport on purpose: parallax reads as depth only when the
+   layers have real distance to travel, and a one-screen hero gives them none. The extra 32vh is
+   travel room, not more art above the fold, so the content block is pushed up by the same 32vh and
+   lands exactly where it did against the first screen. */
+.hero--home{min-height:120vh}
 /* interior banners: no text on the image (the heading lives in the sheet pulled up over it) */
 .hero--page,.hero--article{min-height:min(56vh,520px)}
 .hero--page .hero__media img{object-position:center 91%}
@@ -202,7 +206,8 @@ p,.lede,.small,.hero__sub,.card__cap,.jrow__sum,.wwd__cap,.footer__mission{text-
              linear-gradient(0deg,rgba(9,10,12,.52) 0%,rgba(9,10,12,0) 42%)}
 .hero__inner{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;
   max-width:var(--container);width:100%;margin:0 auto;padding-inline:var(--gutter)}
-.hero--home .hero__inner{justify-content:flex-end;padding-block:var(--space-16) clamp(48px,13vh,150px)}
+.hero--home .hero__inner{justify-content:flex-end;
+  padding-block:var(--space-16) calc(32vh + clamp(48px,13vh,150px))}
 .hero__block{max-width:620px}
 .hero__h1{font-size:clamp(40px,6vw,64px);line-height:1.05;letter-spacing:-.01em;color:var(--on-image);
   text-shadow:0 1px 3px rgba(0,0,0,.65),0 2px 30px rgba(0,0,0,.82);margin:0}
